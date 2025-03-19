@@ -1,9 +1,10 @@
 import "./App.css";
+import Counter from "@/components/Counter.tsx";
 
 function App() {
     return (
         <div>
-            Hello, React!
+            <Counter initialValue={ 10 } />
         </div>
     );
 }
