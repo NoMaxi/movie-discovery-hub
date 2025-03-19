@@ -39,18 +39,20 @@ class Counter extends React.Component<CounterProps, CounterState> {
             React.createElement(
                 "button",
                 {
-                    className: `bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full cursor-pointer ${ isDecrementDisabled ? "opacity-50 cursor-not-allowed" : ""
-                    }`,
+                    className: `bg-[var(--color-primary)] hover:brightness-80 active:brightness-60 w-[40px] h-[40px] 
+                    font-bold py-2 px-4 rounded-full cursor-pointer
+                    ${ isDecrementDisabled ? "opacity-50 cursor-not-allowed" : "" }`,
                     onClick: this.decrement,
                     disabled: isDecrementDisabled,
                 },
                 "-"
             ),
-            React.createElement("span", { className: "text-white text-xl font-bold" }, this.state.count),
+            React.createElement("div", { className: "flex items-center justify-center text-3xl font-bold min-w-[30px]" }, this.state.count),
             React.createElement(
                 "button",
                 {
-                    className: "bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full cursor-pointer",
+                    className: `bg-[var(--color-primary)] hover:brightness-80 active:brightness-60 w-[40px] h-[40px] 
+                    font-bold py-2 px-4 rounded-full cursor-pointer`,
                     onClick: this.increment,
                 },
                 "+"

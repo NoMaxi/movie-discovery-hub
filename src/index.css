@@ -1,1 +1,48 @@
 @import "tailwindcss";
+
+:root {
+    --color-primary: #F65261;
+    --color-background: #232323;
+    --color-text: #FFFFFF;
+    --color-gray: #424242;
+    --color-gray-light: #555555;
+    --color-gray-lighter: #AAAAAA;
+}
+
+body {
+    font-family: "Montserrat", sans-serif;
+    background-color: var(--color-background);
+    color: var(--color-text);
+}
+
+.btn {
+    background-color: var(--color-primary);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: 500;
+    height: 57px;
+    min-width: 180px;
+    padding: 0 20px;
+    text-transform: uppercase;
+    transition: filter 0.3s ease;
+
+    &:hover {
+        filter: brightness(0.8)
+    }
+
+    &:active {
+        filter: brightness(0.6)
+    }
+
+    &:focus {
+        outline: none;
+    }
+}
+
+.input-field {
+    background-color: var(--color-gray);
+    height: 57px;
+    @apply focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent;
+}
