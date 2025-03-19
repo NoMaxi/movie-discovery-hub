@@ -42,7 +42,7 @@ body {
 }
 
 .input-field {
+    @apply focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent transition-all duration-200;
     background-color: var(--color-gray);
     height: 57px;
-    @apply focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent;
 }

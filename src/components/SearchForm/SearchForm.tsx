@@ -2,11 +2,11 @@ import React, { useState, FormEvent, ChangeEvent } from "react";
 
 interface SearchFormProps {
     onSearch: (query: string) => void;
-    initialSearchQuery?: string;
+    initialQuery?: string;
 }
 
-const SearchForm = ({ initialSearchQuery = "", onSearch }: SearchFormProps) => {
-    const [query, setQuery] = useState(initialSearchQuery);
+const SearchForm = ({ initialQuery = "", onSearch }: SearchFormProps) => {
+    const [query, setQuery] = useState(initialQuery);
 
     const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
         setQuery(event.target.value);
@@ -24,7 +24,7 @@ const SearchForm = ({ initialSearchQuery = "", onSearch }: SearchFormProps) => {
     };
 
     return (
-        <form onSubmit={ handleSubmit } className="flex items-center justify-center">
+        <form onSubmit={ handleSubmit } className="flex items-center justify-center w-1/2">
             <input
                 type="text"
                 value={ query }
@@ -38,7 +38,6 @@ const SearchForm = ({ initialSearchQuery = "", onSearch }: SearchFormProps) => {
                     rounded-md
                     py-3
                     px-6
-                    max-w-1/2
                     text-lg
                     flex-grow
                 "
