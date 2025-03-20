@@ -1,9 +1,9 @@
 import { useState } from "react";
 import "@/App.css";
 import { Genre } from "@/types/common";
-import Counter from "@/components/Counter/Counter.tsx";
-import SearchForm from "@/components/SearchForm/SearchForm.tsx";
-import GenreSelect from "@/components/GenreSelect/GenreSelect.tsx";
+import Counter from "@/components/Counter/Counter";
+import SearchForm from "@/components/SearchForm/SearchForm";
+import GenreSelect from "@/components/GenreSelect/GenreSelect";
 
 const App = () => {
     const genres: Genre[] = ["All", "Documentary", "Comedy", "Horror", "Crime"];
