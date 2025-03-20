@@ -9,26 +9,21 @@ interface CounterState {
 }
 
 class Counter extends React.Component<CounterProps, CounterState> {
-    constructor(props: CounterProps) {
-        super(props);
-        this.state = {
-            count: props.initialValue || 0,
-        };
-        this.increment = this.increment.bind(this);
-        this.decrement = this.decrement.bind(this);
-    }
+    state: CounterState = {
+        count: this.props.initialValue ?? 0,
+    };
 
-    increment() {
+    increment = () => {
         this.setState((prevState: CounterState) => ({
             count: prevState.count + 1,
         }));
-    }
+    };
 
-    decrement() {
+    decrement = () => {
         this.setState((prevState: CounterState) => ({
             count: prevState.count - 1,
         }));
-    }
+    };
 
     render() {
         const isDecrementDisabled = this.state.count <= 0;
