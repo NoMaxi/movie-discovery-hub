@@ -1,4 +1,4 @@
-# EPAM ReactJS GGlobal Mentoring Program Q1-Q2 2025
+# EPAM ReactJS Global Mentoring Program Q1-Q2 2025
 
 # React + TypeScript + Vite
 
