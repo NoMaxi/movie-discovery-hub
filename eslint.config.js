@@ -6,7 +6,7 @@ import testingLibrary from "eslint-plugin-testing-library";
 import tseslint from "typescript-eslint";
 
 export default tseslint.config(
-    { ignores: ["dist"] },
+    { ignores: ["dist", "coverage"] },
     {
         extends: [js.configs.recommended, ...tseslint.configs.recommended],
         files: ["**/*.{ts,tsx}"],
