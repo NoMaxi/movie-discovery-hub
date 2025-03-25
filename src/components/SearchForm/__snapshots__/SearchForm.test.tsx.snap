@@ -1,0 +1,61 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SearchForm Should render empty input if no initialQuery is provided in props 1`] = `
+<DocumentFragment>
+  <form
+    class="flex items-center justify-center w-1/2"
+  >
+    <input
+      class="
+                    input-field
+                    placeholder-[var(--color-gray-lighter)]
+                    border-none
+                    rounded-md
+                    py-3
+                    px-6
+                    text-lg
+                    flex-grow
+                "
+      placeholder="What do you want to watch?"
+      type="text"
+      value=""
+    />
+    <button
+      class="btn ml-3"
+      type="submit"
+    >
+      Search
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`SearchForm Should render input with an initial value if initialQuery is provided in props 1`] = `
+<DocumentFragment>
+  <form
+    class="flex items-center justify-center w-1/2"
+  >
+    <input
+      class="
+                    input-field
+                    placeholder-[var(--color-gray-lighter)]
+                    border-none
+                    rounded-md
+                    py-3
+                    px-6
+                    text-lg
+                    flex-grow
+                "
+      placeholder="What do you want to watch?"
+      type="text"
+      value="test query"
+    />
+    <button
+      class="btn ml-3"
+      type="submit"
+    >
+      Search
+    </button>
+  </form>
+</DocumentFragment>
+`;
