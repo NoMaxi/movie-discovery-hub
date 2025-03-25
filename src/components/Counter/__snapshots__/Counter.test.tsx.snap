@@ -1,0 +1,56 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Counter Should render the default initial value if not provided in props 1`] = `
+<DocumentFragment>
+  <div
+    class="p-4 flex items-center justify-center gap-4"
+  >
+    <button
+      class="bg-[var(--color-primary)] hover:brightness-80 active:brightness-60 w-[40px] h-[40px] 
+                    text-xl font-bold py-2 px-4 rounded-full cursor-pointer
+                    opacity-50 cursor-not-allowed"
+      disabled=""
+    >
+      -
+    </button>
+    <div
+      class="flex items-center justify-center text-3xl font-bold min-w-[30px]"
+    >
+      0
+    </div>
+    <button
+      class="bg-[var(--color-primary)] hover:brightness-80 active:brightness-60 w-[40px] h-[40px]
+                    text-xl font-bold py-2 px-4 rounded-full cursor-pointer"
+    >
+      +
+    </button>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Counter Should render the initial value provided in props 1`] = `
+<DocumentFragment>
+  <div
+    class="p-4 flex items-center justify-center gap-4"
+  >
+    <button
+      class="bg-[var(--color-primary)] hover:brightness-80 active:brightness-60 w-[40px] h-[40px] 
+                    text-xl font-bold py-2 px-4 rounded-full cursor-pointer
+                    "
+    >
+      -
+    </button>
+    <div
+      class="flex items-center justify-center text-3xl font-bold min-w-[30px]"
+    >
+      5
+    </div>
+    <button
+      class="bg-[var(--color-primary)] hover:brightness-80 active:brightness-60 w-[40px] h-[40px]
+                    text-xl font-bold py-2 px-4 rounded-full cursor-pointer"
+    >
+      +
+    </button>
+  </div>
+</DocumentFragment>
+`;

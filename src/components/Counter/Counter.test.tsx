@@ -4,15 +4,17 @@ import Counter from "./Counter";
 
 describe("Counter", () => {
     test("Should render the default initial value if not provided in props", () => {
-        render(<Counter />);
+        const { asFragment } = render(<Counter />);
 
         expect(screen.getByText("0")).toBeInTheDocument();
+        expect(asFragment()).toMatchSnapshot();
     });
 
     test("Should render the initial value provided in props", () => {
-        render(<Counter initialValue={5} />);
+        const { asFragment } = render(<Counter initialValue={5} />);
 
         expect(screen.getByText("5")).toBeInTheDocument();
+        expect(asFragment()).toMatchSnapshot();
     });
 
     test("Should decrement the displayed value on decrement button click", () => {
