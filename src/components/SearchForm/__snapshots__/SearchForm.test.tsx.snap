@@ -16,12 +16,15 @@ exports[`SearchForm Should render empty input if no initialQuery is provided in 
                     text-lg
                     flex-grow
                 "
+      data-testid="search-input"
       placeholder="What do you want to watch?"
       type="text"
       value=""
     />
     <button
       class="btn ml-3"
+      data-testid="search-button"
+      disabled=""
       type="submit"
     >
       Search
@@ -46,12 +49,14 @@ exports[`SearchForm Should render input with an initial value if initialQuery is
                     text-lg
                     flex-grow
                 "
+      data-testid="search-input"
       placeholder="What do you want to watch?"
       type="text"
-      value="test query"
+      value="movie title"
     />
     <button
       class="btn ml-3"
+      data-testid="search-button"
       type="submit"
     >
       Search

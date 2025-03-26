@@ -12,11 +12,11 @@ describe("SearchForm", () => {
     });
 
     test("Should render input with an initial value if initialQuery is provided in props", () => {
-        const { asFragment } = render(<SearchForm initialQuery="test query" onSearch={onSearchMock} />);
+        const { asFragment } = render(<SearchForm initialQuery={searchText} onSearch={onSearchMock} />);
         const input = screen.getByPlaceholderText(placeholderText);
 
         expect(input).toBeInTheDocument();
-        expect(input).toHaveValue("test query");
+        expect(input).toHaveValue(searchText);
         expect(asFragment()).toMatchSnapshot();
     });
 
@@ -30,7 +30,7 @@ describe("SearchForm", () => {
     });
 
     test("Should update input value when user types text in the input", () => {
-        render(<SearchForm onSearch={() => {}} />);
+        render(<SearchForm onSearch={onSearchMock} />);
         const input = screen.getByPlaceholderText(placeholderText);
 
         fireEvent.change(input, { target: { value: searchText } });
@@ -49,7 +49,7 @@ describe("SearchForm", () => {
         expect(onSearchMock).toHaveBeenCalledWith(searchText);
     });
 
-    test("Should call 'onSearch' prop with input value when Enter key is pressed", () => {
+    test("Should call 'onSearch' prop with input value when Enter key is pressed in the input", () => {
         render(<SearchForm onSearch={onSearchMock} />);
         const input = screen.getByPlaceholderText(placeholderText);
 
@@ -59,7 +59,16 @@ describe("SearchForm", () => {
         expect(onSearchMock).toHaveBeenCalledWith(searchText);
     });
 
-    test("Should not call 'onSearch' prop when a non-Enter key is pressed", () => {
+    test("Should not call 'onSearch' prop when Enter key is pressed in the input if the input value is empty", () => {
+        render(<SearchForm onSearch={onSearchMock} />);
+        const input = screen.getByPlaceholderText(placeholderText);
+
+        fireEvent.keyDown(input, { key: "Enter" });
+
+        expect(onSearchMock).not.toHaveBeenCalled();
+    });
+
+    test("Should not call 'onSearch' prop when a non-Enter key is pressed in the input", () => {
         render(<SearchForm onSearch={onSearchMock} />);
         const input = screen.getByPlaceholderText(placeholderText);
 
