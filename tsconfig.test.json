@@ -1,0 +1,12 @@
+{
+    "extends": "./tsconfig.app.json",
+    "compilerOptions": {
+        "jsx": "react-jsx",
+        "types": ["node", "jest", "@testing-library/jest-dom"],
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true
+    },
+
+    "include": ["**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts", "src/setupTests.ts"],
+    "exclude": ["node_modules", "cypress"]
+}
