@@ -3,6 +3,12 @@ import Counter from "./Counter";
 
 const meta = {
     component: Counter,
+    argTypes: {
+        initialValue: {
+            control: "number",
+            description: "Initial value for the counter",
+        },
+    },
 } satisfies Meta<typeof Counter>;
 
 export default meta;
