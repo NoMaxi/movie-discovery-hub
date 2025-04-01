@@ -26,6 +26,7 @@ const config: Config = {
         "!src/**/*.test.{ts,tsx}",
         "!src/**/*.spec.{ts,tsx}",
         "!src/**/*.cy.{ts,tsx}",
+        "!src/**/*.stories.{js,jsx,ts,tsx}",
         "!src/**/index.{ts,tsx}",
         "!src/types/**",
         "!src/main.tsx",
