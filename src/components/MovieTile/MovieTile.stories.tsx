@@ -15,7 +15,7 @@ const meta = {
         },
         onEdit: {
             action: "editClicked",
-            description: "Callback function triggered on Edit button is click",
+            description: "Callback function triggered on Edit button click",
         },
         onDelete: {
             action: "deleteClicked",

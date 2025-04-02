@@ -62,11 +62,11 @@ const MovieTile = ({ movie, onClick, onEdit, onDelete }: MovieTileProps) => {
                 <div
                     className="
                         movie-tile-context-menu
+                        flex flex-col justify-center
                         absolute top-4 right-14 z-20 w-[190px] h-[auto]
                         bg-[var(--color-background)]
                         rounded shadow-lg
                         overflow-hidden
-                        flex flex-col justify-center
                     "
                     onClick={(e) => e.stopPropagation()}
                 >
