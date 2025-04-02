@@ -18,3 +18,5 @@ export interface MovieDetailsData {
     duration: number;
     description: string;
 }
+
+export type SortOption = "Release Date" | "Title";
