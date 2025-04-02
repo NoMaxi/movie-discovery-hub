@@ -7,3 +7,14 @@ export interface Movie {
     releaseYear: number;
     genres: Genre[];
 }
+
+export interface MovieDetailsData {
+    id: string;
+    imageUrl: string;
+    title: string;
+    releaseYear: number;
+    genres: Genre[];
+    rating: number;
+    duration: number;
+    description: string;
+}
