@@ -1,4 +1,5 @@
-import { render, fireEvent, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
+import userEvent, { UserEvent } from "@testing-library/user-event";
 import "@testing-library/jest-dom";
 import { Movie } from "@/types/common";
 import MovieTile from "./MovieTile";
@@ -14,11 +15,13 @@ describe("MovieTile", () => {
     let onClickMock: jest.Mock;
     let onEditMock: jest.Mock;
     let onDeleteMock: jest.Mock;
+    let user: UserEvent;
 
     beforeEach(() => {
         onClickMock = jest.fn();
         onEditMock = jest.fn();
         onDeleteMock = jest.fn();
+        user = userEvent.setup();
     });
 
     const renderComponent = () => {
@@ -40,47 +43,47 @@ describe("MovieTile", () => {
         expect(asFragment()).toMatchSnapshot();
     });
 
-    test("Should call 'onClick' prop with movie data when tile is clicked", () => {
+    test("Should call 'onClick' prop with movie data when tile is clicked", async () => {
         renderComponent();
         const titleElement = screen.getByText(mockMovie.title);
 
-        fireEvent.click(titleElement);
+        await user.click(titleElement);
 
         expect(onClickMock).toHaveBeenCalledTimes(1);
         expect(onClickMock).toHaveBeenCalledWith(mockMovie);
     });
 
-    test("Should call 'onEdit' prop with movie data when Edit button is clicked", () => {
+    test("Should call 'onEdit' prop with movie data when Edit button is clicked", async () => {
         renderComponent();
         const menuToggleButton = screen.getByText("⋮");
 
-        fireEvent.click(menuToggleButton);
+        await user.click(menuToggleButton);
 
         const editButton = screen.getByText("Edit");
 
-        fireEvent.click(editButton);
+        await user.click(editButton);
 
         expect(screen.queryByText("Edit")).not.toBeInTheDocument();
         expect(onEditMock).toHaveBeenCalledTimes(1);
         expect(onEditMock).toHaveBeenCalledWith(mockMovie);
     });
 
-    test("Should call 'onDelete' prop with movie data when Delete button is clicked", () => {
+    test("Should call 'onDelete' prop with movie data when Delete button is clicked", async () => {
         renderComponent();
         const menuToggleButton = screen.getByText("⋮");
 
-        fireEvent.click(menuToggleButton);
+        await user.click(menuToggleButton);
 
         const deleteButton = screen.getByText("Delete");
 
-        fireEvent.click(deleteButton);
+        await user.click(deleteButton);
 
         expect(screen.queryByText("Delete")).not.toBeInTheDocument();
         expect(onDeleteMock).toHaveBeenCalledTimes(1);
         expect(onDeleteMock).toHaveBeenCalledWith(mockMovie);
     });
 
-    test("Should show context menu when menu toggle button is clicked", () => {
+    test("Should show context menu when menu toggle button is clicked", async () => {
         renderComponent();
 
         expect(screen.queryByText("Edit")).not.toBeInTheDocument();
@@ -88,51 +91,51 @@ describe("MovieTile", () => {
 
         const menuToggleButton = screen.getByText("⋮");
 
-        fireEvent.click(menuToggleButton);
+        await user.click(menuToggleButton);
 
         expect(screen.getByText("Edit")).toBeInTheDocument();
         expect(screen.getByText("Delete")).toBeInTheDocument();
     });
 
-    test("Should close context menu when close button is clicked", () => {
+    test("Should close context menu when close button is clicked", async () => {
         renderComponent();
         const menuToggleButton = screen.getByText("⋮");
 
-        fireEvent.click(menuToggleButton);
+        await user.click(menuToggleButton);
 
         expect(screen.getByText("Edit")).toBeInTheDocument();
 
         const closeButton = screen.getByText("×");
 
-        fireEvent.click(closeButton);
+        await user.click(closeButton);
 
         expect(screen.queryByText("Edit")).not.toBeInTheDocument();
         expect(screen.queryByText("Delete")).not.toBeInTheDocument();
     });
 
-    test("Should close context menu when menu toggle button is clicked while menu is open", () => {
+    test("Should close context menu when menu toggle button is clicked while menu is open", async () => {
         renderComponent();
         const menuToggleButton = screen.getByText("⋮");
 
-        fireEvent.click(menuToggleButton);
+        await user.click(menuToggleButton);
 
         expect(screen.getByText("Edit")).toBeInTheDocument();
 
-        fireEvent.click(menuToggleButton);
+        await user.click(menuToggleButton);
 
         expect(screen.queryByText("Edit")).not.toBeInTheDocument();
     });
 
-    test("Should close context menu and not call 'onClick' prop when tile is clicked while menu is open", () => {
+    test("Should close context menu and not call 'onClick' prop when tile is clicked while menu is open", async () => {
         renderComponent();
         const menuToggleButton = screen.getByText("⋮");
         const titleElement = screen.getByText(mockMovie.title);
 
-        fireEvent.click(menuToggleButton);
+        await user.click(menuToggleButton);
 
         expect(screen.getByText("Edit")).toBeInTheDocument();
 
-        fireEvent.click(titleElement);
+        await user.click(titleElement);
 
         expect(screen.queryByText("Edit")).not.toBeInTheDocument();
         expect(onClickMock).not.toHaveBeenCalled();
