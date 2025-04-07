@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { SortOption } from "@/types/common";
 import SelectArrow from "@/components/common/SelectArrow/SelectArrow";
+import ContextMenu from "@/components/common/ContextMenu/ContextMenu";
 
 interface SortControlProps {
     currentSelection: SortOption;
@@ -20,24 +21,28 @@ const SortControl = ({ currentSelection, onSelectionChange }: SortControlProps) 
         };
 
         if (isOpen) {
-            document.addEventListener("mousedown", handleClickOutside);
+            document.addEventListener("click", handleClickOutside);
         } else {
-            document.removeEventListener("mousedown", handleClickOutside);
+            document.removeEventListener("click", handleClickOutside);
         }
 
         return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
+            document.removeEventListener("click", handleClickOutside);
         };
     }, [isOpen]);
-
-    const handleOptionClick = (option: SortOption) => {
-        onSelectionChange(option);
-        setIsOpen(false);
-    };
 
     const toggleDropdown = () => {
         setIsOpen(!isOpen);
     };
+
+    const closeMenu = () => {
+        setIsOpen(false);
+    };
+
+    const contextMenuActions = options.map((option) => ({
+        label: option,
+        onClick: () => onSelectionChange(option),
+    }));
 
     return (
         <div className="sort-control relative inline-block text-left" ref={controlRef}>
@@ -57,37 +62,16 @@ const SortControl = ({ currentSelection, onSelectionChange }: SortControlProps) 
                 </button>
             </div>
 
-            {isOpen && (
-                <div
-                    className="
-                        sort-control-dropdown
-                        absolute right-0
-                        mt-2 w-48 origin-top-right rounded z-20
-                        bg-[var(--color-background)] ring-1 ring-black shadow-lg
-                        focus:outline-none overflow-hidden
-                    "
-                >
-                    <ul>
-                        {options.map((option) => (
-                            <li key={option}>
-                                <button
-                                    onClick={() => handleOptionClick(option)}
-                                    className={`
-                                        sort-control-option
-                                        block w-full px-4 py-2
-                                        text-left text-[14px] uppercase font-medium
-                                        ${currentSelection === option && "text-[var(--color-primary)]"}
-                                        hover:bg-[var(--color-primary)] hover:text-[var(--color-text)]
-                                        transition-colors duration-150 cursor-pointer
-                                    `}
-                                >
-                                    {option}
-                                </button>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            )}
+            <ContextMenu
+                isOpen={isOpen}
+                onClose={closeMenu}
+                actions={contextMenuActions}
+                className="
+                    sort-control-dropdown
+                    absolute right-0
+                    mt-2 w-48 origin-top-right rounded
+                "
+            />
         </div>
     );
 };

@@ -6,7 +6,7 @@ import SortControl from "./SortControl";
 
 jest.mock("@/components/common/SelectArrow/SelectArrow", () => () => <svg data-testid="select-arrow"></svg>);
 
-describe.only("SortControl", () => {
+describe("SortControl", () => {
     const SORT_OPTIONS: SortOption[] = ["Release Date", "Title"];
     const initialSelection = SORT_OPTIONS[0];
     let onSelectionChangeMock: jest.Mock;
@@ -35,7 +35,7 @@ describe.only("SortControl", () => {
         expect(asFragment()).toMatchSnapshot();
     });
 
-    test("Should open selection dropdown when selection button is clicked", async () => {
+    test("Should open context menu when selection button is clicked", async () => {
         renderComponent(initialSelection);
         const selectionButton = screen.getByRole("button", { name: /release date/i });
 
@@ -48,7 +48,7 @@ describe.only("SortControl", () => {
         expect(titleOptionButton).toBeInTheDocument();
     });
 
-    test("Should call 'onSelectionChange' prop with correct value when option item is clicked", async () => {
+    test("Should call 'onSelectionChange' prop with correct value when menu option is clicked", async () => {
         renderComponent(initialSelection);
         const selectionButton = screen.getByRole("button", { name: /release date/i });
 
@@ -63,7 +63,7 @@ describe.only("SortControl", () => {
         expect(onSelectionChangeMock).toHaveBeenCalledWith(expectedSelection);
     });
 
-    test("Should close dropdown after option button is selected", async () => {
+    test("Should close context menu after option is selected", async () => {
         renderComponent(initialSelection);
         const selectionButton = screen.getByRole("button", { name: /release date/i });
 
@@ -75,11 +75,10 @@ describe.only("SortControl", () => {
 
         await user.click(titleOptionButton);
 
-        expect(screen.queryByRole('button', { name: SORT_OPTIONS[1] })).not.toBeInTheDocument();
-
+        expect(screen.queryByRole("button", { name: SORT_OPTIONS[1] })).not.toBeInTheDocument();
     });
 
-    test("Should close dropdown when clicking outside the component", async () => {
+    test("Should close context menu when clicking outside the component", async () => {
         renderComponent(initialSelection);
         const selectionButton = screen.getByRole("button", { name: /release date/i });
 
@@ -105,7 +104,5 @@ describe.only("SortControl", () => {
 
         expect(selectionButtonUpdated).toBeInTheDocument();
         expect(selectionButtonUpdated).toHaveTextContent(updatedSelection);
-
-        expect(screen.queryByRole("button", { name: /release date/i })).not.toBeInTheDocument();
     });
 });

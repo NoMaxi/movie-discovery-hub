@@ -37,3 +37,14 @@ export const TitleSelected: Story = {
         currentSelection: "Title",
     },
 };
+
+export const OpenedDropdown: Story = {
+    args: {
+        currentSelection: "Release Date",
+    },
+    parameters: {
+        componentState: {
+            isOpen: true,
+        },
+    },
+};
