@@ -5,13 +5,16 @@ const config: StorybookConfig = {
     addons: [
         "@storybook/addon-essentials",
         "@storybook/addon-onboarding",
-        "@storybook/addon-postcss",
         "@chromatic-com/storybook",
         "@storybook/experimental-addon-test",
     ],
     framework: {
         name: "@storybook/react-vite",
         options: {},
+    },
+    async viteFinal(config) {
+        // Merge custom configuration into the default config
+        return config;
     },
 };
 export default config;

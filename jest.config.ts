@@ -28,6 +28,8 @@ const config: Config = {
         "!src/**/*.spec.{ts,tsx}",
         "!src/**/*.cy.{ts,tsx}",
         "!src/**/*.stories.{js,jsx,ts,tsx}",
+        "!src/**/*.mocks.ts",
+        "!src/**/*.mocks.tsx",
         "!src/**/index.{ts,tsx}",
         "!src/types/**",
         "!src/main.tsx",
