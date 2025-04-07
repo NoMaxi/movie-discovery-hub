@@ -1,14 +1,14 @@
 import { useState, useRef, useEffect } from "react";
 import { SortOption } from "@/types/common";
-import SelectArrow from "@/components/common/SelectArrow/SelectArrow";
-import ContextMenu from "@/components/common/ContextMenu/ContextMenu";
+import { SelectArrow } from "@/components/common/SelectArrow/SelectArrow";
+import { ContextMenu } from "@/components/common/ContextMenu/ContextMenu";
 
 interface SortControlProps {
     currentSelection: SortOption;
     onSelectionChange: (newSelection: SortOption) => void;
 }
 
-const SortControl = ({ currentSelection, onSelectionChange }: SortControlProps) => {
+export const SortControl = ({ currentSelection, onSelectionChange }: SortControlProps) => {
     const [isOpen, setIsOpen] = useState(false);
     const controlRef = useRef<HTMLDivElement>(null);
     const options: SortOption[] = ["Release Date", "Title"];
@@ -75,5 +75,3 @@ const SortControl = ({ currentSelection, onSelectionChange }: SortControlProps) 
         </div>
     );
 };
-
-export default SortControl;

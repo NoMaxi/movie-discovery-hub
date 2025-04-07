@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { fn } from "@storybook/test";
-import GenreSelect from "./GenreSelect";
+import { GenreSelect } from "./GenreSelect";
 import { Genre } from "@/types/common";
 
 const ALL_GENRES: Genre[] = ["All", "Comedy", "Crime", "Documentary", "Horror"];

@@ -13,7 +13,7 @@ interface ContextMenuProps {
     withCloseButton?: boolean;
 }
 
-const ContextMenu = ({ isOpen, onClose, actions, className = "", withCloseButton = false }: ContextMenuProps) => {
+export const ContextMenu = ({ isOpen, onClose, actions, className = "", withCloseButton = false }: ContextMenuProps) => {
     if (!isOpen) {
         return null;
     }
@@ -85,5 +85,3 @@ const ContextMenu = ({ isOpen, onClose, actions, className = "", withCloseButton
         </div>
     );
 };
-
-export default ContextMenu;

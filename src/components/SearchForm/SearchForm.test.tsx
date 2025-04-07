@@ -1,6 +1,6 @@
 import { render, fireEvent, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import SearchForm from "./SearchForm";
+import { SearchForm } from "./SearchForm";
 
 describe("SearchForm", () => {
     const placeholderText = "What do you want to watch?";

@@ -2,7 +2,7 @@ import { render, screen, within } from "@testing-library/react";
 import userEvent, { UserEvent } from "@testing-library/user-event";
 import "@testing-library/jest-dom";
 import { Movie } from "@/types/common";
-import MovieTile from "./MovieTile";
+import { MovieTile } from "./MovieTile";
 
 const mockMovie: Movie = {
     id: "1",

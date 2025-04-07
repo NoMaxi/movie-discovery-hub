@@ -1,7 +1,7 @@
 import { render, fireEvent, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { Genre } from "@/types/common";
-import GenreSelect from "./GenreSelect";
+import { GenreSelect } from "./GenreSelect";
 
 describe("GenreSelect", () => {
     const genres: Genre[] = ["Documentary", "Comedy", "Crime"];

@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import React from "react";
 import userEvent, { UserEvent } from "@testing-library/user-event";
 import "@testing-library/jest-dom";
-import ContextMenu from "./ContextMenu";
+import { ContextMenu } from "./ContextMenu";
 
 interface ContextMenuAction {
     label: string;

@@ -5,7 +5,7 @@ interface MovieDetailsProps {
     details: MovieDetailsData;
 }
 
-const MovieDetails = ({
+export const MovieDetails = ({
     details: { description, duration, genres, imageUrl, rating, releaseYear, title },
 }: MovieDetailsProps) => {
     return (
@@ -38,5 +38,3 @@ const MovieDetails = ({
         </div>
     );
 };
-
-export default MovieDetails;

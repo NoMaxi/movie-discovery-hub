@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import SelectArrow from "./SelectArrow";
+import { SelectArrow } from "./SelectArrow";
 
 describe("SelectArrow", () => {
     test("Should render correctly", () => {

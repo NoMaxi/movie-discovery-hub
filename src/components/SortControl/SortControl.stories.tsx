@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { fn } from "@storybook/test";
 import { SortOption } from "@/types/common";
-import SortControl from "./SortControl";
+import { SortControl } from "./SortControl";
 
 const SORT_OPTIONS: SortOption[] = ["Release Date", "Title"];
 

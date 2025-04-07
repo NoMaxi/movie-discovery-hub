@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent, { UserEvent } from "@testing-library/user-event";
 import "@testing-library/jest-dom";
 import { SortOption } from "@/types/common";
-import SortControl from "./SortControl";
+import { SortControl } from "./SortControl";
 
 jest.mock("@/components/common/SelectArrow/SelectArrow", () => () => <svg data-testid="select-arrow"></svg>);
 

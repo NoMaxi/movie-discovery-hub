@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import MovieDetails from "./MovieDetails";
+import { MovieDetails } from "./MovieDetails";
 import { mockMovieDetails } from "./MovieDetails.mocks";
 
 const meta = {
@@ -27,4 +27,3 @@ export const ZeroDurationMovie: Story = {
         details: { ...mockMovieDetails, duration: 0 },
     },
 };
-

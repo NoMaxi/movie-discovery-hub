@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { fn } from "@storybook/test";
-import ContextMenu from "./ContextMenu";
+import { ContextMenu } from "./ContextMenu";
 
 interface ContextMenuAction {
     label: string;

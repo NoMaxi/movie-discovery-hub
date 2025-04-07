@@ -1,6 +1,6 @@
 import { MouseEvent, useMemo, useState } from "react";
 import { Movie } from "@/types/common";
-import ContextMenu from "@/components/common/ContextMenu/ContextMenu";
+import { ContextMenu } from "@/components/common/ContextMenu/ContextMenu";
 
 interface MovieTileProps {
     movie: Movie;
@@ -9,7 +9,7 @@ interface MovieTileProps {
     onDelete: (movie: Movie) => void;
 }
 
-const MovieTile = ({ movie, onClick, onEdit, onDelete }: MovieTileProps) => {
+export const MovieTile = ({ movie, onClick, onEdit, onDelete }: MovieTileProps) => {
     const [isContextMenuOpen, setIsContextMenuOpen] = useState(false);
 
     const handleMenuToggle = (e: MouseEvent) => {
@@ -81,5 +81,3 @@ const MovieTile = ({ movie, onClick, onEdit, onDelete }: MovieTileProps) => {
         </div>
     );
 };
-
-export default MovieTile;
