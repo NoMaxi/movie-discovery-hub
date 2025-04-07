@@ -1,0 +1,113 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ContextMenu Should render correctly with close button when 'withCloseButton' is true: with-close-button 1`] = `
+<DocumentFragment>
+  <div
+    class="
+                context-menu
+                absolute z-20 min-w-[100px]
+                flex flex-col justify-center
+                bg-[var(--color-background)]
+                ring-1 ring-black shadow-lg rounded
+                overflow-hidden
+                
+            "
+    data-testid="context-menu"
+  >
+    <button
+      class="
+                    context-menu-close-button
+                    absolute top-1 right-2
+                    text-xl leading-none text-[var(--color-gray-lighter)]
+                    hover:text-[var(--color-text)]
+                    cursor-pointer
+                "
+      data-testid="context-menu-close-button"
+    >
+      ×
+    </button>
+    <ul>
+      <li>
+        <button
+          class="
+                                context-menu-edit-button
+                                block w-full text-left px-4 py-2
+                                text-base text-[var(--color-text)]
+                                hover:bg-[var(--color-primary)]
+                                transition-colors duration-150
+                                cursor-pointer
+                            "
+          data-testid="context-menu-edit-button"
+        >
+          Edit
+        </button>
+      </li>
+      <li>
+        <button
+          class="
+                                context-menu-delete-button
+                                block w-full text-left px-4 py-2
+                                text-base text-[var(--color-text)]
+                                hover:bg-[var(--color-primary)]
+                                transition-colors duration-150
+                                cursor-pointer
+                            "
+          data-testid="context-menu-delete-button"
+        >
+          Delete
+        </button>
+      </li>
+    </ul>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`ContextMenu Should render correctly without close button by default when 'isOpen' is true: without-close-button 1`] = `
+<DocumentFragment>
+  <div
+    class="
+                context-menu
+                absolute z-20 min-w-[100px]
+                flex flex-col justify-center
+                bg-[var(--color-background)]
+                ring-1 ring-black shadow-lg rounded
+                overflow-hidden
+                custom-class
+            "
+    data-testid="context-menu"
+  >
+    <ul>
+      <li>
+        <button
+          class="
+                                context-menu-edit-button
+                                block w-full text-left px-4 py-2
+                                text-base text-[var(--color-text)]
+                                hover:bg-[var(--color-primary)]
+                                transition-colors duration-150
+                                cursor-pointer
+                            "
+          data-testid="context-menu-edit-button"
+        >
+          Edit
+        </button>
+      </li>
+      <li>
+        <button
+          class="
+                                context-menu-delete-button
+                                block w-full text-left px-4 py-2
+                                text-base text-[var(--color-text)]
+                                hover:bg-[var(--color-primary)]
+                                transition-colors duration-150
+                                cursor-pointer
+                            "
+          data-testid="context-menu-delete-button"
+        >
+          Delete
+        </button>
+      </li>
+    </ul>
+  </div>
+</DocumentFragment>
+`;
