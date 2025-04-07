@@ -6,7 +6,7 @@ interface GenreSelectProps {
     onSelect: (genre: Genre) => void;
 }
 
-const GenreSelect = ({ genres, selectedGenre, onSelect }: GenreSelectProps) => (
+export const GenreSelect = ({ genres, selectedGenre, onSelect }: GenreSelectProps) => (
     <div className="flex flex-wrap gap-x-8 h-14">
         {genres.map((genre) => (
             <div
@@ -47,5 +47,3 @@ const GenreSelect = ({ genres, selectedGenre, onSelect }: GenreSelectProps) => (
         ))}
     </div>
 );
-
-export default GenreSelect;

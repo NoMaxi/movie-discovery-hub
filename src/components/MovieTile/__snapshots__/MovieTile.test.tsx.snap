@@ -1,0 +1,53 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MovieTile Should render movie tile with correct data and no context menu initially 1`] = `
+<DocumentFragment>
+  <div
+    class="movie-tile relative group w-[320px] text-[var(--color-text)] cursor-pointer "
+  >
+    <button
+      class="
+                    movie-tile-menu-toggle
+                    flex items-center justify-center
+                    absolute top-4 right-4 z-10 w-9 h-9
+                    bg-[var(--color-gray)] bg-opacity-80 rounded-full
+                    text-[var(--color-text)] text-2xl font-bold leading-none
+                    opacity-0 group-hover:opacity-100 transition-opacity duration-200
+                    cursor-pointer
+                    false
+                "
+      data-testid="movie-tile-menu-toggle"
+    >
+      ⋮
+    </button>
+    <img
+      alt="Test Movie Title poster"
+      class="w-full h-[455px] object-cover mb-4"
+      src="https://upload.wikimedia.org/wikipedia/en/3/3b/Pulp_Fiction_%281994%29_poster.jpg"
+    />
+    <div
+      class="flex justify-between items-start mb-1"
+    >
+      <h3
+        class="text-[18px] font-medium text-[var(--color-gray-lighter)] pr-2"
+      >
+        Test Movie Title
+      </h3>
+      <span
+        class="
+                        flex-shrink-0
+                        border border-[var(--color-gray-light)] px-3 py-1 rounded
+                        text-[14px] font-medium text-[var(--color-gray-lighter)]
+                    "
+      >
+        1994
+      </span>
+    </div>
+    <p
+      class="text-[14px] text-[var(--color-gray-light)]"
+    >
+      Comedy, Horror
+    </p>
+  </div>
+</DocumentFragment>
+`;

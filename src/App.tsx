@@ -2,11 +2,11 @@ import { useState } from "react";
 import "@/App.css";
 import { Genre } from "@/types/common";
 import { genres } from "@/constants";
-import Counter from "@/components/Counter/Counter";
-import SearchForm from "@/components/SearchForm/SearchForm";
-import GenreSelect from "@/components/GenreSelect/GenreSelect";
+import { Counter } from "@/components/Counter/Counter";
+import { SearchForm } from "@/components/SearchForm/SearchForm";
+import { GenreSelect } from "@/components/GenreSelect/GenreSelect";
 
-const App = () => {
+export const App = () => {
     const [selectedGenre, setSelectedGenre] = useState<Genre>("All");
 
     const handleGenreSelect = (genre: Genre) => {
@@ -26,5 +26,3 @@ const App = () => {
         </div>
     );
 };
-
-export default App;

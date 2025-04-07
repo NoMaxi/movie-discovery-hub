@@ -1,6 +1,6 @@
 import { render, fireEvent, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import Counter from "./Counter";
+import { Counter } from "./Counter";
 
 describe("Counter", () => {
     test("Should render the default initial value if not provided in props", () => {

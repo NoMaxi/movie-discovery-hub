@@ -8,7 +8,7 @@ interface CounterState {
     count: number;
 }
 
-class Counter extends React.Component<CounterProps, CounterState> {
+export class Counter extends React.Component<CounterProps, CounterState> {
     state: CounterState = {
         count: this.props.initialValue ?? 0,
     };
@@ -61,5 +61,3 @@ class Counter extends React.Component<CounterProps, CounterState> {
         );
     }
 }
-
-export default Counter;

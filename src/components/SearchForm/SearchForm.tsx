@@ -5,7 +5,7 @@ interface SearchFormProps {
     initialQuery?: string;
 }
 
-const SearchForm = ({ initialQuery = "", onSearch }: SearchFormProps) => {
+export const SearchForm = ({ initialQuery = "", onSearch }: SearchFormProps) => {
     const [query, setQuery] = useState(initialQuery);
 
     const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -52,5 +52,3 @@ const SearchForm = ({ initialQuery = "", onSearch }: SearchFormProps) => {
         </form>
     );
 };
-
-export default SearchForm;

@@ -13,6 +13,7 @@ const config: Config = {
     },
     moduleNameMapper: {
         "\\.(css|less|scss|sass)$": "identity-obj-proxy",
+        "^@/(.*)$": "<rootDir>/src/$1",
     },
 
     // Coverage
@@ -26,6 +27,9 @@ const config: Config = {
         "!src/**/*.test.{ts,tsx}",
         "!src/**/*.spec.{ts,tsx}",
         "!src/**/*.cy.{ts,tsx}",
+        "!src/**/*.stories.{js,jsx,ts,tsx}",
+        "!src/**/*.mocks.ts",
+        "!src/**/*.mocks.tsx",
         "!src/**/index.{ts,tsx}",
         "!src/types/**",
         "!src/main.tsx",
