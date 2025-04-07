@@ -10,15 +10,12 @@ const meta = {
             description: "Movie data object",
         },
         onClick: {
-            action: "tileClicked",
             description: "Callback function triggered on tile click",
         },
         onEdit: {
-            action: "editClicked",
             description: "Callback function triggered on Edit button click",
         },
         onDelete: {
-            action: "deleteClicked",
             description: "Callback function triggered on Delete button click",
         },
     },
