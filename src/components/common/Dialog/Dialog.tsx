@@ -66,7 +66,9 @@ export const Dialog = ({ title, children, onClose, className = "" }: DialogProps
                     >
                         <span className="sr-only">Close</span>
                     </button>
-                    <div className={`dialog-body flex-grow ${!title ? "pt-0" : ""}`}>{children}</div>
+                    <div data-testid="dialog-body" className={`dialog-body flex-grow ${!title ? "pt-0" : ""}`}>
+                        {children}
+                    </div>
                 </div>
             </div>
         </FocusTrap>
