@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { SortOption } from "@/types/common";
-import { SelectArrow } from "@/components/common/SelectArrow/SelectArrow";
+import SelectArrow from "@/components/common/SelectArrow/SelectArrow";
 import { ContextMenu } from "@/components/common/ContextMenu/ContextMenu";
 
 interface SortControlProps {
