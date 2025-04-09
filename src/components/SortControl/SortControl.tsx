@@ -1,5 +1,6 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { SortOption } from "@/types/common";
+import { useClickOutside } from "@/hooks/useClickOutside/useClickOutside";
 import SelectArrow from "@/components/common/SelectArrow/SelectArrow";
 import { ContextMenu } from "@/components/common/ContextMenu/ContextMenu";
 
@@ -13,23 +14,7 @@ export const SortControl = ({ currentSelection, onSelectionChange }: SortControl
     const controlRef = useRef<HTMLDivElement>(null);
     const options: SortOption[] = ["Release Date", "Title"];
 
-    useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (controlRef.current && !controlRef.current.contains(event.target as Node)) {
-                setIsOpen(false);
-            }
-        };
-
-        if (isOpen) {
-            document.addEventListener("click", handleClickOutside);
-        } else {
-            document.removeEventListener("click", handleClickOutside);
-        }
-
-        return () => {
-            document.removeEventListener("click", handleClickOutside);
-        };
-    }, [isOpen]);
+    useClickOutside(controlRef, () => setIsOpen(false), isOpen);
 
     const toggleDropdown = () => {
         setIsOpen(!isOpen);

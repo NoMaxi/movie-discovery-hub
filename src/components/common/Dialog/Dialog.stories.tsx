@@ -89,7 +89,7 @@ export const WithComplexBody: Story = {
                 }}
             >
                 <div className="mb-4">
-                    <label htmlFor="item-name" className="block mb-2 text-[var(--color-text)]">
+                    <label htmlFor="item-name" className="form-label block mb-2 text-[var(--color-text)]">
                         Item Name
                     </label>
                     <input
@@ -104,7 +104,7 @@ export const WithComplexBody: Story = {
                     />
                 </div>
                 <div className="mb-4">
-                    <label htmlFor="item-desc" className="block mb-2 text-[var(--color-text)]">
+                    <label htmlFor="item-desc" className="form-label block mb-2 text-[var(--color-text)]">
                         Description
                     </label>
                     <textarea
@@ -119,15 +119,7 @@ export const WithComplexBody: Story = {
                     ></textarea>
                 </div>
                 <div className="text-right mt-6">
-                    <button
-                        type="reset"
-                        className="
-                            h-[57px] min-w-[180px] mr-5
-                            border-none rounded cursor-pointer
-                            bg-[var(--color-gray-lighter)] hover:brightness-80
-                            transition-all duration-300
-                        "
-                    >
+                    <button type="reset" className="btn btn-outline mr-5">
                         Reset
                     </button>
                     <button type="submit" className="btn">
