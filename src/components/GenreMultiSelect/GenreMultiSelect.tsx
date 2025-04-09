@@ -1,7 +1,7 @@
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { Genre } from "@/types/common";
-import SelectArrow from "@/components/common/SelectArrow/SelectArrow";
 import { useClickOutside } from "@/hooks/useClickOutside/useClickOutside";
+import SelectArrow from "@/components/common/SelectArrow/SelectArrow";
 
 const AVAILABLE_GENRES: Exclude<Genre, "All">[] = ["Comedy", "Crime", "Documentary", "Horror"];
 
@@ -32,38 +32,29 @@ export const GenreMultiSelect = forwardRef<GenreSelectRef, GenreSelectProps>(
 
         const toggleDropdown = () => setIsOpen(!isOpen);
 
-        const handleCheckboxChange = useCallback(
-            (genre: Genre, isChecked: boolean) => {
-                setSelectedGenres((prevSelected) => {
-                    const newSelected = new Set(prevSelected);
-                    if (isChecked) {
-                        newSelected.add(genre);
-                    } else {
-                        newSelected.delete(genre);
-                    }
+        const handleCheckboxChange = useCallback((genre: Genre, isChecked: boolean) => {
+            setSelectedGenres((prevSelected) => {
+                const newSelected = new Set(prevSelected);
+                if (isChecked) {
+                    newSelected.add(genre);
+                } else {
+                    newSelected.delete(genre);
+                }
 
-                    const genresArray = Array.from(newSelected);
-                    if (hiddenInputRef.current) {
-                        hiddenInputRef.current.value = genresArray.join(",");
-                    }
+                const genresArray = Array.from(newSelected);
+                if (hiddenInputRef.current) {
+                    hiddenInputRef.current.value = genresArray.join(",");
+                }
 
-                    return newSelected;
-                });
-            },
-            [],
-        );
+                return newSelected;
+            });
+        }, []);
 
         const reset = useCallback(() => {
             setSelectedGenres(new Set(initialGenres));
         }, [initialGenres]);
 
-        useImperativeHandle(
-            ref,
-            () => ({
-                reset,
-            }),
-            [reset],
-        );
+        useImperativeHandle(ref, () => ({ reset }), [reset]);
 
         const areGenresSelected = selectedGenres.size > 0;
         const displayValue = selectedGenres.size > 0 ? Array.from(selectedGenres).join(", ") : "Select Genre";

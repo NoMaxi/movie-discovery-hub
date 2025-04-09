@@ -19,4 +19,8 @@ export interface MovieDetailsData {
     description: string;
 }
 
+export interface InitialMovieInfo extends Omit<MovieDetailsData, "releaseYear"> {
+    releaseDate?: string;
+}
+
 export type SortOption = "Release Date" | "Title";
