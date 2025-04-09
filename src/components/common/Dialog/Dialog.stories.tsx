@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { fn } from "@storybook/test";
+import { mockMovieInfo } from "@/mocks/MovieData";
+import { MovieForm } from "@/components/MovieForm/MovieForm";
 import { Dialog } from "./Dialog";
 
 const meta = {
@@ -37,21 +39,21 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const WithStringTitle: Story = {
+export const StringTitle: Story = {
     args: {
         title: "Default Dialog Title",
         children: <p>This is the default body content for the dialog. You can put any JSX here.</p>,
     },
 };
 
-export const WithEmptyStringTitle: Story = {
+export const EmptyStringTitle: Story = {
     args: {
         title: "",
         children: <p>This is the default body content for the dialog. You can put any JSX here.</p>,
     },
 };
 
-export const WithJSXTitle: Story = {
+export const JSXTitle: Story = {
     args: {
         title: (
             <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
@@ -70,7 +72,7 @@ export const WithJSXTitle: Story = {
     },
 };
 
-export const WithComplexBody: Story = {
+export const ComplexChildren: Story = {
     parameters: {
         layout: "fullscreen",
         docs: {
@@ -132,19 +134,19 @@ export const WithComplexBody: Story = {
     },
 };
 
-export const WithLongContent: Story = {
+export const LongContent: Story = {
     parameters: {
         docs: {
             story: {
                 inline: false,
-                iframeHeight: 600,
+                iframeHeight: 700,
             },
         },
     },
     args: {
-        title: "Dialog With Scrollable Content",
+        title: "Dialog Scrollable Content",
         children: (
-            <div>
+            <div className="overflow-y-auto">
                 <p>
                     This dialog contains a lot of content to demonstrate the vertical scrolling behavior when the
                     content exceeds the maximum height defined by `max-h-[90vh]` and `overflow-y-auto`.
@@ -161,15 +163,15 @@ export const WithLongContent: Story = {
                 ))}
             </div>
         ),
+        className: "max-h-[90vh]",
     },
 };
 
-export const WithCustomClasses: Story = {
+export const CustomClasses: Story = {
     parameters: {
         docs: {
             story: {
-                inline: false,
-                iframeHeight: 600,
+                iframeHeight: 700,
             },
         },
     },
@@ -183,5 +185,59 @@ export const WithCustomClasses: Story = {
         ),
         className:
             "max-w-[500px] h-[600px] ring-4 ring-offset-4 ring-indigo-500 text-[var(--color-text-light)] rounded-lg shadow-lg",
+    },
+};
+
+export const AddMovieForm: Story = {
+    parameters: {
+        docs: {
+            story: {
+                iframeHeight: 950,
+            },
+        },
+    },
+    args: {
+        title: "ADD MOVIE",
+        children: <MovieForm onSubmit={fn().mockName("movieFormSubmit")} />,
+    },
+};
+
+export const EditMovieForm: Story = {
+    parameters: {
+        docs: {
+            story: {
+                iframeHeight: 950,
+            },
+        },
+    },
+    args: {
+        title: "EDIT MOVIE",
+        children: <MovieForm initialMovieInfo={mockMovieInfo} onSubmit={fn().mockName("movieFormSubmit")} />,
+    },
+};
+
+export const DeleteConfirmation: Story = {
+    parameters: {
+        docs: {
+            story: {
+                iframeHeight: 500,
+            },
+        },
+    },
+    args: {
+        title: "DELETE MOVIE",
+        children: (
+            <div className="flex flex-col">
+                <p className="text-[var(--color-text)] opacity-80 mb-16 text-left text-2xl">
+                    Are you sure you want to delete this movie?
+                </p>
+                <div className="flex justify-end">
+                    <button type="button" className="btn" onClick={fn().mockName("confirmDeleteClick")}>
+                        Confirm
+                    </button>
+                </div>
+            </div>
+        ),
+        className: "max-w-[686px]",
     },
 };

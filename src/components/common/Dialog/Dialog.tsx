@@ -30,7 +30,7 @@ export const Dialog = ({ title, children, onClose, className = "" }: DialogProps
                     data-testid="dialog-content"
                     className={`
                         dialog-content
-                        relative flex flex-col w-full max-h-[90vh] p-[60px]
+                        relative flex flex-col w-full p-[60px]
                         bg-[var(--color-background)] rounded-md shadow-2xl
                         overflow-y-auto
                         ${className}

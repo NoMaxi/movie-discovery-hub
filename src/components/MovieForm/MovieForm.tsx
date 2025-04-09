@@ -64,7 +64,7 @@ export const MovieForm = ({ initialMovieInfo = {}, onSubmit }: MovieFormProps) =
 
     return (
         <form ref={formRef} onSubmit={handleSubmit} onReset={handleReset} noValidate>
-            <div className="grid grid-cols-3 gap-x-6 gap-y-4">
+            <div className="grid grid-cols-3 gap-x-6 gap-y-6">
                 <div className="col-span-2">
                     <label htmlFor="title" className="form-label">
                         Title
