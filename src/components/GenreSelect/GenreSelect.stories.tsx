@@ -1,7 +1,8 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import { Meta, StoryFn, StoryObj } from "@storybook/react";
 import { fn } from "@storybook/test";
 import { GenreSelect } from "./GenreSelect";
 import { Genre } from "@/types/common";
+import { useState } from "react";
 
 const ALL_GENRES: Genre[] = ["All", "Comedy", "Crime", "Documentary", "Horror"];
 
@@ -36,4 +37,10 @@ export const Default: Story = {
         genres: ALL_GENRES,
         selectedGenre: "Comedy",
     },
+};
+
+export const Interactive: StoryFn<typeof GenreSelect> = () => {
+    const [selectedGenre, setSelectedGenre] = useState<Genre>("All");
+
+    return <GenreSelect genres={ALL_GENRES} selectedGenre={selectedGenre} onSelect={setSelectedGenre} />;
 };
