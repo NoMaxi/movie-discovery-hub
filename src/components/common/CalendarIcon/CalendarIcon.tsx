@@ -8,6 +8,7 @@ export const CalendarIcon = (props: React.SVGProps<SVGSVGElement>) => (
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         aria-hidden="true"
+        role="img"
         {...props}
     >
         <path
