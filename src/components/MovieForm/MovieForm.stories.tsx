@@ -4,6 +4,7 @@ import { InitialMovieInfo } from "@/types/common";
 import { MovieForm } from "./MovieForm";
 
 const meta = {
+    title: "Components/MovieForm",
     component: MovieForm,
     argTypes: {
         initialMovieInfo: {

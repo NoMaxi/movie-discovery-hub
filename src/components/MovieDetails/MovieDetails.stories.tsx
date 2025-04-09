@@ -3,6 +3,7 @@ import { MovieDetails } from "./MovieDetails";
 import { mockMovieDetails } from "./MovieDetails.mocks";
 
 const meta = {
+    title: "Components/MovieDetails",
     component: MovieDetails,
     argTypes: {
         details: {

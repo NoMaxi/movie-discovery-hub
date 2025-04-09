@@ -3,6 +3,7 @@ import { fn } from "@storybook/test";
 import { SearchForm } from "./SearchForm";
 
 const meta = {
+    title: "Components/SearchForm",
     component: SearchForm,
     argTypes: {
         initialQuery: {

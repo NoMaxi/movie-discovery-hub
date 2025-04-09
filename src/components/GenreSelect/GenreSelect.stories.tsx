@@ -6,6 +6,7 @@ import { Genre } from "@/types/common";
 const ALL_GENRES: Genre[] = ["All", "Comedy", "Crime", "Documentary", "Horror"];
 
 const meta = {
+    title: "Components/GenreSelect",
     component: GenreSelect,
     argTypes: {
         genres: {

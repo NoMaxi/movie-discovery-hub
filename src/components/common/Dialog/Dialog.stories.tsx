@@ -3,6 +3,7 @@ import { fn } from "@storybook/test";
 import { Dialog } from "./Dialog";
 
 const meta = {
+    title: "Common/Dialog",
     component: Dialog,
     argTypes: {
         title: {

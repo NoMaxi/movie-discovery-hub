@@ -6,6 +6,7 @@ import { SortControl } from "./SortControl";
 const SORT_OPTIONS: SortOption[] = ["Release Date", "Title"];
 
 const meta = {
+    title: "Components/SortControl",
     component: SortControl,
     argTypes: {
         currentSelection: {
