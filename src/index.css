@@ -1,12 +1,12 @@
 @import "tailwindcss";
 
 :root {
-    --color-primary: #F65261;
+    --color-primary: #f65261;
     --color-background: #232323;
-    --color-text: #FFFFFF;
+    --color-text: #ffffff;
     --color-gray: #424242;
     --color-gray-light: #555555;
-    --color-gray-lighter: #AAAAAA;
+    --color-gray-lighter: #aaaaaa;
 }
 
 body {
@@ -17,6 +17,7 @@ body {
 }
 
 .btn {
+    @apply inline-flex items-center justify-center;
     background-color: var(--color-primary);
     border: none;
     border-radius: 4px;
@@ -28,17 +29,19 @@ body {
     padding: 0 20px;
     text-transform: uppercase;
     transition: filter 0.3s ease;
+    color: var(--color-text);
 
     &:not(:disabled):hover {
-        filter: brightness(0.8)
+        filter: brightness(0.8);
     }
 
     &:not(:disabled):active {
-        filter: brightness(0.6)
+        filter: brightness(0.6);
     }
 
     &:focus {
         outline: none;
+        @apply ring-2 ring-[var(--color-primary)] ring-offset-2 ring-offset-[var(--color-background)];
     }
 
     &:disabled {
@@ -48,8 +51,75 @@ body {
     }
 }
 
+.btn-outline {
+    background-color: transparent;
+    border: 2px solid var(--color-primary);
+    color: var(--color-primary);
+
+    &:not(:disabled):hover {
+        background-color: var(--color-primary);
+        color: var(--color-text);
+        filter: brightness(0.8);
+        transition:
+            background-color 0.3s ease,
+            color 0.3s ease;
+    }
+
+    &:not(:disabled):active {
+        filter: brightness(0.6);
+    }
+}
+
 .input-field {
-    @apply focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent transition-all duration-200;
-    background-color: var(--color-gray);
+    @apply w-full px-6 py-3 rounded-md
+    border border-transparent
+    bg-[var(--color-gray)]
+    text-[var(--color-text)]
+    placeholder:text-[var(--color-text)] placeholder:opacity-30
+    focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent
+    transition-all duration-300;
     height: 57px;
+}
+
+input[type="date"].input-field {
+    position: relative;
+    color-scheme: dark;
+    padding-right: 2.5rem;
+}
+
+input[type="date"].input-field::-webkit-calendar-picker-indicator {
+    display: none;
+    -webkit-appearance: none;
+}
+
+input[type="date"].input-field:required:invalid,
+input[type="date"].input-field:placeholder-shown {
+    color: rgba(255, 255, 255, 0.3)
+}
+
+input[type="date"].input-field:valid {
+    color: var(--color-text);
+}
+
+.form-checkbox {
+    @apply relative appearance-none w-4 h-4
+    border-2 border-[var(--color-gray-lighter)] rounded-sm
+    bg-[var(--color-background)]
+    checked:bg-[var(--color-primary)]
+    checked:border-transparent
+    focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-[var(--color-primary)]
+    cursor-pointer;
+}
+
+.form-checkbox:checked::after {
+    @apply block w-1.5 h-3
+    border-solid border-white border-r-[3px] border-b-[3px]
+    transform rotate-45 translate-x-[3px] translate-y-[0px];
+    content: "";
+}
+
+.form-label {
+    @apply block mb-2
+    uppercase text-[var(--color-primary)] opacity-80
+    font-semibold tracking-wide;
 }
