@@ -1,4 +1,4 @@
-import { MovieDetailsData } from "@/types/common";
+import { InitialMovieInfo, MovieDetailsData } from "@/types/common";
 
 export const mockMovieDetails: MovieDetailsData = {
     id: "1",
@@ -21,4 +21,9 @@ export const alternativeMovieDetails: MovieDetailsData = {
     rating: 7.9,
     duration: 59.5,
     description: "The greatest movie in history of cinema.",
+};
+
+export const mockMovieInfo: InitialMovieInfo = {
+    ...mockMovieDetails,
+    releaseDate: "1994-10-14",
 };

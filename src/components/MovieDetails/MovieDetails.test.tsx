@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { formatDuration } from "@/utils/formatting";
 import { MovieDetailsData } from "@/types/common";
-import { mockMovieDetails, alternativeMovieDetails } from "./MovieDetails.mocks";
+import { mockMovieDetails, alternativeMovieDetails } from "@/mocks/MovieData";
 import { MovieDetails } from "./MovieDetails";
 
 describe("MovieDetails", () => {
@@ -40,4 +40,3 @@ describe("MovieDetails", () => {
         expect(asFragment()).toMatchSnapshot();
     });
 });
-
