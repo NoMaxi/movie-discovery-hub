@@ -9,13 +9,13 @@ export const useClickOutside = (ref: RefObject<HTMLElement | null>, handler: () 
         };
 
         if (isActive) {
-            document.addEventListener("click", handleClickOutside);
+            document.addEventListener("click", handleClickOutside, true);
         } else {
-            document.removeEventListener("click", handleClickOutside);
+            document.removeEventListener("click", handleClickOutside, true);
         }
 
         return () => {
-            document.removeEventListener("click", handleClickOutside);
+            document.removeEventListener("click", handleClickOutside, true);
         };
     }, [ref, handler, isActive]);
 };
