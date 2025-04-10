@@ -2,7 +2,6 @@ import { FormEvent, useRef, useState } from "react";
 import { Genre, InitialMovieInfo } from "@/types/common";
 import { CalendarIcon } from "@/components/common/CalendarIcon/CalendarIcon";
 import { GenreMultiSelect, GenreSelectRef } from "@/components/GenreMultiSelect/GenreMultiSelect";
-import { genres } from "@/constants";
 
 interface MovieFormProps {
     initialMovieInfo?: Partial<InitialMovieInfo>;
@@ -35,7 +34,7 @@ export const MovieForm = ({ initialMovieInfo = {}, onSubmit }: MovieFormProps) =
             ? ((formData.genres as string).split(",").filter(Boolean) as Genre[])
             : [];
 
-        if (genres.length === 0) {
+        if (selectedGenres.length === 0) {
             setGenreError("Select at least one genre to proceed");
             return;
         }
