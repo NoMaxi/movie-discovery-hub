@@ -43,7 +43,9 @@ export const SortControl = ({ currentSelection, onSelectionChange }: SortControl
                     onClick={toggleDropdown}
                 >
                     {currentSelection}
-                    <SelectArrow />
+                    <span className={`transform transition-transform ${isOpen ? "rotate-180" : "rotate-0"}`}>
+                        <SelectArrow />
+                    </span>
                 </button>
             </div>
 
