@@ -1,0 +1,81 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`GenreMultiSelect Should render correctly with default props and no preselected genres 1`] = `
+<DocumentFragment>
+  <div
+    class="genre-select relative"
+  >
+    <button
+      aria-expanded="false"
+      aria-haspopup="listbox"
+      class="
+                        input-field relative flex items-center justify-between w-full
+                        text-left text-[var(--color-primary)] font-normal opacity-80
+                        cursor-pointer
+                    "
+      id="genre-select"
+      type="button"
+    >
+      <span
+        class="truncate text-[var(--color-text)] opacity-30"
+      >
+        Select Genre
+      </span>
+      <span
+        class="transform transition-transform rotate-0"
+      >
+        <svg
+          class="w-4 h-4"
+          data-testid="select-arrow"
+        />
+      </span>
+    </button>
+    <input
+      data-testid="hidden-input-genres"
+      name="genres"
+      type="hidden"
+      value=""
+    />
+  </div>
+</DocumentFragment>
+`;
+
+exports[`GenreMultiSelect Should render correctly with preselected genres 1`] = `
+<DocumentFragment>
+  <div
+    class="genre-select relative"
+  >
+    <button
+      aria-expanded="false"
+      aria-haspopup="listbox"
+      class="
+                        input-field relative flex items-center justify-between w-full
+                        text-left text-[var(--color-primary)] font-normal opacity-80
+                        cursor-pointer
+                    "
+      id="genre-select"
+      type="button"
+    >
+      <span
+        class="truncate text-[var(--color-text)]"
+      >
+        Comedy, Horror
+      </span>
+      <span
+        class="transform transition-transform rotate-0"
+      >
+        <svg
+          class="w-4 h-4"
+          data-testid="select-arrow"
+        />
+      </span>
+    </button>
+    <input
+      data-testid="hidden-input-genres"
+      name="genres"
+      type="hidden"
+      value="Comedy, Horror"
+    />
+  </div>
+</DocumentFragment>
+`;

@@ -1,38 +1,37 @@
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
-import { Genre } from "@/types/common";
+import { SelectableGenre } from "@/types/common";
+import { SELECTABLE_GENRES } from "@/constants";
 import { useClickOutside } from "@/hooks/useClickOutside/useClickOutside";
 import SelectArrow from "@/components/common/SelectArrow/SelectArrow";
 
-const AVAILABLE_GENRES: Exclude<Genre, "All">[] = ["Comedy", "Crime", "Documentary", "Horror"];
-
-interface GenreSelectProps {
+export interface GenreMultiSelectProps {
     id: string;
     name: string;
-    initialGenres?: Genre[];
+    preselectedGenres?: SelectableGenre[];
     ariaDescribedby?: string;
 }
 
-export interface GenreSelectRef {
+export interface GenreMultiSelectRef {
     reset: () => void;
 }
 
-export const GenreMultiSelect = forwardRef<GenreSelectRef, GenreSelectProps>(
-    ({ initialGenres = [], id, name, ariaDescribedby }, ref) => {
+export const GenreMultiSelect = forwardRef<GenreMultiSelectRef, GenreMultiSelectProps>(
+    ({ preselectedGenres = [], id, name, ariaDescribedby }, ref) => {
         const [isOpen, setIsOpen] = useState(false);
-        const [selectedGenres, setSelectedGenres] = useState<Set<Genre>>(new Set(initialGenres));
-        const [hiddenValue, setHiddenValue] = useState(initialGenres.join(","));
+        const [selectedGenres, setSelectedGenres] = useState<Set<SelectableGenre>>(new Set(preselectedGenres));
+        const [hiddenValue, setHiddenValue] = useState(preselectedGenres.join(", "));
         const controlRef = useRef<HTMLDivElement>(null);
         const hiddenInputRef = useRef<HTMLInputElement>(null);
 
         useEffect(() => {
-            setHiddenValue(Array.from(selectedGenres).join(","));
+            setHiddenValue(Array.from(selectedGenres).join(", "));
         }, [selectedGenres]);
 
         useClickOutside(controlRef, () => setIsOpen(false), isOpen);
 
         const toggleDropdown = () => setIsOpen(!isOpen);
 
-        const handleCheckboxChange = useCallback((genre: Genre, isChecked: boolean) => {
+        const handleCheckboxChange = useCallback((genre: SelectableGenre, isChecked: boolean) => {
             setSelectedGenres((prevSelected) => {
                 const newSelected = new Set(prevSelected);
                 if (isChecked) {
@@ -43,7 +42,7 @@ export const GenreMultiSelect = forwardRef<GenreSelectRef, GenreSelectProps>(
 
                 const genresArray = Array.from(newSelected);
                 if (hiddenInputRef.current) {
-                    hiddenInputRef.current.value = genresArray.join(",");
+                    hiddenInputRef.current.value = genresArray.join(", ");
                 }
 
                 return newSelected;
@@ -51,8 +50,8 @@ export const GenreMultiSelect = forwardRef<GenreSelectRef, GenreSelectProps>(
         }, []);
 
         const reset = useCallback(() => {
-            setSelectedGenres(new Set(initialGenres));
-        }, [initialGenres]);
+            setSelectedGenres(new Set(preselectedGenres));
+        }, [preselectedGenres]);
 
         useImperativeHandle(ref, () => ({ reset }), [reset]);
 
@@ -95,7 +94,7 @@ export const GenreMultiSelect = forwardRef<GenreSelectRef, GenreSelectProps>(
                         max-h-60 overflow-y-auto
                     "
                     >
-                        {AVAILABLE_GENRES.map((genre) => (
+                        {SELECTABLE_GENRES.map((genre) => (
                             <label
                                 key={genre}
                                 className="
@@ -111,13 +110,19 @@ export const GenreMultiSelect = forwardRef<GenreSelectRef, GenreSelectProps>(
                                     onChange={(e) => handleCheckboxChange(genre, e.target.checked)}
                                     onClick={(e) => e.stopPropagation()}
                                 />
-                                <span className="text-[var(--color-text)] text-[16px]">{genre}</span>{" "}
+                                <span className="text-[var(--color-text)] text-[16px]">{genre}</span>
                             </label>
                         ))}
                     </div>
                 )}
 
-                <input ref={hiddenInputRef} type="hidden" name={name} value={hiddenValue} />
+                <input
+                    ref={hiddenInputRef}
+                    type="hidden"
+                    name={name}
+                    value={hiddenValue}
+                    data-testid={`hidden-input-${name}`}
+                />
             </div>
         );
     },
