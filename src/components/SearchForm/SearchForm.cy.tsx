@@ -1,5 +1,5 @@
 /// <reference types="@testing-library/cypress" />
-import SearchForm from "./SearchForm";
+import { SearchForm } from "./SearchForm";
 
 describe("<SearchForm /> Component Tests", () => {
     const searchText = "movie title";
@@ -64,7 +64,7 @@ describe("<SearchForm /> Component Tests", () => {
         const onSearchSpy = cy.spy().as("onSearchSpy");
         cy.mount(<SearchForm onSearch={onSearchSpy} />);
 
-        cy.get(searchInputSelector).type(`${searchText}{space}`);
+        cy.get(searchInputSelector).type(`${searchText}{downArrow}`);
 
         cy.get("@onSearchSpy").should("not.have.been.called");
     });
