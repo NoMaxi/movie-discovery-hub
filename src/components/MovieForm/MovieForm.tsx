@@ -1,7 +1,7 @@
 import { FormEvent, useRef, useState } from "react";
 import { Genre, InitialMovieInfo } from "@/types/common";
 import { CalendarIcon } from "@/components/common/CalendarIcon/CalendarIcon";
-import { GenreMultiSelect, GenreSelectRef } from "@/components/GenreMultiSelect/GenreMultiSelect";
+import { GenreMultiSelect, GenreMultiSelectRef } from "@/components/GenreMultiSelect/GenreMultiSelect";
 
 interface MovieFormProps {
     initialMovieInfo?: Partial<InitialMovieInfo>;
@@ -23,7 +23,7 @@ export const MovieForm = ({ initialMovieInfo = {}, onSubmit }: MovieFormProps) =
     const [genreError, setGenreError] = useState<string | null>(null);
     const formRef = useRef<HTMLFormElement>(null);
     const dateInputRef = useRef<HTMLInputElement>(null);
-    const genreSelectRef = useRef<GenreSelectRef>(null);
+    const genreSelectRef = useRef<GenreMultiSelectRef>(null);
 
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -140,7 +140,7 @@ export const MovieForm = ({ initialMovieInfo = {}, onSubmit }: MovieFormProps) =
                         ref={genreSelectRef}
                         id="genres"
                         name="genres"
-                        initialGenres={initialMovieInfo.genres ?? []}
+                        preselectedGenres={initialMovieInfo.genres ?? []}
                         aria-describedby="genre-error"
                     />
                     {genreError && (
@@ -160,7 +160,7 @@ export const MovieForm = ({ initialMovieInfo = {}, onSubmit }: MovieFormProps) =
                         placeholder="minutes"
                         className="input-field"
                         min="0"
-                        defaultValue={initialMovieInfo.duration ?? ""} // Map from duration
+                        defaultValue={initialMovieInfo.duration ?? ""}
                         required
                     />
                 </div>
@@ -180,7 +180,7 @@ export const MovieForm = ({ initialMovieInfo = {}, onSubmit }: MovieFormProps) =
                 </div>
 
                 <div className="col-span-3 flex justify-end gap-x-4 mt-8">
-                    <button type="reset" className="btn btn-outline" onClick={handleReset}>
+                    <button type="reset" className="btn btn-outline">
                         Reset
                     </button>
                     <button type="submit" className="btn">
