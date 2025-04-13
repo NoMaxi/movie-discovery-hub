@@ -19,7 +19,7 @@ export default tseslint.config(
             "react-refresh": reactRefresh,
         },
         rules: {
-            ...reactHooks.configs.recommended.rules,
+            ...reactHooks.configs["recommended-latest"].rules,
             "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
         },
     },
@@ -30,7 +30,7 @@ export default tseslint.config(
             "testing-library": testingLibrary,
         },
         languageOptions: {
-            globals: globals.jest
+            globals: globals.jest,
         },
         rules: {
             ...testingLibrary.configs.react.rules,
@@ -39,6 +39,8 @@ export default tseslint.config(
             "testing-library/no-debugging-utils": "warn",
             "testing-library/no-dom-import": "off",
         },
+        ...testingLibrary.configs["flat/dom"],
+        ...testingLibrary.configs["flat/react"],
     },
     // Cypress
     {

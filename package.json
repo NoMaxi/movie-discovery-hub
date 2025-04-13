@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.0.14",
+    "axios": "^1.8.4",
     "focus-trap-react": "^11.0.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
@@ -49,7 +50,7 @@
     "autoprefixer": "^10.4.21",
     "cypress": "^14.2.0",
     "eslint": "^9.21.0",
-    "eslint-plugin-react-hooks": "^5.1.0",
+    "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.19",
     "eslint-plugin-storybook": "^0.12.0",
     "eslint-plugin-testing-library": "^7.1.1",
