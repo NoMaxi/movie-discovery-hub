@@ -3,6 +3,7 @@ import { fn } from "@storybook/test";
 import { MovieTile } from "./MovieTile";
 
 const meta = {
+    title: "Components/MovieTile",
     component: MovieTile,
     argTypes: {
         movie: {

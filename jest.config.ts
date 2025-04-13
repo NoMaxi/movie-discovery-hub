@@ -32,6 +32,7 @@ const config: Config = {
         "!src/**/*.mocks.tsx",
         "!src/**/index.{ts,tsx}",
         "!src/types/**",
+        "!src/mocks/**",
         "!src/main.tsx",
         "!src/constants.ts",
     ],

@@ -13,15 +13,17 @@ const defaultMockActions: ContextMenuAction[] = [
 ];
 
 const meta = {
+    title: "Common/ContextMenu",
     component: ContextMenu,
     argTypes: {
         isOpen: {
             control: "boolean",
             description: "Controls whether the context menu is visible",
-            table: { defaultValue: { summary: 'false' } },
+            table: { defaultValue: { summary: "false" } },
         },
         onClose: {
-            description: "Callback function triggered when the menu requests to be closed (via close button or action click)",
+            description:
+                "Callback function triggered when the menu requests to be closed (via close button or action click)",
         },
         actions: {
             control: "object",
@@ -34,7 +36,7 @@ const meta = {
         withCloseButton: {
             control: "boolean",
             description: "If true, shows a close (×) button in the top-right corner",
-            table: { defaultValue: { summary: 'false' } },
+            table: { defaultValue: { summary: "false" } },
         },
     },
     args: {

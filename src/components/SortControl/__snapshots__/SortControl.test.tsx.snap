@@ -22,9 +22,13 @@ exports[`SortControl Should render correctly with initial selection 1`] = `
         type="button"
       >
         Release Date
-        <svg
-          data-testid="select-arrow"
-        />
+        <span
+          class="transform transition-transform rotate-0"
+        >
+          <svg
+            data-testid="select-arrow"
+          />
+        </span>
       </button>
     </div>
   </div>
