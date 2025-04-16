@@ -7,11 +7,12 @@ interface GenreSelectProps {
 }
 
 export const GenreSelect = ({ genres, selectedGenre, onSelect }: GenreSelectProps) => (
-    <div className="flex flex-wrap gap-x-8 h-14">
+    <div className="flex flex-wrap gap-x-8">
         {genres.map((genre) => (
             <div
                 key={genre}
                 className={`
+                    group
                     relative
                     px-2
                     py-1
@@ -34,12 +35,12 @@ export const GenreSelect = ({ genres, selectedGenre, onSelect }: GenreSelectProp
                     className={`
                         absolute
                         left-0
-                        bottom-0
+                        -bottom-[16px]
                         h-[3px]
                         w-0
                         bg-[var(--color-primary)]
                         transition-all
-                        duration-200
+                        duration-300
                         ${genre === selectedGenre ? "w-full" : "group-hover:w-full"}
                     `}
                 ></span>

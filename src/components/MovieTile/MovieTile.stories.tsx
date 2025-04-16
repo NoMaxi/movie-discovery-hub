@@ -34,7 +34,7 @@ type Story = StoryObj<typeof MovieTile>;
 export const Default: Story = {
     args: {
         movie: {
-            id: "1",
+            id: 1,
             title: "Pulp Fiction",
             releaseYear: 1994,
             genres: ["All", "Horror"],
@@ -46,7 +46,7 @@ export const Default: Story = {
 export const LongTitleAndGenres: Story = {
     args: {
         movie: {
-            id: "2",
+            id: 2,
             title: "The Lord of the Rings: The Return of the King",
             releaseYear: 2003,
             genres: ["All", "Horror", "Comedy", "Crime", "Documentary"],
@@ -58,7 +58,7 @@ export const LongTitleAndGenres: Story = {
 export const NoImageAvailable: Story = {
     args: {
         movie: {
-            id: "3",
+            id: 3,
             title: "Movie With Broken Image",
             releaseYear: 1994,
             genres: ["Crime", "Documentary"],

@@ -5,7 +5,7 @@ import { Movie } from "@/types/common";
 import { MovieTile } from "./MovieTile";
 
 const mockMovie: Movie = {
-    id: "1",
+    id: 1,
     title: "Test Movie Title",
     releaseYear: 1994,
     genres: ["Comedy", "Horror"],

@@ -3,10 +3,11 @@
 exports[`GenreSelect Should highlight selected genre provided in props 1`] = `
 <DocumentFragment>
   <div
-    class="flex flex-wrap gap-x-8 h-14"
+    class="flex flex-wrap gap-x-8"
   >
     <div
       class="
+                    group
                     relative
                     px-2
                     py-1
@@ -24,18 +25,19 @@ exports[`GenreSelect Should highlight selected genre provided in props 1`] = `
         class="
                         absolute
                         left-0
-                        bottom-0
+                        -bottom-[16px]
                         h-[3px]
                         w-0
                         bg-[var(--color-primary)]
                         transition-all
-                        duration-200
+                        duration-300
                         group-hover:w-full
                     "
       />
     </div>
     <div
       class="
+                    group
                     relative
                     px-2
                     py-1
@@ -53,18 +55,19 @@ exports[`GenreSelect Should highlight selected genre provided in props 1`] = `
         class="
                         absolute
                         left-0
-                        bottom-0
+                        -bottom-[16px]
                         h-[3px]
                         w-0
                         bg-[var(--color-primary)]
                         transition-all
-                        duration-200
+                        duration-300
                         w-full
                     "
       />
     </div>
     <div
       class="
+                    group
                     relative
                     px-2
                     py-1
@@ -82,12 +85,12 @@ exports[`GenreSelect Should highlight selected genre provided in props 1`] = `
         class="
                         absolute
                         left-0
-                        bottom-0
+                        -bottom-[16px]
                         h-[3px]
                         w-0
                         bg-[var(--color-primary)]
                         transition-all
-                        duration-200
+                        duration-300
                         group-hover:w-full
                     "
       />
@@ -99,10 +102,11 @@ exports[`GenreSelect Should highlight selected genre provided in props 1`] = `
 exports[`GenreSelect Should render all genres provided in props 1`] = `
 <DocumentFragment>
   <div
-    class="flex flex-wrap gap-x-8 h-14"
+    class="flex flex-wrap gap-x-8"
   >
     <div
       class="
+                    group
                     relative
                     px-2
                     py-1
@@ -120,18 +124,19 @@ exports[`GenreSelect Should render all genres provided in props 1`] = `
         class="
                         absolute
                         left-0
-                        bottom-0
+                        -bottom-[16px]
                         h-[3px]
                         w-0
                         bg-[var(--color-primary)]
                         transition-all
-                        duration-200
+                        duration-300
                         group-hover:w-full
                     "
       />
     </div>
     <div
       class="
+                    group
                     relative
                     px-2
                     py-1
@@ -149,18 +154,19 @@ exports[`GenreSelect Should render all genres provided in props 1`] = `
         class="
                         absolute
                         left-0
-                        bottom-0
+                        -bottom-[16px]
                         h-[3px]
                         w-0
                         bg-[var(--color-primary)]
                         transition-all
-                        duration-200
+                        duration-300
                         w-full
                     "
       />
     </div>
     <div
       class="
+                    group
                     relative
                     px-2
                     py-1
@@ -178,12 +184,12 @@ exports[`GenreSelect Should render all genres provided in props 1`] = `
         class="
                         absolute
                         left-0
-                        bottom-0
+                        -bottom-[16px]
                         h-[3px]
                         w-0
                         bg-[var(--color-primary)]
                         transition-all
-                        duration-200
+                        duration-300
                         group-hover:w-full
                     "
       />
@@ -195,7 +201,7 @@ exports[`GenreSelect Should render all genres provided in props 1`] = `
 exports[`GenreSelect Should render nothing if empty array genres is provided 1`] = `
 <DocumentFragment>
   <div
-    class="flex flex-wrap gap-x-8 h-14"
+    class="flex flex-wrap gap-x-8"
   />
 </DocumentFragment>
 `;

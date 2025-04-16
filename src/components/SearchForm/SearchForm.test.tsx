@@ -59,15 +59,6 @@ describe("SearchForm", () => {
         expect(onSearchMock).toHaveBeenCalledWith(searchText);
     });
 
-    test("Should not call 'onSearch' prop when Enter key is pressed in the input if the input value is empty", () => {
-        render(<SearchForm onSearch={onSearchMock} />);
-        const input = screen.getByPlaceholderText(placeholderText);
-
-        fireEvent.keyDown(input, { key: "Enter" });
-
-        expect(onSearchMock).not.toHaveBeenCalled();
-    });
-
     test("Should not call 'onSearch' prop when a non-Enter key is pressed in the input", () => {
         render(<SearchForm onSearch={onSearchMock} />);
         const input = screen.getByPlaceholderText(placeholderText);

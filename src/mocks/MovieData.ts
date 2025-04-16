@@ -1,7 +1,7 @@
 import { InitialMovieInfo, MovieDetailsData } from "@/types/common";
 
 export const mockMovieDetails: MovieDetailsData = {
-    id: "1",
+    id: 1,
     title: "Pulp Fiction",
     releaseYear: 1994,
     genres: ["Comedy", "Crime"],
@@ -13,7 +13,7 @@ export const mockMovieDetails: MovieDetailsData = {
 };
 
 export const alternativeMovieDetails: MovieDetailsData = {
-    id: "2",
+    id: 2,
     imageUrl: "https://example.com/poster-alt.jpg",
     title: "Another Great Film",
     releaseYear: 2022,

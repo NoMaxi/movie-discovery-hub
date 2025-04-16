@@ -3,28 +3,18 @@
 exports[`SearchForm Should render empty input if no initialQuery is provided in props 1`] = `
 <DocumentFragment>
   <form
-    class="flex items-center justify-center w-1/2"
+    class="flex items-center w-full"
   >
     <input
-      class="
-                    input-field
-                    placeholder-[var(--color-gray-lighter)]
-                    border-none
-                    rounded-md
-                    py-3
-                    px-6
-                    text-lg
-                    flex-grow
-                "
+      class="input-field input-transparent-shadow-glow"
       data-testid="search-input"
       placeholder="What do you want to watch?"
       type="text"
       value=""
     />
     <button
-      class="btn ml-3"
+      class="btn ml-[14px]"
       data-testid="search-button"
-      disabled=""
       type="submit"
     >
       Search
@@ -36,26 +26,17 @@ exports[`SearchForm Should render empty input if no initialQuery is provided in 
 exports[`SearchForm Should render input with an initial value if initialQuery is provided in props 1`] = `
 <DocumentFragment>
   <form
-    class="flex items-center justify-center w-1/2"
+    class="flex items-center w-full"
   >
     <input
-      class="
-                    input-field
-                    placeholder-[var(--color-gray-lighter)]
-                    border-none
-                    rounded-md
-                    py-3
-                    px-6
-                    text-lg
-                    flex-grow
-                "
+      class="input-field input-transparent-shadow-glow"
       data-testid="search-input"
       placeholder="What do you want to watch?"
       type="text"
       value="movie title"
     />
     <button
-      class="btn ml-3"
+      class="btn ml-[14px]"
       data-testid="search-button"
       type="submit"
     >

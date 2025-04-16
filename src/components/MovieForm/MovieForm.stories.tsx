@@ -30,7 +30,7 @@ export const AddMovie: Story = {
 };
 
 const mockExistingMovieData: InitialMovieInfo = {
-    id: "m1",
+    id: 1,
     title: "Pulp Fiction",
     releaseDate: "1994-10-14",
     imageUrl: "https://upload.wikimedia.org/wikipedia/en/3/3b/Pulp_Fiction_%281994%29_poster.jpg",

@@ -1,21 +1,21 @@
-export type Genre = "All" | "Comedy" | "Crime" | "Documentary" | "Horror";
+export type SelectableGenre = "Comedy" | "Crime" | "Documentary" | "Horror";
 
-export type SelectableGenre = Exclude<Genre, "All">;
+export type Genre = "All" | SelectableGenre;
 
 export interface Movie {
-    id: string;
+    id: number;
     imageUrl: string;
     title: string;
     releaseYear: number;
-    genres: Genre[];
+    genres: string[];
 }
 
 export interface MovieDetailsData {
-    id: string;
+    id: number;
     imageUrl: string;
     title: string;
     releaseYear: number;
-    genres: SelectableGenre[];
+    genres: string[];
     rating: number;
     duration: number;
     description: string;
@@ -26,3 +26,10 @@ export interface InitialMovieInfo extends Omit<MovieDetailsData, "releaseYear"> 
 }
 
 export type SortOption = "Release Date" | "Title";
+
+export interface MovieListResult {
+    movies: Movie[];
+    totalAmount: number;
+    offset: number;
+    limit: number;
+}
