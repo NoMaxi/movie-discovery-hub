@@ -2,19 +2,26 @@
 
 :root {
     --font-family-base: "Montserrat";
-    --color-primary: #f65261;
-    --color-background: #232323;
-    --color-text: #ffffff;
+    --font-size-base: 20px;
+    --color-white: #ffffff;
+    --color-dark: #232323;
     --color-gray: #424242;
     --color-gray-light: #555555;
     --color-gray-lighter: #aaaaaa;
+    --color-pink-shade: #f65261;
+    --color-primary: var(--color-pink-shade);
+    --color-text: var(--color-white);
+    --color-background: var(--color-gray-light);
+    --color-content-background: var(--color-dark);
+    --content-width: 1200px;
 }
 
 body {
-    font-family: var(--font-family-base), sans-serif;
-    font-size: 20px;
-    background-color: var(--color-background);
+    background: url("src/assets/bg-content.jpg") no-repeat 0 -350px fixed var(--color-gray-light);
+    background-size: cover;
     color: var(--color-text);
+    font-family: var(--font-family-base), sans-serif;
+    font-size: var(--font-size-base);
 }
 
 .btn {
@@ -22,6 +29,7 @@ body {
     background-color: var(--color-primary);
     border: none;
     border-radius: 4px;
+    color: var(--color-text);
     cursor: pointer;
     font-size: 20px;
     font-weight: 500;
@@ -30,7 +38,6 @@ body {
     padding: 0 20px;
     text-transform: uppercase;
     transition: filter 0.3s ease;
-    color: var(--color-text);
 
     &:not(:disabled):hover {
         filter: brightness(0.8);
@@ -71,15 +78,45 @@ body {
     }
 }
 
+.btn-add-movie {
+    @apply inline-flex items-center justify-center;
+    background-color: rgba(96, 96, 96, 0.7);
+    backdrop-filter: blur(3px);
+    border: none;
+    border-radius: 4px;
+    color: var(--color-primary);
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: 600;
+    height: 46px;
+    width: 177px;
+    padding: 0 10px;
+    text-transform: uppercase;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+        background-color: rgba(80, 80, 80, 0.8);
+    }
+
+    &:active {
+        background-color: rgba(60, 60, 60, 0.85);
+    }
+}
+
 .input-field {
     @apply w-full px-6 py-3 rounded-md
-    border border-transparent
+    border-transparent
     bg-[var(--color-gray)]
     text-[var(--color-text)]
-    placeholder:text-[var(--color-text)] placeholder:opacity-30
+    placeholder:opacity-50
+    shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)]
     focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent
     transition-all duration-300;
     height: 57px;
+}
+
+.input-transparent-shadow-glow {
+    @apply bg-transparent shadow-[inset_0_0_15px_var(--color-primary),inset_0_0_3px_var(--color-primary)]
 }
 
 input[type="date"].input-field {
@@ -95,7 +132,7 @@ input[type="date"].input-field::-webkit-calendar-picker-indicator {
 
 input[type="date"].input-field:required:invalid,
 input[type="date"].input-field:placeholder-shown {
-    color: rgba(255, 255, 255, 0.3)
+    color: rgba(255, 255, 255, 0.3);
 }
 
 input[type="date"].input-field:valid {
