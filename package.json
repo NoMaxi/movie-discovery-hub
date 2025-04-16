@@ -72,7 +72,7 @@
     "tsx": "^4.19.3",
     "typescript": "~5.7.2",
     "typescript-eslint": "^8.24.1",
-    "vite": "^6.2.2",
+    "vite": "^6.3.0",
     "vitest": "^3.0.9"
   },
   "eslintConfig": {
