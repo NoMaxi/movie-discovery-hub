@@ -17,11 +17,13 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.0.14",
+    "@tanstack/react-query": "^5.74.3",
     "axios": "^1.8.4",
     "date-fns": "^4.1.0",
     "focus-trap-react": "^11.0.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-intersection-observer": "^9.16.0",
     "react-portal": "^4.3.0"
   },
   "devDependencies": {
@@ -36,6 +38,8 @@
     "@storybook/react": "^8.6.11",
     "@storybook/react-vite": "^8.6.11",
     "@storybook/test": "^8.6.11",
+    "@tanstack/eslint-plugin-query": "^5.73.3",
+    "@tanstack/react-query-devtools": "^5.74.3",
     "@testing-library/cypress": "^10.0.3",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",

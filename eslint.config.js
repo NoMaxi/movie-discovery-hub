@@ -1,5 +1,6 @@
 import js from "@eslint/js";
 import globals from "globals";
+import pluginQuery from '@tanstack/eslint-plugin-query'
 import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
 import testingLibrary from "eslint-plugin-testing-library";
@@ -17,9 +18,11 @@ export default tseslint.config(
         plugins: {
             "react-hooks": reactHooks,
             "react-refresh": reactRefresh,
+            '@tanstack/query': pluginQuery,
         },
         rules: {
             ...reactHooks.configs["recommended-latest"].rules,
+            ...pluginQuery.configs['flat/recommended'].rules,
             "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
         },
     },
