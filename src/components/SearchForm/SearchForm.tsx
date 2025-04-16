@@ -15,9 +15,7 @@ export const SearchForm = ({ initialQuery = "", onSearch }: SearchFormProps) => 
     const handleSubmit = (event: FormEvent) => {
         event.preventDefault();
         const trimmedQuery = query.trim();
-        if (trimmedQuery) {
-            onSearch(trimmedQuery);
-        }
+        onSearch(trimmedQuery);
     };
 
     const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -27,7 +25,7 @@ export const SearchForm = ({ initialQuery = "", onSearch }: SearchFormProps) => 
     };
 
     return (
-        <form onSubmit={handleSubmit} className="flex items-center justify-center w-1/2">
+        <form onSubmit={handleSubmit} className="flex items-center w-full">
             <input
                 data-testid="search-input"
                 type="text"
@@ -35,18 +33,9 @@ export const SearchForm = ({ initialQuery = "", onSearch }: SearchFormProps) => 
                 onChange={handleInputChange}
                 onKeyDown={handleKeyDown}
                 placeholder="What do you want to watch?"
-                className="
-                    input-field
-                    placeholder-[var(--color-gray-lighter)]
-                    border-none
-                    rounded-md
-                    py-3
-                    px-6
-                    text-lg
-                    flex-grow
-                "
+                className="input-field input-transparent-shadow-glow"
             />
-            <button data-testid="search-button" type="submit" className="btn ml-3" disabled={!query.trim()}>
+            <button data-testid="search-button" type="submit" className="btn ml-[14px]">
                 Search
             </button>
         </form>
