@@ -1,6 +1,6 @@
 import js from "@eslint/js";
 import globals from "globals";
-import pluginQuery from '@tanstack/eslint-plugin-query'
+import pluginQuery from "@tanstack/eslint-plugin-query";
 import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
 import testingLibrary from "eslint-plugin-testing-library";
@@ -9,7 +9,11 @@ import tseslint from "typescript-eslint";
 export default tseslint.config(
     { ignores: ["dist", "coverage"] },
     {
-        extends: [js.configs.recommended, ...tseslint.configs.recommended],
+        extends: [
+            js.configs.recommended,
+            ...tseslint.configs.recommended,
+            "plugin:@tanstack/eslint-plugin-query/recommended",
+        ],
         files: ["**/*.{ts,tsx}"],
         languageOptions: {
             ecmaVersion: 2020,
@@ -18,11 +22,11 @@ export default tseslint.config(
         plugins: {
             "react-hooks": reactHooks,
             "react-refresh": reactRefresh,
-            '@tanstack/query': pluginQuery,
+            "@tanstack/query": pluginQuery,
         },
         rules: {
             ...reactHooks.configs["recommended-latest"].rules,
-            ...pluginQuery.configs['flat/recommended'].rules,
+            ...pluginQuery.configs["flat/recommended"],
             "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
         },
     },
