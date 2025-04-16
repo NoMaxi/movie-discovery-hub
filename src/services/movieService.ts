@@ -1,5 +1,5 @@
-import axios, { AxiosResponse, CancelToken } from "axios";
-import { Genre, MovieListResult, MovieDetailsData, SortOption } from "@/types/common";
+import axios, { AxiosResponse } from "axios";
+import { Genre, Movie, MovieDetailsData, MovieListResult, SortOption } from "@/types/common";
 import { DEFAULT_MOVIES_PER_PAGE } from "@/constants";
 import {
     mapAPIMovieDetailsToMovie,
@@ -38,9 +38,7 @@ export interface BadRequestError {
 }
 
 export type SearchBy = "title" | "genres";
-
 export type SortBy = "title" | "release_date";
-
 export type SortOrder = "asc" | "desc";
 
 export interface MoviesRequestParams {
@@ -55,18 +53,24 @@ export interface MoviesRequestParams {
 
 export const API_URL = "http://localhost:4000/movies";
 
+export interface InfiniteMovieListResult extends MovieListResult {
+    nextOffset?: number;
+}
+
 export const movieService = {
     async getMovies(
         searchQuery: string,
         sortCriterion: SortOption,
         activeGenre: Genre,
-        cancelToken?: CancelToken,
-    ): Promise<MovieListResult> {
+        signal: AbortSignal | undefined,
+        offset: number = 0,
+    ): Promise<InfiniteMovieListResult> {
         const params: MoviesRequestParams = {
             sortBy: mapSortOptionToSortBy(sortCriterion),
             sortOrder: mapSortOptionToSortOrder(sortCriterion),
-            limit: DEFAULT_MOVIES_PER_PAGE,
             searchBy: "title",
+            limit: DEFAULT_MOVIES_PER_PAGE,
+            offset,
         };
 
         if (searchQuery) {
@@ -77,14 +81,19 @@ export const movieService = {
             params.filter = activeGenre;
         }
 
-        const { data: moviesResponse } = await axios.get<MoviesResponse>(API_URL, {
-            params,
-            cancelToken,
-        });
+        const { data: moviesResponse } = await axios.get<MoviesResponse>(API_URL, { params, signal });
+
+        const { offset: responseOffset, totalAmount, limit, data } = moviesResponse;
+        const movies: Movie[] = data.map(mapAPIMovieDetailsToMovie);
+        const currentTotalFetched = offset + movies.length;
+        const nextOffset = currentTotalFetched < totalAmount ? currentTotalFetched : undefined;
 
         return {
-            ...moviesResponse,
-            movies: moviesResponse.data.map(mapAPIMovieDetailsToMovie),
+            movies,
+            totalAmount,
+            limit,
+            offset: responseOffset,
+            nextOffset,
         };
     },
 
