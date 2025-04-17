@@ -24,7 +24,8 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-intersection-observer": "^9.16.0",
-    "react-portal": "^4.3.0"
+    "react-portal": "^4.3.0",
+    "react-spinners": "^0.16.1"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^3.2.6",

@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useState } from "react"; // Added useRef
+import React, { useEffect, useRef, useState } from "react";
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { useInView } from "react-intersection-observer";
 import bgHeaderImage from "@/assets/bg_header.png";
-import { GENRES } from "@/constants";
+import { DEFAULT_ACTIVE_GENRE, DEFAULT_SORT_CRITERION, GENRES } from "@/constants";
 import { Genre, Movie, MovieDetailsData, SortOption } from "@/types/common";
 import { movieService } from "@/services/movieService";
 import { SearchForm } from "@/components/SearchForm/SearchForm";
@@ -11,11 +11,12 @@ import { SortControl } from "@/components/SortControl/SortControl";
 import { MovieTile } from "@/components/MovieTile/MovieTile";
 import { MovieDetails } from "@/components/MovieDetails/MovieDetails";
 import { NetflixRouletteText } from "@/components/common/NetflixRouletteText/NetflixRouletteText";
+import { Loader } from "@/components/common/Loader/Loader";
 
 export const MovieListPage = () => {
     const [searchQuery, setSearchQuery] = useState<string>("");
-    const [sortCriterion, setSortCriterion] = useState<SortOption>("Release Date");
-    const [activeGenre, setActiveGenre] = useState<Genre>("All");
+    const [sortCriterion, setSortCriterion] = useState<SortOption>(DEFAULT_SORT_CRITERION);
+    const [activeGenre, setActiveGenre] = useState<Genre>(DEFAULT_ACTIVE_GENRE);
     const [selectedMovie, setSelectedMovie] = useState<MovieDetailsData | null>(null);
 
     const queryClient = useQueryClient();
@@ -190,8 +191,8 @@ export const MovieListPage = () => {
                                 ×
                             </button>
                             {isDetailLoading && (
-                                <div className="flex justify-center items-center text-center p-10 h-full">
-                                    Loading details...
+                                <div className="flex justify-center items-center p-10 h-full">
+                                    <Loader />
                                 </div>
                             )}
                             {detailError && (
@@ -239,7 +240,9 @@ export const MovieListPage = () => {
                 </div>
 
                 {isLoading ? (
-                    <div className="text-center py-10">Loading movies...</div>
+                    <div className="flex justify-center items-center pt-10 h-full">
+                        <Loader />
+                    </div>
                 ) : isError ? (
                     <div className="text-center py-10 text-red-500">{queryErrorMessage}</div>
                 ) : allMovies.length > 0 ? (
