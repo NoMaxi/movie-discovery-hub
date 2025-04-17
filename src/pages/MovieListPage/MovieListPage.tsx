@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react"; // Added useRef
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { useInView } from "react-intersection-observer";
 import bgHeaderImage from "@/assets/bg_header.png";
@@ -19,10 +19,8 @@ export const MovieListPage = () => {
     const [selectedMovie, setSelectedMovie] = useState<MovieDetailsData | null>(null);
 
     const queryClient = useQueryClient();
-
-    const { ref: loadMoreRef, inView: isLoadMoreVisible } = useInView({
-        threshold: 0.1,
-    });
+    const { ref: loadMoreRef, inView: isLoadMoreVisible } = useInView({ threshold: 0.1 });
+    const lastClickedTileRef = useRef<HTMLDivElement | null>(null);
 
     const {
         data,
@@ -52,28 +50,45 @@ export const MovieListPage = () => {
         }
     }, [isLoadMoreVisible, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
+    const resetSelectedMovie = () => {
+        setSelectedMovie(null);
+    };
+
+    const resetClickedTile = () => {
+        lastClickedTileRef.current = null;
+    };
+
+    const resetViewState = () => {
+        resetSelectedMovie();
+        resetClickedTile();
+    };
+
     const handleSearch = (query: string) => {
         setSearchQuery(query);
-        setSelectedMovie(null);
+        resetViewState();
     };
 
     const handleGenreSelect = (genre: Genre) => {
         setActiveGenre(genre);
-        setSelectedMovie(null);
+        resetViewState();
     };
 
     const handleSortChange = (selection: SortOption) => {
         setSortCriterion(selection);
-        setSelectedMovie(null);
+        resetViewState();
     };
 
     const [isDetailLoading, setIsDetailLoading] = useState(false);
     const [detailError, setDetailError] = useState<string | null>(null);
 
-    const handleMovieClick = async (movie: Movie) => {
+    const handleMovieClick = async (movie: Movie, event: React.MouseEvent<HTMLDivElement>) => {
+        if (isDetailLoading || movie.id === selectedMovie?.id) {
+            return;
+        }
+
         setIsDetailLoading(true);
         setDetailError(null);
-        setSelectedMovie(null);
+        lastClickedTileRef.current = event.currentTarget;
 
         const movieId = movie.id;
         try {
@@ -83,25 +98,30 @@ export const MovieListPage = () => {
         } catch (error) {
             console.error(`Failed to fetch movie details by id ${movieId}:`, error);
             setDetailError("Failed to load movie details.");
-            setSelectedMovie(null);
+            resetViewState();
         } finally {
             setIsDetailLoading(false);
         }
     };
 
-    const handleMovieDetailsClose = () => {
-        setSelectedMovie(null);
+    const handleDetailsClose = () => {
+        resetSelectedMovie();
         setDetailError(null);
+
+        if (lastClickedTileRef.current) {
+            lastClickedTileRef.current.scrollIntoView({
+                behavior: "smooth",
+                block: "nearest",
+            });
+            resetClickedTile();
+        }
     };
 
     const handleAddMovieClick = () => {
         console.log("Add movie - Placeholder");
-        // TODO: Implement `Add Movie` logic
     };
-
     const handleMovieEdit = (movie: Movie) => {
         console.log("Edit movie:", movie.id, "- Placeholder");
-        // TODO: Implement `Edit Movie` logic
     };
 
     const [isDeleting, setIsDeleting] = useState(false);
@@ -110,9 +130,14 @@ export const MovieListPage = () => {
     const handleMovieDelete = async (movie: Movie) => {
         setIsDeleting(true);
         setDeleteError(null);
+
         try {
             await movieService.deleteMovie(movie.id);
             await queryClient.invalidateQueries({ queryKey: ["movies", activeGenre, sortCriterion, searchQuery] });
+
+            if (selectedMovie?.id === movie.id) {
+                resetViewState();
+            }
         } catch (err) {
             console.error("Failed to delete movie:", err);
             setDeleteError("Failed to delete movie.");
@@ -125,6 +150,7 @@ export const MovieListPage = () => {
     const totalAmount = data?.pages[0]?.totalAmount ?? 0;
     const queryErrorMessage =
         queryError instanceof Error ? queryError.message : "An unknown error occurred while fetching movies.";
+    const showDetailsSection = !!selectedMovie || isDetailLoading;
 
     return (
         <div className="movie-list-page flex flex-col items-center relative w-full min-h-screen">
@@ -148,23 +174,34 @@ export const MovieListPage = () => {
                 "
                 style={{ backgroundImage: `url(${bgHeaderImage})` }}
             >
-                <div className="flex flex-col relative min-h-[290px] z-10">
-                    {selectedMovie ? (
+                <div className={`flex flex-col relative z-10 ${showDetailsSection ? "h-[540px]" : "min-h-[290px]"}`}>
+                    {showDetailsSection ? (
                         <>
                             <button
-                                onClick={handleMovieDetailsClose}
+                                onClick={handleDetailsClose}
                                 className="
                                     absolute top-0 right-0 text-5xl p-2 z-20
                                     text-[var(--color-primary)] hover:text-red-400
                                     cursor-pointer transition-colors
                                 "
                                 title="Back to Search"
+                                aria-label="Close movie details"
                             >
-                                &times;
+                                ×
                             </button>
-                            {isDetailLoading && <div className="text-center p-10 text-xl">Loading details...</div>}
-                            {detailError && <div className="text-center p-10 text-xl text-red-500">{detailError}</div>}
-                            {selectedMovie && !isDetailLoading && <MovieDetails details={selectedMovie} />}
+                            {isDetailLoading && (
+                                <div className="flex justify-center items-center text-center p-10 h-full">
+                                    Loading details...
+                                </div>
+                            )}
+                            {detailError && (
+                                <div className="flex justify-center items-center text-center text-red-500 p-10 h-full">
+                                    {detailError}
+                                </div>
+                            )}
+                            {!isDetailLoading && !detailError && selectedMovie && (
+                                <MovieDetails details={selectedMovie} />
+                            )}
                         </>
                     ) : (
                         <div className="flex flex-col items-start px-[60px]">
@@ -179,8 +216,18 @@ export const MovieListPage = () => {
                 </div>
             </header>
 
-            <main className="flex-grow w-[var(--content-width)] px-16 pb-6 mb-[60px] bg-[var(--color-content-background)]">
-                <div className="flex justify-between items-center h-[60px] mb-6 border-b-2 border-[var(--color-gray-light)]">
+            <main
+                className="
+                    flex-grow w-[var(--content-width)] px-16 pb-6 mb-[60px]
+                    bg-[var(--color-content-background)]
+                "
+            >
+                <div
+                    className="
+                        flex justify-between items-center h-[60px] mb-6
+                        border-b-2 border-[var(--color-gray-light)]
+                    "
+                >
                     <GenreSelect genres={GENRES} selectedGenre={activeGenre} onSelect={handleGenreSelect} />
                     <SortControl currentSelection={sortCriterion} onSelectionChange={handleSortChange} />
                 </div>

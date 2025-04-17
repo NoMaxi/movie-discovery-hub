@@ -104,7 +104,8 @@ describe("MovieTile", () => {
         await user.click(imageElement);
 
         expect(onClickMock).toHaveBeenCalledTimes(1);
-        expect(onClickMock).toHaveBeenCalledWith(mockMovie);
+        expect(onClickMock).toHaveBeenCalledWith(mockMovie, expect.any(Object));
+        expect(onClickMock.mock.calls[0][1]).toHaveProperty("type", "click");
         expect(screen.queryByTestId("context-menu")).not.toBeInTheDocument();
     });
 

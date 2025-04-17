@@ -1,10 +1,10 @@
-import { MouseEvent, useMemo, useState } from "react";
+import React, { MouseEvent, useMemo, useState } from "react";
 import { Movie } from "@/types/common";
 import { ContextMenu } from "@/components/common/ContextMenu/ContextMenu";
 
 interface MovieTileProps {
     movie: Movie;
-    onClick: (movie: Movie) => void;
+    onClick: (movie: Movie, event: React.MouseEvent<HTMLDivElement>) => void;
     onEdit: (movie: Movie) => void;
     onDelete: (movie: Movie) => void;
 }
@@ -17,11 +17,11 @@ export const MovieTile = ({ movie, onClick, onEdit, onDelete }: MovieTileProps) 
         setIsContextMenuOpen(!isContextMenuOpen);
     };
 
-    const handleTileClick = () => {
+    const handleTileClick = (event: React.MouseEvent<HTMLDivElement>) => {
         if (isContextMenuOpen) {
             setIsContextMenuOpen(false);
         } else {
-            onClick(movie);
+            onClick(movie, event);
         }
     };
 
