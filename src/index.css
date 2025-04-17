@@ -16,6 +16,10 @@
     --content-width: 1200px;
 }
 
+html {
+    overflow-y: scroll;
+}
+
 body {
     background: url("src/assets/bg-content.jpg") no-repeat fixed;
     background-size: cover;
