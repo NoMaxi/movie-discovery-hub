@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Loader Should render loader component with correct props 1`] = `
+<DocumentFragment>
+  <div
+    data-testid="mocked-pacman-loader"
+  >
+    Mocked PacmanLoader
+  </div>
+</DocumentFragment>
+`;
