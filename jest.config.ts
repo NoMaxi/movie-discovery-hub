@@ -32,10 +32,10 @@ const config: Config = {
         "!src/**/*.mocks.ts",
         "!src/**/*.mocks.tsx",
         "!src/**/index.{ts,tsx}",
+        "!src/constants/**",
         "!src/types/**",
         "!src/mocks/**",
         "!src/main.tsx",
-        "!src/constants.ts",
     ],
     coverageThreshold: {
         global: {
