@@ -1,5 +1,5 @@
 import { PacmanLoader } from "react-spinners";
-import { PRIMARY_COLOR } from "@/constants";
+import { PRIMARY_COLOR } from "@/constants/constants";
 
 export const Loader = () => (
     <PacmanLoader

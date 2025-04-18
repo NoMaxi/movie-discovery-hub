@@ -1,6 +1,6 @@
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { SelectableGenre } from "@/types/common";
-import { SELECTABLE_GENRES } from "@/constants";
+import { SELECTABLE_GENRES } from "@/constants/constants";
 import { useClickOutside } from "@/hooks/useClickOutside/useClickOutside";
 import SelectArrow from "@/components/common/SelectArrow/SelectArrow";
 

@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { useInView } from "react-intersection-observer";
 import bgHeaderImage from "@/assets/bg_header.png";
-import { DEFAULT_ACTIVE_GENRE, DEFAULT_SORT_CRITERION, GENRES } from "@/constants";
+import { DEFAULT_ACTIVE_GENRE, DEFAULT_SORT_CRITERION, GENRES } from "@/constants/constants";
 import { Genre, Movie, MovieDetailsData, SortOption } from "@/types/common";
 import { movieService } from "@/services/movieService";
 import { SearchForm } from "@/components/SearchForm/SearchForm";

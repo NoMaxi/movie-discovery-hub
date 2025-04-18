@@ -1,4 +1,5 @@
 import { InitialMovieInfo, MovieDetailsData } from "@/types/common";
+import { APIMovieDetails } from "@/services/movieService";
 
 export const mockMovieDetails: MovieDetailsData = {
     id: 1,
@@ -26,4 +27,15 @@ export const alternativeMovieDetails: MovieDetailsData = {
 export const mockMovieInfo: InitialMovieInfo = {
     ...mockMovieDetails,
     releaseDate: "1994-10-14",
+};
+
+export const mockAPIMovie: APIMovieDetails = {
+    id: 123,
+    title: "Test Movie",
+    poster_path: "https://example.com/poster.jpg",
+    release_date: "2022-05-15",
+    genres: ["Action", "Drama"],
+    overview: "A test movie description",
+    runtime: 120,
+    vote_average: 7.5,
 };

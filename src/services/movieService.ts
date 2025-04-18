@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 import { Genre, Movie, MovieDetailsData, MovieListResult, SortOption } from "@/types/common";
-import { DEFAULT_MOVIES_PER_PAGE } from "@/constants";
+import { DEFAULT_MOVIES_PER_PAGE } from "@/constants/constants";
 import {
     mapAPIMovieDetailsToMovie,
     mapAPIMovieDetailsToMovieData,

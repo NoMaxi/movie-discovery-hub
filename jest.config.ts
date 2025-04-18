@@ -13,6 +13,7 @@ const config: Config = {
     },
     moduleNameMapper: {
         "\\.(css|less|scss|sass)$": "identity-obj-proxy",
+        "^@/constants/assetConstants$": "<rootDir>/src/mocks/assetConstants.ts",
         "^@/(.*)$": "<rootDir>/src/$1",
     },
 
