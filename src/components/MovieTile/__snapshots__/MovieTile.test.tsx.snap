@@ -21,7 +21,7 @@ exports[`MovieTile Should render movie tile with correct data and no context men
       ⋮
     </button>
     <img
-      alt="Test Movie Title poster"
+      alt="Pulp Fiction poster"
       class="w-full h-[455px] object-cover mb-4"
       src="https://upload.wikimedia.org/wikipedia/en/3/3b/Pulp_Fiction_%281994%29_poster.jpg"
     />
@@ -31,7 +31,7 @@ exports[`MovieTile Should render movie tile with correct data and no context men
       <h3
         class="text-[18px] font-medium text-[var(--color-gray-lighter)] pr-2"
       >
-        Test Movie Title
+        Pulp Fiction
       </h3>
       <span
         class="
@@ -46,7 +46,7 @@ exports[`MovieTile Should render movie tile with correct data and no context men
     <p
       class="text-[14px] text-[var(--color-gray-light)]"
     >
-      Comedy, Horror
+      Comedy, Crime
     </p>
   </div>
 </DocumentFragment>

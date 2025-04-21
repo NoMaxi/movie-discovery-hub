@@ -1,8 +1,8 @@
-import { MovieDetailsData } from "@/types/common";
+import { Movie } from "@/types/common";
 import { formatDuration } from "@/utils/formatting";
 
 interface MovieDetailsProps {
-    details: MovieDetailsData;
+    details: Movie;
 }
 
 export const MovieDetails = ({

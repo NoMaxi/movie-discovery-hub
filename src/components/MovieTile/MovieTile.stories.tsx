@@ -39,6 +39,9 @@ export const Default: Story = {
             releaseYear: 1994,
             genres: ["All", "Horror"],
             imageUrl: "https://upload.wikimedia.org/wikipedia/en/3/3b/Pulp_Fiction_%281994%29_poster.jpg",
+            rating: 8.9,
+            duration: 154,
+            description: "Pulp Fiction description",
         },
     },
 };
@@ -51,6 +54,9 @@ export const LongTitleAndGenres: Story = {
             releaseYear: 2003,
             genres: ["All", "Horror", "Comedy", "Crime", "Documentary"],
             imageUrl: "https://upload.wikimedia.org/wikipedia/commons/7/7d/El_Se%C3%B1or_de_los_Anillos_lectura.jpg",
+            rating: 9.0,
+            duration: 201,
+            description: "The Lord of the Rings: The Return of the King description",
         },
     },
 };
@@ -63,6 +69,9 @@ export const NoImageAvailable: Story = {
             releaseYear: 1994,
             genres: ["Crime", "Documentary"],
             imageUrl: "https://invalid-url-will-cause-error.abc",
+            rating: 7.5,
+            duration: 120,
+            description: "Movie With Broken Image description",
         },
     },
 };
