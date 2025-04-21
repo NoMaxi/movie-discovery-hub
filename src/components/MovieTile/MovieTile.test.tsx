@@ -1,7 +1,7 @@
 import { render, screen, within } from "@testing-library/react";
 import userEvent, { UserEvent } from "@testing-library/user-event";
 import "@testing-library/jest-dom";
-import { mockMovieDetails } from "@/mocks/MovieData";
+import { mockMovieDetails } from "@/mocks/movieData";
 import { MovieTile } from "./MovieTile";
 
 describe("MovieTile", () => {
@@ -22,7 +22,9 @@ describe("MovieTile", () => {
     });
 
     const renderComponent = () =>
-        render(<MovieTile movie={mockMovieDetails} onClick={onClickMock} onEdit={onEditMock} onDelete={onDeleteMock} />);
+        render(
+            <MovieTile movie={mockMovieDetails} onClick={onClickMock} onEdit={onEditMock} onDelete={onDeleteMock} />,
+        );
 
     test("Should render movie tile with correct data and no context menu initially", () => {
         const { asFragment } = renderComponent();

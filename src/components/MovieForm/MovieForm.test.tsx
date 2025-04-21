@@ -3,7 +3,7 @@ import { fireEvent, render, screen, within } from "@testing-library/react";
 import userEvent, { UserEvent } from "@testing-library/user-event";
 import "@testing-library/jest-dom";
 import { InitialMovieInfo, SelectableGenre } from "@/types/common";
-import { mockMovieInfo } from "@/mocks/MovieData";
+import { mockMovieInfo } from "@/mocks/movieData";
 import { GenreMultiSelectProps, GenreMultiSelectRef } from "@/components/GenreMultiSelect/GenreMultiSelect";
 import { MovieForm } from "./MovieForm";
 

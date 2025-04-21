@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { fn } from "@storybook/test";
-import { mockMovieInfo } from "@/mocks/MovieData";
+import { mockMovieInfo } from "@/mocks/movieData";
 import { MovieForm } from "@/components/MovieForm/MovieForm";
 import { Dialog } from "./Dialog";
 

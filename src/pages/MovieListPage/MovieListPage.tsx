@@ -187,9 +187,7 @@ export const MovieListPage = () => {
                     </div>
                 )}
 
-                {showEmptyState && (
-                    <div className="text-center py-10">No movies found.</div>
-                )}
+                {showEmptyState && <div className="text-center py-10">No movies found.</div>}
 
                 <div ref={loadMoreRef} className="h-10 w-full mt-4">
                     {isFetchingNextPage && <div className="text-center py-5 text-lg">Loading more...</div>}

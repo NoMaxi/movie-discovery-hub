@@ -50,6 +50,4 @@ describe("SelectArrow", () => {
         expect(pathElement.tagName.toLowerCase()).toBe("path");
         expect(pathElement).toHaveAttribute("d", "M0 0 L10 0 L5 7 z");
     });
-
-
 });

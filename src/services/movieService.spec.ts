@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 import { movieService, API_URL, APIMovieDetails, CreateMoviePayload } from "@/services/movieService";
-import { mockAPIMovie } from "@/mocks/MovieData";
+import { mockAPIMovie } from "@/mocks/movieData";
 import { mapAPIMovieDetailsToMovieData } from "@/utils/movieMapping";
 import { DEFAULT_MOVIES_PER_PAGE } from "@/constants/constants";
 
