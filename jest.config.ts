@@ -12,8 +12,8 @@ const config: Config = {
         ],
     },
     moduleNameMapper: {
-        "\\.(css|less|scss|sass)$": "identity-obj-proxy",
-        "^@/constants/assetConstants$": "<rootDir>/src/mocks/assetConstants.ts",
+        "\\.(css|less|scss|sass)$": "<rootDir>/src/mocks/fileMock.ts",
+        "\\.(png|jpg|jpeg|gif|svg)$": "<rootDir>/src/mocks/fileMock.ts",
         "^@/(.*)$": "<rootDir>/src/$1",
     },
 
