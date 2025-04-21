@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { MovieDetails } from "./MovieDetails";
-import { mockMovieDetails } from "@/mocks/MovieData";
+import { mockMovieDetails } from "@/mocks/movieData";
 
 const meta = {
     title: "Components/MovieDetails",

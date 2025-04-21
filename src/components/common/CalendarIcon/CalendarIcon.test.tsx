@@ -37,4 +37,3 @@ describe("CalendarIcon", () => {
         expect(svgElement).toHaveClass(className);
     });
 });
-

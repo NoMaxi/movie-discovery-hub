@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { formatDuration } from "@/utils/formatting";
 import { Movie } from "@/types/common";
-import { mockMovieDetails, alternativeMovieDetails } from "@/mocks/MovieData";
+import { mockMovieDetails, alternativeMovieDetails } from "@/mocks/movieData";
 import { MovieDetails } from "./MovieDetails";
 
 describe("MovieDetails", () => {

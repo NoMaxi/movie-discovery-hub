@@ -2,7 +2,7 @@ import { DEFAULT_DESCRIPTION, DEFAULT_TITLE } from "@/constants/constants";
 import { DEFAULT_IMAGE_URL } from "@/constants/assetConstants";
 import { getYearFromDate } from "@/utils/formatting";
 import { mapAPIMovieDetailsToMovieData, mapSortOptionToSortBy, mapSortOptionToSortOrder } from "./movieMapping";
-import { mockAPIMovie } from "@/mocks/MovieData";
+import { mockAPIMovie } from "@/mocks/movieData";
 import { APIMovieDetails } from "@/services/movieService";
 import { SortOption } from "@/types/common";
 

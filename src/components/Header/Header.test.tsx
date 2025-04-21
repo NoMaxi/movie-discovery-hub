@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent, { UserEvent } from "@testing-library/user-event";
 import "@testing-library/jest-dom";
-import { mockMovieDetails } from "@/mocks/MovieData";
+import { mockMovieDetails } from "@/mocks/movieData";
 import { Header } from "./Header";
 
 describe("Header", () => {

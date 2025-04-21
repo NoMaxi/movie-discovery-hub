@@ -120,7 +120,7 @@ body {
 }
 
 .input-transparent-shadow-glow {
-    @apply bg-transparent shadow-[inset_0_0_15px_var(--color-primary),inset_0_0_3px_var(--color-primary)]
+    @apply bg-transparent shadow-[inset_0_0_15px_var(--color-primary),inset_0_0_3px_var(--color-primary)];
 }
 
 input[type="date"].input-field {
