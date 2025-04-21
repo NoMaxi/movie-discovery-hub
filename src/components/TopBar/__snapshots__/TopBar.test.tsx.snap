@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TopBar Should render correctly with NetflixRouletteText and Add movie button 1`] = `
+<DocumentFragment>
+  <div
+    class="
+            flex justify-between items-center fixed
+            top-0 left-0 right-0 h-[60px] px-16 z-50
+            bg-opacity-80 backdrop-blur-sm shadow-md
+        "
+  >
+    <div
+      data-testid="mocked-netflix-roulette-text"
+    >
+      NetflixRouletteText
+    </div>
+    <button
+      class="btn-add-movie"
+    >
+      + Add Movie
+    </button>
+  </div>
+</DocumentFragment>
+`;
