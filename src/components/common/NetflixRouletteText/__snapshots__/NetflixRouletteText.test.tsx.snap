@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`NetflixRouletteText Should render the component with correct text parts 1`] = `
+<DocumentFragment>
+  <span
+    class="text-[var(--color-primary)] group"
+    data-testid="netflix-roulette-text"
+  >
+    <span
+      class="font-black group-hover:text-blue-500 transition-colors duration-300"
+    >
+      netflix
+    </span>
+    <span
+      class="font-medium group-hover:text-red-500 transition-colors duration-300"
+    >
+      roulette
+    </span>
+  </span>
+</DocumentFragment>
+`;

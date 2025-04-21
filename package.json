@@ -17,10 +17,15 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.0.14",
+    "@tanstack/react-query": "^5.74.3",
+    "axios": "^1.8.4",
+    "date-fns": "^4.1.0",
     "focus-trap-react": "^11.0.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-portal": "^4.3.0"
+    "react-intersection-observer": "^9.16.0",
+    "react-portal": "^4.3.0",
+    "react-spinners": "^0.16.1"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^3.2.6",
@@ -34,6 +39,8 @@
     "@storybook/react": "^8.6.11",
     "@storybook/react-vite": "^8.6.11",
     "@storybook/test": "^8.6.11",
+    "@tanstack/eslint-plugin-query": "^5.73.3",
+    "@tanstack/react-query-devtools": "^5.74.3",
     "@testing-library/cypress": "^10.0.3",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
@@ -49,7 +56,7 @@
     "autoprefixer": "^10.4.21",
     "cypress": "^14.2.0",
     "eslint": "^9.21.0",
-    "eslint-plugin-react-hooks": "^5.1.0",
+    "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.19",
     "eslint-plugin-storybook": "^0.12.0",
     "eslint-plugin-testing-library": "^7.1.1",
@@ -66,7 +73,7 @@
     "tsx": "^4.19.3",
     "typescript": "~5.7.2",
     "typescript-eslint": "^8.24.1",
-    "vite": "^6.2.2",
+    "vite": "^6.3.0",
     "vitest": "^3.0.9"
   },
   "eslintConfig": {

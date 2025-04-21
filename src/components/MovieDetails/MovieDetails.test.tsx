@@ -1,12 +1,12 @@
 import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { formatDuration } from "@/utils/formatting";
-import { MovieDetailsData } from "@/types/common";
+import { Movie } from "@/types/common";
 import { mockMovieDetails, alternativeMovieDetails } from "@/mocks/MovieData";
 import { MovieDetails } from "./MovieDetails";
 
 describe("MovieDetails", () => {
-    const renderComponent = (details: MovieDetailsData) => {
+    const renderComponent = (details: Movie) => {
         return render(<MovieDetails details={details} />);
     };
 

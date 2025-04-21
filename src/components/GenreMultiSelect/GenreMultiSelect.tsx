@@ -1,13 +1,13 @@
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { SelectableGenre } from "@/types/common";
-import { SELECTABLE_GENRES } from "@/constants";
+import { SELECTABLE_GENRES } from "@/constants/constants";
 import { useClickOutside } from "@/hooks/useClickOutside/useClickOutside";
 import SelectArrow from "@/components/common/SelectArrow/SelectArrow";
 
 export interface GenreMultiSelectProps {
     id: string;
     name: string;
-    preselectedGenres?: SelectableGenre[];
+    preselectedGenres?: string[];
     ariaDescribedby?: string;
 }
 
@@ -18,7 +18,7 @@ export interface GenreMultiSelectRef {
 export const GenreMultiSelect = forwardRef<GenreMultiSelectRef, GenreMultiSelectProps>(
     ({ preselectedGenres = [], id, name, ariaDescribedby }, ref) => {
         const [isOpen, setIsOpen] = useState(false);
-        const [selectedGenres, setSelectedGenres] = useState<Set<SelectableGenre>>(new Set(preselectedGenres));
+        const [selectedGenres, setSelectedGenres] = useState<Set<string>>(new Set(preselectedGenres));
         const [hiddenValue, setHiddenValue] = useState(preselectedGenres.join(", "));
         const controlRef = useRef<HTMLDivElement>(null);
         const hiddenInputRef = useRef<HTMLInputElement>(null);

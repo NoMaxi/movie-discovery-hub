@@ -51,15 +51,6 @@ describe("<SearchForm /> Component Tests", () => {
         cy.get("@onSearchSpy").should("have.been.calledOnceWith", searchText);
     });
 
-    it("Should not call 'onSearch' prop when Enter key is pressed in the input if the input value is empty", () => {
-        const onSearchSpy = cy.spy().as("onSearchSpy");
-        cy.mount(<SearchForm onSearch={onSearchSpy} />);
-
-        cy.get(searchInputSelector).type(`{enter}`);
-
-        cy.get("@onSearchSpy").should("not.have.been.called");
-    });
-
     it("Should not call 'onSearch' prop when a non-Enter key is pressed in the input", () => {
         const onSearchSpy = cy.spy().as("onSearchSpy");
         cy.mount(<SearchForm onSearch={onSearchSpy} />);

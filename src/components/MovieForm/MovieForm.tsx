@@ -9,12 +9,12 @@ interface MovieFormProps {
 }
 
 interface MovieFormData {
-    id?: string;
+    id?: number;
     title: string;
     release_date: string;
     poster_path: string;
     vote_average: number;
-    genres: Genre[];
+    genres: string[];
     runtime: number;
     overview: string;
 }

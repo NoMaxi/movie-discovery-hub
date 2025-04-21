@@ -13,7 +13,13 @@ interface ContextMenuProps {
     withCloseButton?: boolean;
 }
 
-export const ContextMenu = ({ isOpen, onClose, actions, className = "", withCloseButton = false }: ContextMenuProps) => {
+export const ContextMenu = ({
+    isOpen,
+    onClose,
+    actions,
+    className = "",
+    withCloseButton = false,
+}: ContextMenuProps) => {
     if (!isOpen) {
         return null;
     }
@@ -39,7 +45,7 @@ export const ContextMenu = ({ isOpen, onClose, actions, className = "", withClos
                 context-menu
                 absolute z-20 min-w-[100px]
                 flex flex-col justify-center
-                bg-[var(--color-background)]
+                bg-[var(--color-content-background)]
                 ring-1 ring-black shadow-lg rounded
                 overflow-hidden
                 ${className}

@@ -3,7 +3,7 @@ import { render, screen, act } from "@testing-library/react";
 import userEvent, { UserEvent } from "@testing-library/user-event";
 import "@testing-library/jest-dom";
 import { SelectableGenre } from "@/types/common";
-import { SELECTABLE_GENRES } from "@/constants";
+import { SELECTABLE_GENRES } from "@/constants/constants";
 import { GenreMultiSelect, GenreMultiSelectRef } from "./GenreMultiSelect";
 
 jest.mock("@/hooks/useClickOutside/useClickOutside", () => ({

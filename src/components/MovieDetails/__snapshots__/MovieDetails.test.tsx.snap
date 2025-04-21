@@ -3,11 +3,14 @@
 exports[`MovieDetails Should render different movie details correctly 1`] = `
 <DocumentFragment>
   <div
-    class="movie-details flex gap-x-14 p-8 text-[var(--color-text)] w-full"
+    class="
+                movie-details flex w-full gap-x-14 p-8 text-[var(--color-text)]
+                bg-[var(--color-content-background)]
+            "
   >
     <img
       alt="Another Great Film poster"
-      class="movie-details-poster w-[320px] h-[485px] object-cover flex-shrink-0"
+      class="movie-details-poster flex-shrink-0 w-[320px] h-[485px] object-cover"
       src="https://example.com/poster-alt.jpg"
     />
     <div
@@ -17,12 +20,15 @@ exports[`MovieDetails Should render different movie details correctly 1`] = `
         class="flex items-center gap-x-5 mb-2"
       >
         <h1
-          class="movie-details-title text-[40px] font-light tracking-[1px] text-white uppercase"
+          class="movie-details-title text-[40px] font-light tracking-[1px] uppercase"
         >
           Another Great Film
         </h1>
         <div
-          class="movie-details-rating w-[60px] h-[60px] border-2 rounded-full flex items-center justify-center flex-shrink-0"
+          class="
+                            movie-details-rating flex flex-shrink-0 items-center justify-center
+                            w-[60px] h-[60px] border-2 rounded-full
+                        "
         >
           <span
             class="font-light"
@@ -63,11 +69,14 @@ exports[`MovieDetails Should render different movie details correctly 1`] = `
 exports[`MovieDetails Should render movie details correctly with provided data 1`] = `
 <DocumentFragment>
   <div
-    class="movie-details flex gap-x-14 p-8 text-[var(--color-text)] w-full"
+    class="
+                movie-details flex w-full gap-x-14 p-8 text-[var(--color-text)]
+                bg-[var(--color-content-background)]
+            "
   >
     <img
       alt="Pulp Fiction poster"
-      class="movie-details-poster w-[320px] h-[485px] object-cover flex-shrink-0"
+      class="movie-details-poster flex-shrink-0 w-[320px] h-[485px] object-cover"
       src="https://upload.wikimedia.org/wikipedia/en/3/3b/Pulp_Fiction_%281994%29_poster.jpg"
     />
     <div
@@ -77,12 +86,15 @@ exports[`MovieDetails Should render movie details correctly with provided data 1
         class="flex items-center gap-x-5 mb-2"
       >
         <h1
-          class="movie-details-title text-[40px] font-light tracking-[1px] text-white uppercase"
+          class="movie-details-title text-[40px] font-light tracking-[1px] uppercase"
         >
           Pulp Fiction
         </h1>
         <div
-          class="movie-details-rating w-[60px] h-[60px] border-2 rounded-full flex items-center justify-center flex-shrink-0"
+          class="
+                            movie-details-rating flex flex-shrink-0 items-center justify-center
+                            w-[60px] h-[60px] border-2 rounded-full
+                        "
         >
           <span
             class="font-light"

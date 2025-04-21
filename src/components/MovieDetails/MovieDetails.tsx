@@ -1,27 +1,35 @@
-import { MovieDetailsData } from "@/types/common";
+import { Movie } from "@/types/common";
 import { formatDuration } from "@/utils/formatting";
 
 interface MovieDetailsProps {
-    details: MovieDetailsData;
+    details: Movie;
 }
 
 export const MovieDetails = ({
     details: { description, duration, genres, imageUrl, rating, releaseYear, title },
 }: MovieDetailsProps) => {
     return (
-        <div className="movie-details flex gap-x-14 p-8 text-[var(--color-text)] w-full">
+        <div
+            className="
+                movie-details flex w-full gap-x-14 p-8 text-[var(--color-text)]
+                bg-[var(--color-content-background)]
+            "
+        >
             <img
                 src={imageUrl}
                 alt={`${title} poster`}
-                className="movie-details-poster w-[320px] h-[485px] object-cover flex-shrink-0"
+                className="movie-details-poster flex-shrink-0 w-[320px] h-[485px] object-cover"
             />
 
             <div className="movie-details-info flex flex-col flex-grow">
                 <div className="flex items-center gap-x-5 mb-2">
-                    <h1 className="movie-details-title text-[40px] font-light tracking-[1px] text-white uppercase">
-                        {title}
-                    </h1>
-                    <div className="movie-details-rating w-[60px] h-[60px] border-2 rounded-full flex items-center justify-center flex-shrink-0">
+                    <h1 className="movie-details-title text-[40px] font-light tracking-[1px] uppercase">{title}</h1>
+                    <div
+                        className="
+                            movie-details-rating flex flex-shrink-0 items-center justify-center
+                            w-[60px] h-[60px] border-2 rounded-full
+                        "
+                    >
                         <span className="font-light">{rating}</span>
                     </div>
                 </div>

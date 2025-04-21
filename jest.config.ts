@@ -12,7 +12,8 @@ const config: Config = {
         ],
     },
     moduleNameMapper: {
-        "\\.(css|less|scss|sass)$": "identity-obj-proxy",
+        "\\.(css|less|scss|sass)$": "<rootDir>/src/mocks/fileMock.ts",
+        "\\.(png|jpg|jpeg|gif|svg)$": "<rootDir>/src/mocks/fileMock.ts",
         "^@/(.*)$": "<rootDir>/src/$1",
     },
 
@@ -31,10 +32,10 @@ const config: Config = {
         "!src/**/*.mocks.ts",
         "!src/**/*.mocks.tsx",
         "!src/**/index.{ts,tsx}",
+        "!src/constants/**",
         "!src/types/**",
         "!src/mocks/**",
         "!src/main.tsx",
-        "!src/constants.ts",
     ],
     coverageThreshold: {
         global: {
