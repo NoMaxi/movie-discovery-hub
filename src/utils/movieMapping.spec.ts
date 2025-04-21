@@ -1,40 +1,12 @@
 import { DEFAULT_DESCRIPTION, DEFAULT_TITLE } from "@/constants/constants";
 import { DEFAULT_IMAGE_URL } from "@/constants/assetConstants";
 import { getYearFromDate } from "@/utils/formatting";
-import {
-    mapAPIMovieDetailsToMovie,
-    mapAPIMovieDetailsToMovieData,
-    mapSortOptionToSortBy,
-    mapSortOptionToSortOrder,
-} from "./movieMapping";
+import { mapAPIMovieDetailsToMovieData, mapSortOptionToSortBy, mapSortOptionToSortOrder } from "./movieMapping";
 import { mockAPIMovie } from "@/mocks/MovieData";
 import { APIMovieDetails } from "@/services/movieService";
 import { SortOption } from "@/types/common";
 
 describe("movieMapping", () => {
-    describe("mapAPIMovieDetailsToMovie", () => {
-        it("Should correctly map APIMovieDetails to Movie", () => {
-            const result = mapAPIMovieDetailsToMovie(mockAPIMovie);
-
-            expect(result).toBeDefined();
-            expect(result.id).toBe(mockAPIMovie.id);
-            expect(result.genres).toStrictEqual(mockAPIMovie.genres);
-            expect(result.imageUrl).toBe(mockAPIMovie.poster_path);
-            expect(result.releaseYear).toBe(getYearFromDate(mockAPIMovie.release_date));
-            expect(result.title).toBe(mockAPIMovie.title);
-        });
-
-        it("Should correctly return default values", () => {
-            const missingValuesMovie: APIMovieDetails = { ...mockAPIMovie, poster_path: "", title: "" };
-
-            const result = mapAPIMovieDetailsToMovie(missingValuesMovie);
-
-            expect(result).toBeDefined();
-            expect(result.imageUrl).toBe(DEFAULT_IMAGE_URL);
-            expect(result.title).toBe(DEFAULT_TITLE);
-        });
-    });
-
     describe("mapAPIMovieDetailsToMovieData", () => {
         it("Should correctly map APIMovieDetails to MovieDetailsData", () => {
             const result = mapAPIMovieDetailsToMovieData(mockAPIMovie);

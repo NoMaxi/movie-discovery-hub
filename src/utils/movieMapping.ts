@@ -1,22 +1,8 @@
-import { Movie, MovieDetailsData, SortOption } from "@/types/common";
+import { Movie, SortOption } from "@/types/common";
 import { DEFAULT_DESCRIPTION, DEFAULT_TITLE } from "@/constants/constants";
 import { DEFAULT_IMAGE_URL } from "@/constants/assetConstants";
 import { getYearFromDate } from "@/utils/formatting";
 import { APIMovieDetails, SortBy, SortOrder } from "@/services/movieService";
-
-export const mapAPIMovieDetailsToMovie = ({
-    genres,
-    id,
-    poster_path,
-    release_date,
-    title,
-}: APIMovieDetails): Movie => ({
-    id,
-    genres,
-    imageUrl: poster_path || DEFAULT_IMAGE_URL,
-    releaseYear: getYearFromDate(release_date),
-    title: title || DEFAULT_TITLE,
-});
 
 export const mapAPIMovieDetailsToMovieData = ({
     id,
@@ -27,7 +13,7 @@ export const mapAPIMovieDetailsToMovieData = ({
     vote_average,
     release_date,
     title,
-}: APIMovieDetails): MovieDetailsData => ({
+}: APIMovieDetails): Movie => ({
     id,
     description: overview || DEFAULT_DESCRIPTION,
     duration: runtime,

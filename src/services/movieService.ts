@@ -1,12 +1,7 @@
 import axios, { AxiosResponse } from "axios";
-import { Genre, Movie, MovieDetailsData, MovieListResult, SortOption } from "@/types/common";
+import { Genre, Movie, SortOption } from "@/types/common";
 import { DEFAULT_MOVIES_PER_PAGE } from "@/constants/constants";
-import {
-    mapAPIMovieDetailsToMovie,
-    mapAPIMovieDetailsToMovieData,
-    mapSortOptionToSortBy,
-    mapSortOptionToSortOrder,
-} from "@/utils/movieMapping";
+import { mapAPIMovieDetailsToMovieData, mapSortOptionToSortBy, mapSortOptionToSortOrder } from "@/utils/movieMapping";
 
 export interface CreateMoviePayload {
     genres: string[];
@@ -51,11 +46,15 @@ export interface MoviesRequestParams {
     filter?: Genre;
 }
 
-export const API_URL = "http://localhost:4000/movies";
-
-export interface InfiniteMovieListResult extends MovieListResult {
+export interface InfiniteMovieListResult {
+    movies: Movie[];
+    totalAmount: number;
+    offset: number;
+    limit: number;
     nextOffset?: number;
 }
+
+export const API_URL = "http://localhost:4000/movies";
 
 export const movieService = {
     async getMovies(
@@ -84,7 +83,7 @@ export const movieService = {
         const { data: moviesResponse } = await axios.get<MoviesResponse>(API_URL, { params, signal });
 
         const { offset: responseOffset, totalAmount, limit, data } = moviesResponse;
-        const movies: Movie[] = data.map(mapAPIMovieDetailsToMovie);
+        const movies: Movie[] = data.map(mapAPIMovieDetailsToMovieData);
         const currentTotalFetched = offset + movies.length;
         const nextOffset = currentTotalFetched < totalAmount ? currentTotalFetched : undefined;
 
@@ -97,12 +96,12 @@ export const movieService = {
         };
     },
 
-    async getMovieById(id: number): Promise<MovieDetailsData> {
+    async getMovieById(id: number): Promise<Movie> {
         const response = await axios.get<APIMovieDetails>(`${API_URL}/${id}`);
         return mapAPIMovieDetailsToMovieData(response.data);
     },
 
-    async createMovie(movieData: CreateMoviePayload): Promise<MovieDetailsData> {
+    async createMovie(movieData: CreateMoviePayload): Promise<Movie> {
         const { data } = await axios.post<APIMovieDetails, AxiosResponse<APIMovieDetails>, CreateMoviePayload>(
             API_URL,
             movieData,
@@ -110,7 +109,7 @@ export const movieService = {
         return mapAPIMovieDetailsToMovieData(data);
     },
 
-    async updateMovie(movieData: APIMovieDetails): Promise<MovieDetailsData> {
+    async updateMovie(movieData: APIMovieDetails): Promise<Movie> {
         const { data } = await axios.put<APIMovieDetails, AxiosResponse<APIMovieDetails>, APIMovieDetails>(
             API_URL,
             movieData,
