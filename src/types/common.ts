@@ -8,28 +8,13 @@ export interface Movie {
     title: string;
     releaseYear: number;
     genres: string[];
-}
-
-export interface MovieDetailsData {
-    id: number;
-    imageUrl: string;
-    title: string;
-    releaseYear: number;
-    genres: string[];
     rating: number;
     duration: number;
     description: string;
 }
 
-export interface InitialMovieInfo extends Omit<MovieDetailsData, "releaseYear"> {
+export interface InitialMovieInfo extends Omit<Movie, "releaseYear"> {
     releaseDate: string;
 }
 
 export type SortOption = "Release Date" | "Title";
-
-export interface MovieListResult {
-    movies: Movie[];
-    totalAmount: number;
-    offset: number;
-    limit: number;
-}
