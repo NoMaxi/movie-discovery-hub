@@ -1,23 +1,22 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { useInView } from "react-intersection-observer";
-import bgHeaderImage from "@/assets/bg_header.png";
 import { DEFAULT_ACTIVE_GENRE, DEFAULT_SORT_CRITERION, GENRES } from "@/constants/constants";
-import { Genre, Movie, MovieDetailsData, SortOption } from "@/types/common";
-import { movieService } from "@/services/movieService";
-import { SearchForm } from "@/components/SearchForm/SearchForm";
+import { Genre, Movie, SortOption } from "@/types/common";
+import { InfiniteMovieListResult, movieService } from "@/services/movieService";
 import { GenreSelect } from "@/components/GenreSelect/GenreSelect";
 import { SortControl } from "@/components/SortControl/SortControl";
 import { MovieTile } from "@/components/MovieTile/MovieTile";
-import { MovieDetails } from "@/components/MovieDetails/MovieDetails";
 import { NetflixRouletteText } from "@/components/common/NetflixRouletteText/NetflixRouletteText";
 import { Loader } from "@/components/common/Loader/Loader";
+import { TopBar } from "@/components/TopBar/TopBar";
+import { Header } from "@/components/Header/Header";
 
 export const MovieListPage = () => {
     const [searchQuery, setSearchQuery] = useState<string>("");
     const [sortCriterion, setSortCriterion] = useState<SortOption>(DEFAULT_SORT_CRITERION);
     const [activeGenre, setActiveGenre] = useState<Genre>(DEFAULT_ACTIVE_GENRE);
-    const [selectedMovie, setSelectedMovie] = useState<MovieDetailsData | null>(null);
+    const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
 
     const queryClient = useQueryClient();
     const { ref: loadMoreRef, inView: isLoadMoreVisible } = useInView({ threshold: 0.1 });
@@ -32,11 +31,7 @@ export const MovieListPage = () => {
         isFetching,
         isFetchingNextPage,
         isLoading,
-    } = useInfiniteQuery<{
-        movies: Movie[];
-        totalAmount: number;
-        nextOffset?: number;
-    }>({
+    } = useInfiniteQuery<InfiniteMovieListResult>({
         queryKey: ["movies", activeGenre, sortCriterion, searchQuery],
         queryFn: ({ pageParam = 0, signal }) => {
             return movieService.getMovies(searchQuery, sortCriterion, activeGenre, signal, pageParam as number);
@@ -79,35 +74,14 @@ export const MovieListPage = () => {
         resetViewState();
     };
 
-    const [isDetailLoading, setIsDetailLoading] = useState(false);
-    const [detailError, setDetailError] = useState<string | null>(null);
-
-    const handleMovieClick = async (movie: Movie, event: React.MouseEvent<HTMLDivElement>) => {
-        if (isDetailLoading || movie.id === selectedMovie?.id) {
-            return;
-        }
-
-        setIsDetailLoading(true);
-        setDetailError(null);
+    const handleMovieClick = (movie: Movie, event: React.MouseEvent<HTMLDivElement>) => {
         lastClickedTileRef.current = event.currentTarget;
-
-        const movieId = movie.id;
-        try {
-            const movieDetails = await movieService.getMovieById(movieId);
-            setSelectedMovie(movieDetails);
-            window.scrollTo({ top: 0, behavior: "smooth" });
-        } catch (error) {
-            console.error(`Failed to fetch movie details by id ${movieId}:`, error);
-            setDetailError("Failed to load movie details.");
-            resetViewState();
-        } finally {
-            setIsDetailLoading(false);
-        }
+        setSelectedMovie(movie);
+        window.scrollTo({ top: 0, behavior: "smooth" });
     };
 
     const handleDetailsClose = () => {
         resetSelectedMovie();
-        setDetailError(null);
 
         if (lastClickedTileRef.current) {
             lastClickedTileRef.current.scrollIntoView({
@@ -151,71 +125,23 @@ export const MovieListPage = () => {
     const totalAmount = data?.pages[0]?.totalAmount ?? 0;
     const queryErrorMessage =
         queryError instanceof Error ? queryError.message : "An unknown error occurred while fetching movies.";
-    const showDetailsSection = !!selectedMovie || isDetailLoading;
+
+    const showDetailsSection = !!selectedMovie;
+    const showError = !isLoading && isError;
+    const showMovieGrid = !isLoading && !isError && allMovies.length > 0;
+    const showEmptyState = !isLoading && !isError && allMovies.length === 0 && !isFetching;
 
     return (
         <div className="movie-list-page flex flex-col items-center relative w-full min-h-screen">
-            <div
-                className="
-                    flex justify-between items-center
-                    fixed top-0 left-0 right-0 h-[60px] px-16 z-50
-                    bg-opacity-80 backdrop-blur-sm shadow-md
-                "
-            >
-                <NetflixRouletteText />
-                <button className="btn-add-movie" onClick={handleAddMovieClick}>
-                    + Add Movie
-                </button>
-            </div>
+            <TopBar onAddMovieClick={handleAddMovieClick} />
 
-            <header
-                className="
-                    relative w-[var(--content-width)] px-[60px] pt-[80px] pb-[20px] mb-[10px]
-                    bg-[var(--color-content-background)] bg-cover bg-center bg-no-repeat
-                "
-                style={{ backgroundImage: `url(${bgHeaderImage})` }}
-            >
-                <div className={`flex flex-col relative z-10 ${showDetailsSection ? "h-[540px]" : "min-h-[290px]"}`}>
-                    {showDetailsSection ? (
-                        <>
-                            <button
-                                onClick={handleDetailsClose}
-                                className="
-                                    absolute top-0 right-0 text-5xl p-2 z-20
-                                    text-[var(--color-primary)] hover:text-red-400
-                                    cursor-pointer transition-colors
-                                "
-                                title="Back to Search"
-                                aria-label="Close movie details"
-                            >
-                                ×
-                            </button>
-                            {isDetailLoading && (
-                                <div className="flex justify-center items-center p-10 -ml-24 h-full">
-                                    <Loader />
-                                </div>
-                            )}
-                            {detailError && (
-                                <div className="flex justify-center items-center text-center text-red-500 p-10 h-full">
-                                    {detailError}
-                                </div>
-                            )}
-                            {!isDetailLoading && !detailError && selectedMovie && (
-                                <MovieDetails details={selectedMovie} />
-                            )}
-                        </>
-                    ) : (
-                        <div className="flex flex-col items-start px-[60px]">
-                            <h2 className="text-[40px] font-light uppercase mb-8 mt-[25px] tracking-[1px]">
-                                Find Your Movie
-                            </h2>
-                            <div className="w-full">
-                                <SearchForm initialQuery={searchQuery} onSearch={handleSearch} />
-                            </div>
-                        </div>
-                    )}
-                </div>
-            </header>
+            <Header
+                searchQuery={searchQuery}
+                onSearch={handleSearch}
+                showDetailsSection={showDetailsSection}
+                selectedMovie={selectedMovie}
+                onDetailsClose={handleDetailsClose}
+            />
 
             <main
                 className="
@@ -233,19 +159,21 @@ export const MovieListPage = () => {
                     <SortControl currentSelection={sortCriterion} onSelectionChange={handleSortChange} />
                 </div>
 
-                <div className="mb-6">
+                <div className="mb-6" data-testid="movie-count">
                     <span className="font-semibold">{totalAmount}</span> movies found
                     {isDeleting && <span className="ml-4 text-yellow-500"> Deleting...</span>}
                     {deleteError && <span className="ml-4 text-red-500"> {deleteError}</span>}
                 </div>
 
-                {isLoading ? (
+                {isLoading && (
                     <div className="flex justify-center items-center pt-10 -ml-24 h-full">
                         <Loader />
                     </div>
-                ) : isError ? (
-                    <div className="text-center py-10 text-red-500">{queryErrorMessage}</div>
-                ) : allMovies.length > 0 ? (
+                )}
+
+                {showError && <div className="text-center py-10 text-red-500">{queryErrorMessage}</div>}
+
+                {showMovieGrid && (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-[64px] gap-y-8">
                         {allMovies.map((movie) => (
                             <MovieTile
@@ -257,8 +185,10 @@ export const MovieListPage = () => {
                             />
                         ))}
                     </div>
-                ) : (
-                    !isFetching && <div className="text-center py-10">No movies found.</div>
+                )}
+
+                {showEmptyState && (
+                    <div className="text-center py-10">No movies found.</div>
                 )}
 
                 <div ref={loadMoreRef} className="h-10 w-full mt-4">
