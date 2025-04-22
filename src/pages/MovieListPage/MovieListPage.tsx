@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { useInView } from "react-intersection-observer";
+import { useSearchParams } from "react-router-dom";
 import { DEFAULT_ACTIVE_GENRE, DEFAULT_SORT_CRITERION, GENRES } from "@/constants/constants";
 import { Genre, Movie, SortOption } from "@/types/common";
 import { InfiniteMovieListResult, movieService } from "@/services/movieService";
@@ -13,14 +14,15 @@ import { TopBar } from "@/components/TopBar/TopBar";
 import { Header } from "@/components/Header/Header";
 
 export const MovieListPage = () => {
-    const [searchQuery, setSearchQuery] = useState<string>("");
-    const [sortCriterion, setSortCriterion] = useState<SortOption>(DEFAULT_SORT_CRITERION);
-    const [activeGenre, setActiveGenre] = useState<Genre>(DEFAULT_ACTIVE_GENRE);
-    const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
-
     const queryClient = useQueryClient();
     const { ref: loadMoreRef, inView: isLoadMoreVisible } = useInView({ threshold: 0.1 });
     const lastClickedTileRef = useRef<HTMLDivElement | null>(null);
+    const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    const searchQuery = searchParams.get("query") ?? "";
+    const sortCriterion = (searchParams.get("sortBy") as SortOption) ?? DEFAULT_SORT_CRITERION;
+    const activeGenre = (searchParams.get("genre") as Genre) ?? DEFAULT_ACTIVE_GENRE;
 
     const {
         data,
@@ -60,17 +62,35 @@ export const MovieListPage = () => {
     };
 
     const handleSearch = (query: string) => {
-        setSearchQuery(query);
+        setSearchParams(
+            (prev) => {
+                prev.set("query", query);
+                return prev;
+            },
+            { replace: true },
+        );
         resetViewState();
     };
 
     const handleGenreSelect = (genre: Genre) => {
-        setActiveGenre(genre);
+        setSearchParams(
+            (prev) => {
+                prev.set("genre", genre);
+                return prev;
+            },
+            { replace: true },
+        );
         resetViewState();
     };
 
     const handleSortChange = (selection: SortOption) => {
-        setSortCriterion(selection);
+        setSearchParams(
+            (prev) => {
+                prev.set("sortBy", selection);
+                return prev;
+            },
+            { replace: true },
+        );
         resetViewState();
     };
 
