@@ -7,7 +7,7 @@ interface GenreSelectProps {
 }
 
 export const GenreSelect = ({ genres, selectedGenre, onSelect }: GenreSelectProps) => (
-    <div className="flex flex-wrap gap-x-8">
+    <div className="flex flex-wrap gap-x-8" data-testid="genre-select">
         {genres.map((genre) => (
             <div
                 key={genre}

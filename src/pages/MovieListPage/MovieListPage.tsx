@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { useInView } from "react-intersection-observer";
 import { useSearchParams } from "react-router-dom";
-import { DEFAULT_ACTIVE_GENRE, DEFAULT_SORT_CRITERION, GENRES } from "@/constants/constants";
+import { DEFAULT_ACTIVE_GENRE, DEFAULT_SORT_OPTION, GENRES } from "@/constants/constants";
 import { Genre, Movie, SortOption } from "@/types/common";
 import { InfiniteMovieListResult, movieService } from "@/services/movieService";
 import { GenreSelect } from "@/components/GenreSelect/GenreSelect";
@@ -21,7 +21,7 @@ export const MovieListPage = () => {
     const [searchParams, setSearchParams] = useSearchParams();
 
     const searchQuery = searchParams.get("query") ?? "";
-    const sortCriterion = (searchParams.get("sortBy") as SortOption) ?? DEFAULT_SORT_CRITERION;
+    const sortCriterion = (searchParams.get("sortBy") as SortOption) ?? DEFAULT_SORT_OPTION;
     const activeGenre = (searchParams.get("genre") as Genre) ?? DEFAULT_ACTIVE_GENRE;
 
     const {
