@@ -56,24 +56,22 @@ export const MovieListPage = () => {
         }
     }, [movieId]);
 
-    const handleGenreSelect = (genre: Genre) => {
+    const updateSearchParam = (key: "genre" | "sortBy", value: Genre | SortOption) => {
         setSearchParams(
             (prev) => {
-                prev.set("genre", genre);
+                prev.set(key, value);
                 return prev;
             },
             { replace: true },
         );
     };
 
-    const handleSortChange = (selection: SortOption) => {
-        setSearchParams(
-            (prev) => {
-                prev.set("sortBy", selection);
-                return prev;
-            },
-            { replace: true },
-        );
+    const handleGenreSelect = (genre: Genre) => {
+        updateSearchParam("genre", genre);
+    };
+
+    const handleSortChange = (sortOption: SortOption) => {
+        updateSearchParam("sortBy", sortOption);
     };
 
     const handleMovieClick = (movie: Movie, event: React.MouseEvent<HTMLDivElement>) => {
