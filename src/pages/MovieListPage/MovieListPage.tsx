@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { useInView } from "react-intersection-observer";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { DEFAULT_ACTIVE_GENRE, DEFAULT_SORT_OPTION, GENRES } from "@/constants/constants";
 import { Genre, Movie, SortOption } from "@/types/common";
 import { InfiniteMovieListResult, movieService } from "@/services/movieService";
@@ -14,11 +14,12 @@ import { TopBar } from "@/components/TopBar/TopBar";
 import { Header } from "@/components/Header/Header";
 
 export const MovieListPage = () => {
-    const queryClient = useQueryClient();
-    const { ref: loadMoreRef, inView: isLoadMoreVisible } = useInView({ threshold: 0.1 });
-    const lastClickedTileRef = useRef<HTMLDivElement | null>(null);
-    const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
     const [searchParams, setSearchParams] = useSearchParams();
+    const { movieId } = useParams<{ movieId: string }>();
+    const navigate = useNavigate();
+    const queryClient = useQueryClient();
+    const lastClickedTileRef = useRef<HTMLDivElement | null>(null);
+    const { ref: loadMoreRef, inView: isLoadMoreVisible } = useInView({ threshold: 0.1 });
 
     const searchQuery = searchParams.get("query") ?? "";
     const sortCriterion = (searchParams.get("sortBy") as SortOption) ?? DEFAULT_SORT_OPTION;
@@ -48,29 +49,12 @@ export const MovieListPage = () => {
         }
     }, [isLoadMoreVisible, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-    const resetSelectedMovie = () => {
-        setSelectedMovie(null);
-    };
-
-    const resetClickedTile = () => {
-        lastClickedTileRef.current = null;
-    };
-
-    const resetViewState = () => {
-        resetSelectedMovie();
-        resetClickedTile();
-    };
-
-    const handleSearch = (query: string) => {
-        setSearchParams(
-            (prev) => {
-                prev.set("query", query);
-                return prev;
-            },
-            { replace: true },
-        );
-        resetViewState();
-    };
+    useEffect(() => {
+        if (!movieId && lastClickedTileRef.current) {
+            lastClickedTileRef.current.scrollIntoView({ behavior: "smooth", block: "nearest" });
+            lastClickedTileRef.current = null;
+        }
+    }, [movieId]);
 
     const handleGenreSelect = (genre: Genre) => {
         setSearchParams(
@@ -80,7 +64,6 @@ export const MovieListPage = () => {
             },
             { replace: true },
         );
-        resetViewState();
     };
 
     const handleSortChange = (selection: SortOption) => {
@@ -91,25 +74,14 @@ export const MovieListPage = () => {
             },
             { replace: true },
         );
-        resetViewState();
     };
 
     const handleMovieClick = (movie: Movie, event: React.MouseEvent<HTMLDivElement>) => {
         lastClickedTileRef.current = event.currentTarget;
-        setSelectedMovie(movie);
         window.scrollTo({ top: 0, behavior: "smooth" });
-    };
 
-    const handleDetailsClose = () => {
-        resetSelectedMovie();
-
-        if (lastClickedTileRef.current) {
-            lastClickedTileRef.current.scrollIntoView({
-                behavior: "smooth",
-                block: "nearest",
-            });
-            resetClickedTile();
-        }
+        const searchParamsString = searchParams.toString();
+        navigate(`${movie.id}${searchParamsString ? `?${searchParamsString}` : ""}`);
     };
 
     const handleAddMovieClick = () => {
@@ -129,10 +101,6 @@ export const MovieListPage = () => {
         try {
             await movieService.deleteMovie(movie.id);
             await queryClient.invalidateQueries({ queryKey: ["movies", activeGenre, sortCriterion, searchQuery] });
-
-            if (selectedMovie?.id === movie.id) {
-                resetViewState();
-            }
         } catch (err) {
             console.error("Failed to delete movie:", err);
             setDeleteError("Failed to delete movie.");
@@ -146,7 +114,6 @@ export const MovieListPage = () => {
     const queryErrorMessage =
         queryError instanceof Error ? queryError.message : "An unknown error occurred while fetching movies.";
 
-    const showDetailsSection = !!selectedMovie;
     const showError = !isLoading && isError;
     const showMovieGrid = !isLoading && !isError && allMovies.length > 0;
     const showEmptyState = !isLoading && !isError && allMovies.length === 0 && !isFetching;
@@ -155,13 +122,7 @@ export const MovieListPage = () => {
         <div className="movie-list-page flex flex-col items-center relative w-full min-h-screen">
             <TopBar onAddMovieClick={handleAddMovieClick} />
 
-            <Header
-                searchQuery={searchQuery}
-                onSearch={handleSearch}
-                showDetailsSection={showDetailsSection}
-                selectedMovie={selectedMovie}
-                onDetailsClose={handleDetailsClose}
-            />
+            <Header />
 
             <main
                 className="
@@ -213,7 +174,6 @@ export const MovieListPage = () => {
                     {isFetchingNextPage && <div className="text-center py-5 text-lg">Loading more...</div>}
                 </div>
             </main>
-
             <footer
                 className="
                     flex justify-center items-center
