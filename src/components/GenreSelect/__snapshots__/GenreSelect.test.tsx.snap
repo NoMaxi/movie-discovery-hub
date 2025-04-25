@@ -4,6 +4,7 @@ exports[`GenreSelect Should highlight selected genre provided in props 1`] = `
 <DocumentFragment>
   <div
     class="flex flex-wrap gap-x-8"
+    data-testid="genre-select"
   >
     <div
       class="
@@ -103,6 +104,7 @@ exports[`GenreSelect Should render all genres provided in props 1`] = `
 <DocumentFragment>
   <div
     class="flex flex-wrap gap-x-8"
+    data-testid="genre-select"
   >
     <div
       class="
@@ -202,6 +204,7 @@ exports[`GenreSelect Should render nothing if empty array genres is provided 1`]
 <DocumentFragment>
   <div
     class="flex flex-wrap gap-x-8"
+    data-testid="genre-select"
   />
 </DocumentFragment>
 `;
