@@ -7,14 +7,15 @@ export const Header = () => {
 
     return (
         <header
+            data-testid="header"
             className="
                 relative w-[var(--content-width)] px-[60px] pt-[80px] pb-[20px] mb-[10px]
                 bg-[var(--color-content-background)] bg-cover bg-center bg-no-repeat
             "
             style={{ backgroundImage: `url(${bgHeaderImage})` }}
         >
-            <div className={`flex flex-col relative z-10 ${heightClass}`}>
-                <Outlet />
+            <div data-testid="header-inner" className={`flex flex-col relative z-10 ${heightClass}`}>
+                <Outlet data-testid="outlet-inner" />
             </div>
         </header>
     );
