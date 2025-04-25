@@ -7,6 +7,7 @@ exports[`MovieDetails Should render different movie details correctly 1`] = `
                 movie-details flex w-full gap-x-14 p-8 text-[var(--color-text)]
                 bg-[var(--color-content-background)]
             "
+    data-testid="movie-details"
   >
     <img
       alt="Another Great Film poster"
@@ -73,6 +74,7 @@ exports[`MovieDetails Should render movie details correctly with provided data 1
                 movie-details flex w-full gap-x-14 p-8 text-[var(--color-text)]
                 bg-[var(--color-content-background)]
             "
+    data-testid="movie-details"
   >
     <img
       alt="Pulp Fiction poster"

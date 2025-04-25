@@ -3,11 +3,14 @@ import { DEFAULT_ACTIVE_GENRE, DEFAULT_SORT_OPTION, GENRES, SORT_OPTIONS } from 
 
 describe("Movie List Page - URL Search Parameters", () => {
     const searchInputSelector = '[data-testid="search-input"]';
+    const searchButtonSelector = '[data-testid="search-button"]';
     const genreSelectSelector = '[data-testid="genre-select"]';
     const sortControlSelector = '[data-testid="sort-control"]';
     const movieCountSelector = '[data-testid="movie-count"]';
+    const movieTileSelector = '[data-testid="movie-tile"]';
+    const movieDetailsSelector = '[data-testid="movie-details"]';
 
-    const testQuery = "Test Search";
+    const testQuery = "car";
     const testGenre: Genre = GENRES[1];
     const testSortOption: SortOption = SORT_OPTIONS[1];
 
@@ -34,7 +37,7 @@ describe("Movie List Page - URL Search Parameters", () => {
 
     it("Should update URL with 'query' param on search and persist after reload", () => {
         cy.get(searchInputSelector).type(testQuery);
-        cy.get('[data-testid="search-button"]').click();
+        cy.get(searchButtonSelector).click();
         cy.wait("@getMovies");
 
         checkUrlParam("query", testQuery);
@@ -93,7 +96,7 @@ describe("Movie List Page - URL Search Parameters", () => {
 
     it("Should update URL with all params combined and persist after reload", () => {
         cy.get(searchInputSelector).type(testQuery);
-        cy.get('[data-testid="search-button"]').click();
+        cy.get(searchButtonSelector).click();
         cy.get(genreSelectSelector).contains("div", testGenre).click();
         cy.get(sortControlSelector).find("button").click();
         cy.contains(testSortOption).click();
@@ -126,6 +129,18 @@ describe("Movie List Page - URL Search Parameters", () => {
         cy.get(searchInputSelector).should("have.value", testQuery);
         cy.get(genreSelectSelector).should("contain.text", testGenre);
         cy.get(sortControlSelector).find("button").should("contain.text", testSortOption);
+        cy.get(movieCountSelector).should("exist");
+    });
+
+    it("Should navigate to movie details route when a tile is clicked and preserve list", () => {
+        cy.get(searchInputSelector).type(testQuery);
+        cy.get(searchButtonSelector).click();
+        cy.wait("@getMovies");
+        cy.get(movieTileSelector).first().click();
+        cy.wait("@getMovies");
+
+        cy.url().should("match", /\/\d+(\?.*)?$/);
+        cy.get(movieDetailsSelector).should("exist");
         cy.get(movieCountSelector).should("exist");
     });
 });

@@ -10,6 +10,7 @@ export const MovieDetails = ({
 }: MovieDetailsProps) => {
     return (
         <div
+            data-testid="movie-details"
             className="
                 movie-details flex w-full gap-x-14 p-8 text-[var(--color-text)]
                 bg-[var(--color-content-background)]
