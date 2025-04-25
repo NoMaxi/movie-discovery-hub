@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MovieDetailsError Should render component with correct content 1`] = `
+<DocumentFragment>
+  <div
+    class="error-container flex flex-col items-center justify-center relative h-full"
+    data-testid="error-container"
+  >
+    <div
+      data-testid="close-details-button"
+    />
+    <p>
+      Sorry, we couldn't load the movie details.
+    </p>
+    <p>
+      Please try again later or return to search.
+    </p>
+    <a
+      class="btn mt-5"
+      data-discover="true"
+      data-testid="back-to-search-link"
+      href="/"
+    >
+      Back to Search
+    </a>
+  </div>
+</DocumentFragment>
+`;

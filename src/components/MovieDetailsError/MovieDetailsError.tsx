@@ -6,13 +6,16 @@ export const MovieDetailsError = () => {
     console.error(error);
 
     return (
-        <div className="error-container flex flex-col items-center justify-center relative h-full">
+        <div
+            data-testid="error-container"
+            className="error-container flex flex-col items-center justify-center relative h-full"
+        >
             <CloseDetailsButton />
 
             <p>Sorry, we couldn't load the movie details.</p>
             <p>Please try again later or return to search.</p>
 
-            <Link to="/" className="btn mt-5">
+            <Link data-testid="back-to-search-link" to="/" className="btn mt-5">
                 Back to Search
             </Link>
         </div>
