@@ -38,6 +38,7 @@ export const MovieTile = ({ movie, onClick, onEdit, onDelete }: MovieTileProps) 
             className="movie-tile relative group w-[320px] text-[var(--color-text)] cursor-pointer "
             onClick={handleTileClick}
             data-testid="movie-tile"
+            data-movie-id={movie.id}
         >
             <button
                 data-testid="movie-tile-menu-toggle"

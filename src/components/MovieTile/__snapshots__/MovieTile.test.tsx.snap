@@ -4,6 +4,7 @@ exports[`MovieTile Should render movie tile with correct data and no context men
 <DocumentFragment>
   <div
     class="movie-tile relative group w-[320px] text-[var(--color-text)] cursor-pointer "
+    data-movie-id="1"
     data-testid="movie-tile"
   >
     <button

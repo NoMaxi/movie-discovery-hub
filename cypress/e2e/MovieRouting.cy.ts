@@ -1,5 +1,5 @@
 import { Genre, SortOption } from "../../src/types/common";
-import { DEFAULT_ACTIVE_GENRE, DEFAULT_SORT_OPTION, GENRES, SORT_OPTIONS } from "../../src/constants/constants";
+import { DEFAULT_ACTIVE_GENRE, DEFAULT_SORT_OPTION } from "../../src/constants/constants";
 
 describe("Movie List Page - URL Search Parameters", () => {
     const searchInputSelector = '[data-testid="search-input"]';
@@ -9,15 +9,29 @@ describe("Movie List Page - URL Search Parameters", () => {
     const movieCountSelector = '[data-testid="movie-count"]';
     const movieTileSelector = '[data-testid="movie-tile"]';
     const movieDetailsSelector = '[data-testid="movie-details"]';
+    const closeDetailsButtonSelector = '[data-testid="close-details-button"]';
 
     const testQuery = "car";
-    const testGenre: Genre = GENRES[1];
-    const testSortOption: SortOption = SORT_OPTIONS[1];
+    const testGenre: Genre = "Comedy";
+    const testSortOption: SortOption = "Title";
+    let firstMovieId: string;
 
     beforeEach(() => {
         cy.intercept("GET", "**/movies*").as("getMovies");
+        cy.intercept("GET", /\/movies\/\d+$/).as("getMovieDetails");
         cy.visit("/");
         cy.wait("@getMovies");
+
+        cy.get(movieTileSelector)
+            .first()
+            .invoke("attr", "data-movie-id")
+            .then((id) => {
+                if (id) {
+                    firstMovieId = id;
+                } else {
+                    throw new Error("Could not find movie ID for the first tile.");
+                }
+            });
     });
 
     const checkUrlParam = (param: string, expectedValue: string) => {
@@ -132,15 +146,69 @@ describe("Movie List Page - URL Search Parameters", () => {
         cy.get(movieCountSelector).should("exist");
     });
 
-    it("Should navigate to movie details route when a tile is clicked and preserve list", () => {
+    it("Should navigate to movie details, preserve search params, and persist details on reload", () => {
         cy.get(searchInputSelector).type(testQuery);
         cy.get(searchButtonSelector).click();
         cy.wait("@getMovies");
-        cy.get(movieTileSelector).first().click();
+        cy.get(genreSelectSelector).contains("div", testGenre).click();
+        cy.wait("@getMovies");
+        cy.get(sortControlSelector).find("button").click();
+        cy.contains(testSortOption).click();
         cy.wait("@getMovies");
 
-        cy.url().should("match", /\/\d+(\?.*)?$/);
-        cy.get(movieDetailsSelector).should("exist");
-        cy.get(movieCountSelector).should("exist");
+        let clickedMovieId: string;
+
+        cy.get(movieTileSelector)
+            .first()
+            .invoke("attr", "data-movie-id")
+            .then((id) => {
+                if (!id) throw new Error("Could not get movie ID before clicking");
+                clickedMovieId = id;
+            })
+            .then(() => {
+                cy.get(movieTileSelector).first().click();
+                cy.wait("@getMovieDetails");
+
+                cy.url().should("match", new RegExp(`/${clickedMovieId}(\\?.*)?$`));
+                checkUrlParam("query", testQuery);
+                checkUrlParam("genre", testGenre);
+                checkUrlParam("sortBy", testSortOption);
+
+                cy.get(movieDetailsSelector).should("be.visible");
+                cy.get(movieCountSelector).should("exist");
+
+                cy.reload();
+                cy.wait("@getMovieDetails");
+                cy.wait("@getMovies");
+
+                cy.url().should("match", new RegExp(`/${clickedMovieId}(\\?.*)?$`));
+                checkUrlParam("query", testQuery);
+                checkUrlParam("genre", testGenre);
+                checkUrlParam("sortBy", testSortOption);
+                cy.get(movieDetailsSelector).should("be.visible");
+                cy.get(movieCountSelector).should("exist");
+            });
+    });
+
+    it("Should show SearchForm on root path and MovieDetails on /:movieId path", () => {
+        cy.url().should("eq", Cypress.config().baseUrl + "/");
+        cy.get(searchInputSelector).should("be.visible");
+        cy.get(searchButtonSelector).should("be.visible");
+        cy.get(movieDetailsSelector).should("not.exist");
+
+        cy.get(movieTileSelector).first().click();
+        cy.wait("@getMovieDetails");
+
+        cy.url().should("match", new RegExp(`/${firstMovieId}(\\?.*)?$`));
+        cy.get(movieDetailsSelector).should("be.visible");
+        cy.get(searchInputSelector).should("not.exist");
+        cy.get(searchButtonSelector).should("not.exist");
+
+        cy.get(closeDetailsButtonSelector).click({ force: true });
+
+        cy.url().should("match", /^http:\/\/localhost:\d+\/(\?.*)?$/);
+        cy.get(searchInputSelector).should("be.visible");
+        cy.get(searchButtonSelector).should("be.visible");
+        cy.get(movieDetailsSelector).should("not.exist");
     });
 });

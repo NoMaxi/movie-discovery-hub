@@ -9,6 +9,7 @@ exports[`CloseDetailsButton should render the close button with correct styling 
                 hover:text-red-400 cursor-pointer transition-colors
             "
     data-discover="true"
+    data-testid="close-details-button"
     href="/"
     title="Close movie details"
   >

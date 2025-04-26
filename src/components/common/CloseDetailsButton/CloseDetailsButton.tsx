@@ -6,6 +6,7 @@ export const CloseDetailsButton = () => {
 
     return (
         <Link
+            data-testid="close-details-button"
             to={searchParamsString ? `/?${searchParamsString}` : "/"}
             className="
                 absolute top-0 right-0 p-2 z-20 text-5xl text-[var(--color-primary)]
