@@ -53,14 +53,10 @@ describe("SearchFormPage", () => {
 
         expect(mockSetSearchParams).toHaveBeenCalledTimes(1);
 
-        const [callback, options] = mockSetSearchParams.mock.calls[0];
+        const [newParams, options] = mockSetSearchParams.mock.calls[0];
 
-        expect(typeof callback).toBe("function");
+        expect(typeof newParams).toBe("object");
         expect(options).toEqual({ replace: true });
-
-        const params = new URLSearchParams();
-        const updatedParams = callback(params);
-
-        expect(updatedParams.get("query")).toBe("new-query");
+        expect(newParams.get("query")).toBe("new-query");
     });
 });

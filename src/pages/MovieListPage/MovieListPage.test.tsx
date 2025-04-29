@@ -575,11 +575,11 @@ describe("MovieListPage", () => {
 
         expect(mockSetSearchParams).toHaveBeenCalledTimes(2);
 
-        const firstCallArg = mockSetSearchParams.mock.calls[0][0];
-        expect(firstCallArg(mockSearchParams).get("genre")).toBe("Documentary");
+        const firstCallNewParams = mockSetSearchParams.mock.calls[0][0];
+        expect(firstCallNewParams.get("genre")).toBe("Documentary");
 
-        const secondCallArg = mockSetSearchParams.mock.calls[1][0];
-        expect(secondCallArg(mockSearchParams).get("sortBy")).toBe("Title");
+        const secondCallNewParams = mockSetSearchParams.mock.calls[1][0];
+        expect(secondCallNewParams.get("sortBy")).toBe("Title");
     });
 
     test("Should call movieService.getMovies with correct parameters", async () => {

@@ -7,13 +7,9 @@ export const SearchFormPage = () => {
     const searchQuery = searchParams.get("query") ?? "";
 
     const handleSearch = (query: string) => {
-        setSearchParams(
-            (prev) => {
-                prev.set("query", query);
-                return prev;
-            },
-            { replace: true },
-        );
+        const newParams = new URLSearchParams(searchParams);
+        newParams.set("query", query);
+        setSearchParams(newParams, { replace: true });
     };
 
     return (

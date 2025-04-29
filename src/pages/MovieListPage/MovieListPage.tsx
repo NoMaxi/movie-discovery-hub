@@ -57,13 +57,9 @@ export const MovieListPage = () => {
     }, [movieId]);
 
     const updateSearchParam = (key: "genre" | "sortBy", value: Genre | SortOption) => {
-        setSearchParams(
-            (prev) => {
-                prev.set(key, value);
-                return prev;
-            },
-            { replace: true },
-        );
+        const newParams = new URLSearchParams(searchParams);
+        newParams.set(key, value);
+        setSearchParams(newParams, { replace: true });
     };
 
     const handleGenreSelect = (genre: Genre) => {
