@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { useInView } from "react-intersection-observer";
-import { DEFAULT_ACTIVE_GENRE, DEFAULT_SORT_CRITERION, GENRES } from "@/constants/constants";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { DEFAULT_ACTIVE_GENRE, DEFAULT_SORT_OPTION, GENRES } from "@/constants/constants";
 import { Genre, Movie, SortOption } from "@/types/common";
 import { InfiniteMovieListResult, movieService } from "@/services/movieService";
 import { GenreSelect } from "@/components/GenreSelect/GenreSelect";
@@ -13,14 +14,16 @@ import { TopBar } from "@/components/TopBar/TopBar";
 import { Header } from "@/components/Header/Header";
 
 export const MovieListPage = () => {
-    const [searchQuery, setSearchQuery] = useState<string>("");
-    const [sortCriterion, setSortCriterion] = useState<SortOption>(DEFAULT_SORT_CRITERION);
-    const [activeGenre, setActiveGenre] = useState<Genre>(DEFAULT_ACTIVE_GENRE);
-    const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
-
+    const [searchParams, setSearchParams] = useSearchParams();
+    const { movieId } = useParams<{ movieId: string }>();
+    const navigate = useNavigate();
     const queryClient = useQueryClient();
-    const { ref: loadMoreRef, inView: isLoadMoreVisible } = useInView({ threshold: 0.1 });
     const lastClickedTileRef = useRef<HTMLDivElement | null>(null);
+    const { ref: loadMoreRef, inView: isLoadMoreVisible } = useInView({ threshold: 0.1 });
+
+    const searchQuery = searchParams.get("query") ?? "";
+    const sortCriterion = (searchParams.get("sortBy") as SortOption) ?? DEFAULT_SORT_OPTION;
+    const activeGenre = (searchParams.get("genre") as Genre) ?? DEFAULT_ACTIVE_GENRE;
 
     const {
         data,
@@ -46,50 +49,33 @@ export const MovieListPage = () => {
         }
     }, [isLoadMoreVisible, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-    const resetSelectedMovie = () => {
-        setSelectedMovie(null);
-    };
+    useEffect(() => {
+        if (!movieId && lastClickedTileRef.current) {
+            lastClickedTileRef.current.scrollIntoView({ behavior: "smooth", block: "nearest" });
+            lastClickedTileRef.current = null;
+        }
+    }, [movieId]);
 
-    const resetClickedTile = () => {
-        lastClickedTileRef.current = null;
-    };
-
-    const resetViewState = () => {
-        resetSelectedMovie();
-        resetClickedTile();
-    };
-
-    const handleSearch = (query: string) => {
-        setSearchQuery(query);
-        resetViewState();
+    const updateSearchParam = (key: "genre" | "sortBy", value: Genre | SortOption) => {
+        const newParams = new URLSearchParams(searchParams);
+        newParams.set(key, value);
+        setSearchParams(newParams, { replace: true });
     };
 
     const handleGenreSelect = (genre: Genre) => {
-        setActiveGenre(genre);
-        resetViewState();
+        updateSearchParam("genre", genre);
     };
 
-    const handleSortChange = (selection: SortOption) => {
-        setSortCriterion(selection);
-        resetViewState();
+    const handleSortChange = (sortOption: SortOption) => {
+        updateSearchParam("sortBy", sortOption);
     };
 
     const handleMovieClick = (movie: Movie, event: React.MouseEvent<HTMLDivElement>) => {
         lastClickedTileRef.current = event.currentTarget;
-        setSelectedMovie(movie);
         window.scrollTo({ top: 0, behavior: "smooth" });
-    };
 
-    const handleDetailsClose = () => {
-        resetSelectedMovie();
-
-        if (lastClickedTileRef.current) {
-            lastClickedTileRef.current.scrollIntoView({
-                behavior: "smooth",
-                block: "nearest",
-            });
-            resetClickedTile();
-        }
+        const searchParamsString = searchParams.toString();
+        navigate(`${movie.id}${searchParamsString ? `?${searchParamsString}` : ""}`);
     };
 
     const handleAddMovieClick = () => {
@@ -109,10 +95,6 @@ export const MovieListPage = () => {
         try {
             await movieService.deleteMovie(movie.id);
             await queryClient.invalidateQueries({ queryKey: ["movies", activeGenre, sortCriterion, searchQuery] });
-
-            if (selectedMovie?.id === movie.id) {
-                resetViewState();
-            }
         } catch (err) {
             console.error("Failed to delete movie:", err);
             setDeleteError("Failed to delete movie.");
@@ -126,7 +108,6 @@ export const MovieListPage = () => {
     const queryErrorMessage =
         queryError instanceof Error ? queryError.message : "An unknown error occurred while fetching movies.";
 
-    const showDetailsSection = !!selectedMovie;
     const showError = !isLoading && isError;
     const showMovieGrid = !isLoading && !isError && allMovies.length > 0;
     const showEmptyState = !isLoading && !isError && allMovies.length === 0 && !isFetching;
@@ -135,13 +116,7 @@ export const MovieListPage = () => {
         <div className="movie-list-page flex flex-col items-center relative w-full min-h-screen">
             <TopBar onAddMovieClick={handleAddMovieClick} />
 
-            <Header
-                searchQuery={searchQuery}
-                onSearch={handleSearch}
-                showDetailsSection={showDetailsSection}
-                selectedMovie={selectedMovie}
-                onDetailsClose={handleDetailsClose}
-            />
+            <Header />
 
             <main
                 className="
@@ -193,7 +168,6 @@ export const MovieListPage = () => {
                     {isFetchingNextPage && <div className="text-center py-5 text-lg">Loading more...</div>}
                 </div>
             </main>
-
             <footer
                 className="
                     flex justify-center items-center

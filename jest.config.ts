@@ -16,6 +16,7 @@ const config: Config = {
         "\\.(png|jpg|jpeg|gif|svg)$": "<rootDir>/src/mocks/fileMock.ts",
         "^@/(.*)$": "<rootDir>/src/$1",
     },
+    setupFilesAfterEnv: ["<rootDir>/jest-setup.ts"],
 
     // Coverage
     collectCoverage: true,

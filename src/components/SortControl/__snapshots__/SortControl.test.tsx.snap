@@ -4,6 +4,7 @@ exports[`SortControl Should render correctly with initial selection 1`] = `
 <DocumentFragment>
   <div
     class="sort-control relative inline-block text-left"
+    data-testid="sort-control"
   >
     <div
       class="flex items-center gap-x-4 text-base"

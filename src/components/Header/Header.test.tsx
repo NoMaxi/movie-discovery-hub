@@ -1,85 +1,56 @@
 import { render, screen } from "@testing-library/react";
-import userEvent, { UserEvent } from "@testing-library/user-event";
+import { MemoryRouter } from "react-router-dom";
 import "@testing-library/jest-dom";
-import { mockMovieDetails } from "@/mocks/movieData";
 import { Header } from "./Header";
 
-describe("Header", () => {
-    const defaultProps = {
-        searchQuery: "",
-        onSearch: jest.fn(),
-        showDetailsSection: false,
-        selectedMovie: null,
-        onDetailsClose: jest.fn(),
+jest.mock("react-router-dom", () => {
+    const actual = jest.requireActual("react-router-dom");
+    return {
+        ...actual,
+        Outlet: () => <div data-testid="outlet" />,
+        useParams: jest.fn(),
     };
-    let onSearchMock: jest.Mock;
-    let onDetailsCloseMock: jest.Mock;
-    let user: UserEvent;
+});
 
+const { useParams } = jest.requireMock("react-router-dom");
+
+describe("Header", () => {
     beforeEach(() => {
-        onSearchMock = jest.fn();
-        onDetailsCloseMock = jest.fn();
-        user = userEvent.setup();
-    });
-
-    afterEach(() => {
         jest.clearAllMocks();
     });
 
-    const renderComponent = (props = {}) => {
+    const renderWithRouter = (movieId?: string) => {
+        (useParams as jest.Mock).mockReturnValue(movieId ? { movieId } : {});
         return render(
-            <Header {...defaultProps} onSearch={onSearchMock} onDetailsClose={onDetailsCloseMock} {...props} />,
+            <MemoryRouter>
+                <Header />
+            </MemoryRouter>,
         );
     };
 
-    test("Should render search view with initial query", () => {
-        renderComponent({ searchQuery: " test " });
-        const heading = screen.getByRole("heading", { name: "Find Your Movie", level: 2 });
+    test("Should render a header with the correct background and base classes", () => {
+        const { asFragment } = renderWithRouter();
+        const header = screen.getByTestId("header");
 
-        expect(heading).toBeInTheDocument();
-
-        const input = screen.getByTestId("search-input");
-
-        expect(input).toBeInTheDocument();
-        expect(input).toHaveValue(" test ");
-
-        const button = screen.getByTestId("search-button");
-
-        expect(button).toBeInTheDocument();
+        expect(header).toBeInTheDocument();
+        expect(header).toHaveStyle({ backgroundImage: expect.stringContaining("bg_header.png") });
+        expect(header).toHaveClass("relative");
+        expect(header).toHaveClass("w-[var(--content-width)]");
+        expect(asFragment()).toMatchSnapshot();
     });
 
-    test("Should call onSearch with trimmed query when pressing Enter in search input", async () => {
-        renderComponent();
-        const input = screen.getByTestId("search-input");
-
-        await user.clear(input);
-        await user.type(input, "  Apollo Movie  ");
-        await user.keyboard("{Enter}");
-
-        expect(onSearchMock).toHaveBeenCalledWith("Apollo Movie");
+    test("Should apply 'min-h-[290px]' class when 'movieId' is not present in URL params", () => {
+        renderWithRouter();
+        expect(screen.getByTestId("header-inner")).toHaveClass("min-h-[290px]");
     });
 
-    test("Should call onSearch with trimmed query when clicking search button", async () => {
-        renderComponent();
-        const input = screen.getByTestId("search-input");
-        const button = screen.getByTestId("search-button");
-
-        await user.clear(input);
-        await user.type(input, "  Matrix  ");
-        await user.click(button);
-
-        expect(onSearchMock).toHaveBeenCalledWith("Matrix");
+    test("Should apply 'h-[540px]' class when 'movieId' is present in URL params", () => {
+        renderWithRouter("123");
+        expect(screen.getByTestId("header-inner")).toHaveClass("h-[540px]");
     });
 
-    test("Should render details section and handle close action", async () => {
-        renderComponent({ showDetailsSection: true, selectedMovie: mockMovieDetails });
-        const closeButton = screen.getByRole("button", { name: "Close movie details" });
-
-        expect(closeButton).toBeInTheDocument();
-        expect(screen.getByText(mockMovieDetails.title)).toBeInTheDocument();
-
-        await user.click(closeButton);
-
-        expect(onDetailsCloseMock).toHaveBeenCalledTimes(1);
+    test("Should render Outlet", () => {
+        renderWithRouter();
+        expect(screen.getByTestId("outlet")).toBeInTheDocument();
     });
 });

@@ -1,5 +1,6 @@
-import { useState, useRef } from "react";
+import { useRef, useState } from "react";
 import { SortOption } from "@/types/common";
+import { SORT_OPTIONS } from "@/constants/constants";
 import { useClickOutside } from "@/hooks/useClickOutside/useClickOutside";
 import SelectArrow from "@/components/common/SelectArrow/SelectArrow";
 import { ContextMenu } from "@/components/common/ContextMenu/ContextMenu";
@@ -12,7 +13,6 @@ interface SortControlProps {
 export const SortControl = ({ currentSelection, onSelectionChange }: SortControlProps) => {
     const [isOpen, setIsOpen] = useState(false);
     const controlRef = useRef<HTMLDivElement>(null);
-    const options: SortOption[] = ["Release Date", "Title"];
 
     useClickOutside(controlRef, () => setIsOpen(false), isOpen);
 
@@ -24,13 +24,13 @@ export const SortControl = ({ currentSelection, onSelectionChange }: SortControl
         setIsOpen(false);
     };
 
-    const contextMenuActions = options.map((option) => ({
+    const contextMenuActions = SORT_OPTIONS.map((option) => ({
         label: option,
         onClick: () => onSelectionChange(option),
     }));
 
     return (
-        <div className="sort-control relative inline-block text-left" ref={controlRef}>
+        <div className="sort-control relative inline-block text-left" ref={controlRef} data-testid="sort-control">
             <div className="flex items-center gap-x-4 text-base">
                 <span className="sort-control-label text-[16px] uppercase opacity-60">Sort by</span>
                 <button
