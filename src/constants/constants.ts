@@ -4,8 +4,6 @@ export const GENRES: Genre[] = ["All", "Documentary", "Comedy", "Horror", "Crime
 export const SELECTABLE_GENRES: SelectableGenre[] = ["Documentary", "Comedy", "Horror", "Crime"];
 export const SORT_OPTIONS: SortOption[] = ["Release Date", "Title"];
 
-export const PRIMARY_COLOR = "#F65261";
-
 export const DEFAULT_SORT_OPTION: SortOption = "Release Date";
 export const DEFAULT_ACTIVE_GENRE: Genre = "All";
 export const DEFAULT_TITLE = "No Title";

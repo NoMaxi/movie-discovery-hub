@@ -1,7 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { PacmanLoader } from "react-spinners";
-import { PRIMARY_COLOR } from "@/constants/constants";
 import { Loader } from "./Loader";
 
 jest.mock("react-spinners", () => ({
@@ -19,7 +18,7 @@ describe("Loader", () => {
         expect(screen.getByTestId("mocked-pacman-loader")).toBeInTheDocument();
         expect(PacmanLoader).toHaveBeenCalledWith(
             {
-                color: PRIMARY_COLOR,
+                color: "var(--color-primary)",
                 loading: true,
                 size: 40,
                 "aria-label": "Loading Spinner",
