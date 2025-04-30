@@ -11,15 +11,15 @@ interface MovieFormProps {
     onSubmit: (formData: MovieFormData) => void;
 }
 
-const mapInitialToDefaultValues = (initial: Partial<InitialMovieInfo> = {}): Partial<MovieFormData> => ({
-    id: initial.id,
-    title: initial.title ?? "",
-    release_date: initial.releaseDate ?? "",
-    poster_path: initial.imageUrl ?? "",
-    vote_average: initial.rating,
-    genres: initial.genres ?? [],
-    runtime: initial.duration,
-    overview: initial.description ?? "",
+const mapInitialInfoToDefaultValues = (initialInfo: Partial<InitialMovieInfo> = {}): Partial<MovieFormData> => ({
+    id: initialInfo.id,
+    title: initialInfo.title ?? "",
+    release_date: initialInfo.releaseDate ?? "",
+    poster_path: initialInfo.imageUrl ?? "",
+    vote_average: initialInfo.rating,
+    genres: initialInfo.genres ?? [],
+    runtime: initialInfo.duration,
+    overview: initialInfo.description ?? "",
 });
 
 export const MovieForm = ({ initialMovieInfo = {}, onSubmit }: MovieFormProps) => {
@@ -30,7 +30,7 @@ export const MovieForm = ({ initialMovieInfo = {}, onSubmit }: MovieFormProps) =
         formState: { errors },
         reset,
     } = useForm<MovieFormData>({
-        defaultValues: mapInitialToDefaultValues(initialMovieInfo),
+        defaultValues: mapInitialInfoToDefaultValues(initialMovieInfo),
         shouldFocusError: false,
         mode: "onChange",
         reValidateMode: "onChange",
@@ -53,7 +53,7 @@ export const MovieForm = ({ initialMovieInfo = {}, onSubmit }: MovieFormProps) =
     };
 
     const handleFormReset = () => {
-        reset(mapInitialToDefaultValues(initialMovieInfo));
+        reset(mapInitialInfoToDefaultValues(initialMovieInfo));
     };
 
     const handleCalendarIconClick = () => {
