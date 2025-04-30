@@ -1,4 +1,4 @@
-import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
+import { forwardRef, useCallback, useEffect, useRef, useState } from "react";
 import { SelectableGenre } from "@/types/common";
 import { SELECTABLE_GENRES } from "@/constants/constants";
 import { useClickOutside } from "@/hooks/useClickOutside/useClickOutside";
@@ -8,32 +8,28 @@ export interface GenreMultiSelectProps {
     id: string;
     name: string;
     preselectedGenres?: string[];
+    onChange?: (value: string[]) => void;
     ariaDescribedby?: string;
+    error?: boolean;
 }
 
-export interface GenreMultiSelectRef {
-    reset: () => void;
-}
-
-export const GenreMultiSelect = forwardRef<GenreMultiSelectRef, GenreMultiSelectProps>(
-    ({ preselectedGenres = [], id, name, ariaDescribedby }, ref) => {
+export const GenreMultiSelect = forwardRef<HTMLDivElement, GenreMultiSelectProps>(
+    ({ preselectedGenres = [], onChange, id, ariaDescribedby, error }, ref) => {
         const [isOpen, setIsOpen] = useState(false);
-        const [selectedGenres, setSelectedGenres] = useState<Set<string>>(new Set(preselectedGenres));
-        const [hiddenValue, setHiddenValue] = useState(preselectedGenres.join(", "));
+        const [selectedGenres, setSelectedGenres] = useState<Set<SelectableGenre | string>>(new Set(preselectedGenres));
         const controlRef = useRef<HTMLDivElement>(null);
-        const hiddenInputRef = useRef<HTMLInputElement>(null);
 
         useEffect(() => {
-            setHiddenValue(Array.from(selectedGenres).join(", "));
-        }, [selectedGenres]);
+            setSelectedGenres(new Set(preselectedGenres));
+        }, [preselectedGenres]);
 
         useClickOutside(controlRef, () => setIsOpen(false), isOpen);
 
         const toggleDropdown = () => setIsOpen(!isOpen);
 
-        const handleCheckboxChange = useCallback((genre: SelectableGenre, isChecked: boolean) => {
-            setSelectedGenres((prevSelected) => {
-                const newSelected = new Set(prevSelected);
+        const handleCheckboxChange = useCallback(
+            (genre: SelectableGenre, isChecked: boolean) => {
+                const newSelected = new Set(selectedGenres);
                 if (isChecked) {
                     newSelected.add(genre);
                 } else {
@@ -41,25 +37,26 @@ export const GenreMultiSelect = forwardRef<GenreMultiSelectRef, GenreMultiSelect
                 }
 
                 const genresArray = Array.from(newSelected);
-                if (hiddenInputRef.current) {
-                    hiddenInputRef.current.value = genresArray.join(", ");
-                }
-
-                return newSelected;
-            });
-        }, []);
-
-        const reset = useCallback(() => {
-            setSelectedGenres(new Set(preselectedGenres));
-        }, [preselectedGenres]);
-
-        useImperativeHandle(ref, () => ({ reset }), [reset]);
+                setSelectedGenres(newSelected);
+                onChange?.(genresArray);
+            },
+            [selectedGenres, onChange],
+        );
 
         const areGenresSelected = selectedGenres.size > 0;
-        const displayValue = selectedGenres.size > 0 ? Array.from(selectedGenres).join(", ") : "Select Genre";
+        const displayValue = areGenresSelected ? Array.from(selectedGenres).join(", ") : "Select Genre";
+
+        const combinedRef = (node: HTMLDivElement | null) => {
+            controlRef.current = node;
+            if (typeof ref === "function") {
+                ref(node);
+            } else if (ref) {
+                ref.current = node;
+            }
+        };
 
         return (
-            <div className="genre-select relative" ref={controlRef}>
+            <div className="genre-select relative" ref={combinedRef}>
                 <button
                     id={id}
                     type="button"
@@ -67,11 +64,12 @@ export const GenreMultiSelect = forwardRef<GenreMultiSelectRef, GenreMultiSelect
                     aria-haspopup="listbox"
                     aria-expanded={isOpen}
                     aria-describedby={ariaDescribedby}
-                    className="
+                    aria-invalid={error ? "true" : "false"}
+                    className={`
                         input-field relative flex items-center justify-between w-full
                         text-left text-[var(--color-primary)] font-normal opacity-80
-                        cursor-pointer
-                    "
+                        cursor-pointer ${error ? "input-error" : ""}
+                    `}
                 >
                     <span
                         className={`truncate ${
@@ -115,14 +113,6 @@ export const GenreMultiSelect = forwardRef<GenreMultiSelectRef, GenreMultiSelect
                         ))}
                     </div>
                 )}
-
-                <input
-                    ref={hiddenInputRef}
-                    type="hidden"
-                    name={name}
-                    value={hiddenValue}
-                    data-testid={`hidden-input-${name}`}
-                />
             </div>
         );
     },
