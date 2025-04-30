@@ -70,17 +70,21 @@ export const MovieListPage = () => {
         updateSearchParam("sortBy", sortOption);
     };
 
+    const navigateWithSearchParams = (path: string) => {
+        const searchParamsString = searchParams.toString();
+        navigate(`${path}${searchParamsString ? `?${searchParamsString}` : ""}`);
+    };
+
     const handleMovieClick = (movie: Movie, event: React.MouseEvent<HTMLDivElement>) => {
         lastClickedTileRef.current = event.currentTarget;
         window.scrollTo({ top: 0, behavior: "smooth" });
-
-        const searchParamsString = searchParams.toString();
-        navigate(`${movie.id}${searchParamsString ? `?${searchParamsString}` : ""}`);
+        navigateWithSearchParams(String(movie.id));
     };
 
     const handleAddMovieClick = () => {
-        console.log("Add movie - Placeholder");
+        navigateWithSearchParams("/new");
     };
+
     const handleMovieEdit = (movie: Movie) => {
         console.log("Edit movie:", movie.id, "- Placeholder");
     };
