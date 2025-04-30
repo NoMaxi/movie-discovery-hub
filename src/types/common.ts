@@ -17,4 +17,15 @@ export interface InitialMovieInfo extends Omit<Movie, "releaseYear"> {
     releaseDate: string;
 }
 
+export interface MovieFormData {
+    id?: number;
+    title: string;
+    release_date: string;
+    poster_path: string;
+    vote_average: number;
+    genres: string[];
+    runtime: number;
+    overview: string;
+}
+
 export type SortOption = "Release Date" | "Title";

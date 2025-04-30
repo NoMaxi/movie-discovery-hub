@@ -1,68 +1,89 @@
-import { FormEvent, useRef, useState } from "react";
-import { Genre, InitialMovieInfo } from "@/types/common";
+import { FormEvent, useRef } from "react";
+import { useForm, Controller, SubmitHandler } from "react-hook-form";
+import { isBefore, isValid, parseISO } from "date-fns";
+import { InitialMovieInfo, MovieFormData } from "@/types/common";
+import { urlValidationRegExp } from "@/constants/constants";
 import { CalendarIcon } from "@/components/common/CalendarIcon/CalendarIcon";
-import { GenreMultiSelect, GenreMultiSelectRef } from "@/components/GenreMultiSelect/GenreMultiSelect";
+import { GenreMultiSelect } from "@/components/GenreMultiSelect/GenreMultiSelect";
 
 interface MovieFormProps {
     initialMovieInfo?: Partial<InitialMovieInfo>;
     onSubmit: (formData: MovieFormData) => void;
 }
 
-interface MovieFormData {
-    id?: number;
-    title: string;
-    release_date: string;
-    poster_path: string;
-    vote_average: number;
-    genres: string[];
-    runtime: number;
-    overview: string;
-}
+const mapInitialToDefaultValues = (initial: Partial<InitialMovieInfo> = {}): Partial<MovieFormData> => ({
+    id: initial.id,
+    title: initial.title ?? "",
+    release_date: initial.releaseDate ?? "",
+    poster_path: initial.imageUrl ?? "",
+    vote_average: initial.rating,
+    genres: initial.genres ?? [],
+    runtime: initial.duration,
+    overview: initial.description ?? "",
+});
 
 export const MovieForm = ({ initialMovieInfo = {}, onSubmit }: MovieFormProps) => {
-    const [genreError, setGenreError] = useState<string | null>(null);
-    const formRef = useRef<HTMLFormElement>(null);
+    const {
+        register,
+        handleSubmit,
+        control,
+        formState: { errors },
+        reset,
+    } = useForm<MovieFormData>({
+        defaultValues: mapInitialToDefaultValues(initialMovieInfo),
+        shouldFocusError: false,
+        mode: "onChange",
+        reValidateMode: "onChange",
+    });
     const dateInputRef = useRef<HTMLInputElement>(null);
-    const genreSelectRef = useRef<GenreMultiSelectRef>(null);
 
-    const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        setGenreError(null);
-
-        const formData = Object.fromEntries(new FormData(event.currentTarget).entries());
-        const selectedGenres = formData.genres
-            ? ((formData.genres as string).split(",").filter(Boolean) as Genre[])
-            : [];
-
-        if (selectedGenres.length === 0) {
-            setGenreError("Select at least one genre to proceed");
-            return;
-        }
-
-        const processedData: MovieFormData = {
-            ...(initialMovieInfo.id && { id: initialMovieInfo.id }),
-            title: formData.title as string,
-            release_date: formData.release_date as string,
-            poster_path: formData.poster_path as string,
-            vote_average: parseFloat(formData.vote_average as string) || 0,
-            genres: selectedGenres,
-            runtime: parseInt(formData.runtime as string, 10) || 0,
-            overview: formData.overview as string,
+    const onSubmitHandler: SubmitHandler<MovieFormData> = (data) => {
+        const submitData = initialMovieInfo.id ? { ...data, id: initialMovieInfo.id } : data;
+        const finalData: MovieFormData = {
+            ...submitData,
+            vote_average: Number(submitData.vote_average) || 0,
+            runtime: Number(submitData.runtime) || 0,
         };
-        onSubmit(processedData);
+        onSubmit(finalData);
     };
 
-    const handleReset = () => {
-        genreSelectRef.current?.reset();
-        setGenreError(null);
+    const onSubmitWithFocusPrevention = (event: FormEvent) => {
+        event.preventDefault();
+        handleSubmit(onSubmitHandler)(event);
+    };
+
+    const handleFormReset = () => {
+        reset(mapInitialToDefaultValues(initialMovieInfo));
     };
 
     const handleCalendarIconClick = () => {
         dateInputRef.current?.showPicker();
     };
 
+    const { ref: rhfDateRef, ...dateRegisterProps } = register("release_date", {
+        required: "Release date is required",
+        validate: (value) => {
+            if (!value) {
+                return true;
+            }
+
+            const inputDate = parseISO(value);
+            const minDate = parseISO("1900-01-01");
+
+            if (!isValid(inputDate)) {
+                return "Please enter a valid date";
+            }
+
+            if (isBefore(inputDate, minDate)) {
+                return "Date must be 1900-01-01 or later";
+            }
+
+            return true;
+        },
+    });
+
     return (
-        <form ref={formRef} onSubmit={handleSubmit} onReset={handleReset} noValidate>
+        <form onSubmit={(e) => onSubmitWithFocusPrevention(e)} onReset={handleFormReset} noValidate>
             <div className="grid grid-cols-3 gap-x-6 gap-y-6">
                 <div className="col-span-2">
                     <label htmlFor="title" className="form-label">
@@ -71,33 +92,50 @@ export const MovieForm = ({ initialMovieInfo = {}, onSubmit }: MovieFormProps) =
                     <input
                         type="text"
                         id="title"
-                        name="title"
                         placeholder="Enter title"
-                        className="input-field"
-                        defaultValue={initialMovieInfo.title ?? ""}
-                        required
+                        className={`input-field ${errors.title ? "input-error" : ""}`}
+                        aria-invalid={errors.title ? "true" : "false"}
+                        aria-describedby="title-error"
+                        autoFocus
+                        {...register("title", {
+                            required: "Title is required",
+                        })}
                     />
+                    {errors.title && (
+                        <p id="title-error" className="error-message" role="alert">
+                            {errors.title.message}
+                        </p>
+                    )}
                 </div>
+
                 <div>
                     <label htmlFor="release_date" className="form-label">
                         Release Date
                     </label>
                     <div className="relative">
                         <input
-                            ref={dateInputRef}
+                            ref={(e) => {
+                                rhfDateRef(e);
+                                dateInputRef.current = e;
+                            }}
                             type="date"
                             id="release_date"
-                            name="release_date"
-                            className="input-field"
+                            className={`input-field ${errors.release_date ? "input-error" : ""}`}
                             min="1900-01-01"
-                            defaultValue={initialMovieInfo.releaseDate ?? ""}
-                            required
+                            aria-invalid={errors.release_date ? "true" : "false"}
+                            aria-describedby="release_date-error"
+                            {...dateRegisterProps}
                         />
                         <CalendarIcon
                             className="absolute right-4 top-1/2 transform -translate-y-1/2 cursor-pointer"
                             onClick={handleCalendarIconClick}
                         />
                     </div>
+                    {errors.release_date && (
+                        <p id="release_date-error" className="error-message" role="alert">
+                            {errors.release_date.message}
+                        </p>
+                    )}
                 </div>
 
                 <div className="col-span-2">
@@ -107,13 +145,25 @@ export const MovieForm = ({ initialMovieInfo = {}, onSubmit }: MovieFormProps) =
                     <input
                         type="url"
                         id="poster_path"
-                        name="poster_path"
-                        placeholder="[https://example.com/image.jpg](https://example.com/image.jpg)"
-                        className="input-field"
-                        defaultValue={initialMovieInfo.imageUrl ?? ""}
-                        required
+                        placeholder="https://example.com/image.jpg"
+                        className={`input-field ${errors.poster_path ? "input-error" : ""}`}
+                        aria-invalid={errors.poster_path ? "true" : "false"}
+                        aria-describedby="poster_path-error"
+                        {...register("poster_path", {
+                            required: "Movie URL is required",
+                            pattern: {
+                                value: urlValidationRegExp,
+                                message: "Please enter a valid URL",
+                            },
+                        })}
                     />
+                    {errors.poster_path && (
+                        <p id="poster_path-error" className="error-message" role="alert">
+                            {errors.poster_path.message}
+                        </p>
+                    )}
                 </div>
+
                 <div>
                     <label htmlFor="vote_average" className="form-label">
                         Rating
@@ -121,34 +171,55 @@ export const MovieForm = ({ initialMovieInfo = {}, onSubmit }: MovieFormProps) =
                     <input
                         type="number"
                         id="vote_average"
-                        name="vote_average"
                         placeholder="7.8"
-                        className="input-field"
+                        className={`input-field ${errors.vote_average ? "input-error" : ""}`}
                         step="0.1"
-                        min="0"
-                        max="10"
-                        defaultValue={initialMovieInfo.rating ?? ""}
-                        required
+                        aria-invalid={errors.vote_average ? "true" : "false"}
+                        aria-describedby="vote_average-error"
+                        {...register("vote_average", {
+                            required: "Rating is required",
+                            valueAsNumber: true,
+                            min: { value: 0, message: "Rating must be 0 or higher" },
+                            max: { value: 10, message: "Rating must be 10 or lower" },
+                        })}
                     />
+                    {errors.vote_average && (
+                        <p id="vote_average-error" className="error-message" role="alert">
+                            {errors.vote_average.message}
+                        </p>
+                    )}
                 </div>
 
                 <div className="col-span-2">
                     <label htmlFor="genres" className="form-label">
                         Genre
                     </label>
-                    <GenreMultiSelect
-                        ref={genreSelectRef}
-                        id="genres"
+                    <Controller
                         name="genres"
-                        preselectedGenres={initialMovieInfo.genres ?? []}
-                        aria-describedby="genre-error"
+                        control={control}
+                        rules={{
+                            validate: (value: string[]) => value.length > 0 || "Select at least one genre to proceed",
+                        }}
+                        render={({ field, fieldState: { error } }) => (
+                            <>
+                                <GenreMultiSelect
+                                    id="genres"
+                                    preselectedGenres={field.value}
+                                    onChange={field.onChange}
+                                    name={field.name}
+                                    ariaDescribedby="genre-error"
+                                    error={!!error}
+                                />
+                                {error && (
+                                    <p id="genre-error" className="error-message" role="alert">
+                                        {error.message}
+                                    </p>
+                                )}
+                            </>
+                        )}
                     />
-                    {genreError && (
-                        <p id="genre-error" className="text-[var(--color-primary)] text-sm mt-1 opacity-80">
-                            {genreError}
-                        </p>
-                    )}
                 </div>
+
                 <div>
                     <label htmlFor="runtime" className="form-label">
                         Runtime
@@ -156,13 +227,22 @@ export const MovieForm = ({ initialMovieInfo = {}, onSubmit }: MovieFormProps) =
                     <input
                         type="number"
                         id="runtime"
-                        name="runtime"
                         placeholder="minutes"
-                        className="input-field"
-                        min="0"
-                        defaultValue={initialMovieInfo.duration ?? ""}
-                        required
+                        className={`input-field ${errors.runtime ? "input-error" : ""}`}
+                        aria-invalid={errors.runtime ? "true" : "false"}
+                        aria-describedby="runtime-error"
+                        {...register("runtime", {
+                            required: "Runtime is required",
+                            valueAsNumber: true,
+                            min: { value: 0, message: "Runtime must be 0 or higher" },
+                            max: { value: 60 * 10, message: "Runtime is too long" },
+                        })}
                     />
+                    {errors.runtime && (
+                        <p id="runtime-error" className="error-message" role="alert">
+                            {errors.runtime.message}
+                        </p>
+                    )}
                 </div>
 
                 <div className="col-span-3">
@@ -171,12 +251,17 @@ export const MovieForm = ({ initialMovieInfo = {}, onSubmit }: MovieFormProps) =
                     </label>
                     <textarea
                         id="overview"
-                        name="overview"
                         placeholder="Movie description"
-                        className="input-field min-h-[200px] h-auto py-3"
-                        defaultValue={initialMovieInfo.description ?? ""}
-                        required
+                        className={`input-field min-h-[200px] h-auto py-3 ${errors.overview ? "input-error" : ""}`}
+                        aria-invalid={errors.overview ? "true" : "false"}
+                        aria-describedby="overview-error"
+                        {...register("overview", { required: "Overview is required" })}
                     ></textarea>
+                    {errors.overview && (
+                        <p id="overview-error" className="error-message" role="alert">
+                            {errors.overview.message}
+                        </p>
+                    )}
                 </div>
 
                 <div className="col-span-3 flex justify-end gap-x-4 mt-8">
