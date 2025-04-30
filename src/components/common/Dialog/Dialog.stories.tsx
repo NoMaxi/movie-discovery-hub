@@ -197,7 +197,7 @@ export const AddMovieForm: Story = {
         },
     },
     args: {
-        title: "ADD MOVIE",
+        title: "Add Movie",
         children: <MovieForm onSubmit={fn().mockName("movieFormSubmit")} />,
     },
 };
@@ -211,7 +211,7 @@ export const EditMovieForm: Story = {
         },
     },
     args: {
-        title: "EDIT MOVIE",
+        title: "Edit Movie",
         children: <MovieForm initialMovieInfo={mockMovieInfo} onSubmit={fn().mockName("movieFormSubmit")} />,
     },
 };
@@ -225,7 +225,7 @@ export const DeleteConfirmation: Story = {
         },
     },
     args: {
-        title: "DELETE MOVIE",
+        title: "Delete Movie",
         children: (
             <div className="flex flex-col">
                 <p className="text-[var(--color-text)] opacity-80 mb-16 text-left text-2xl">

@@ -12,4 +12,4 @@ export const DEFAULT_MOVIES_PER_PAGE = 18;
 export const MOVIE_LIST_STALE_TIME = 5 * 60 * 1000; // 5 minutes
 
 export const urlValidationRegExp =
-    /^(?:https?|ftp):\/\/(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+[A-Z]{2,6}\.?|localhost|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(?::\d+)?(?:\/?|[\/?]\S+)$/i;
+    /^(?:https?|ftp):\/\/(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+[A-Z]{2,6}\.?|localhost|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(?::\d+)?(?:\/?|[/?]\S+)$/i;
