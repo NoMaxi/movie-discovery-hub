@@ -24,6 +24,11 @@ exports[`SearchFormPage Should render correctly 1`] = `
         >
           Search
         </button>
+        <button
+          type="button"
+        >
+          Empty Search
+        </button>
       </div>
     </div>
   </div>

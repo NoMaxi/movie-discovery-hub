@@ -8,7 +8,13 @@ export const SearchFormPage = () => {
 
     const handleSearch = (query: string) => {
         const newParams = new URLSearchParams(searchParams);
-        newParams.set("query", query);
+
+        if (query) {
+            newParams.set("query", query);
+        } else {
+            newParams.delete("query");
+        }
+
         setSearchParams(newParams, { replace: true });
     };
 
