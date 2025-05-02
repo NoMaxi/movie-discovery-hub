@@ -1,14 +1,17 @@
-import { FormEvent, useRef } from "react";
+import { FormEvent, useRef, useEffect } from "react";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
-import { isBefore, isValid, parseISO } from "date-fns";
+import { isAfter, isBefore, isValid, parseISO } from "date-fns";
 import { InitialMovieInfo, MovieFormData } from "@/types/common";
 import { urlValidationRegExp } from "@/constants/constants";
+import { Loader } from "@/components/common/Loader/Loader";
 import { CalendarIcon } from "@/components/common/CalendarIcon/CalendarIcon";
 import { GenreMultiSelect } from "@/components/GenreMultiSelect/GenreMultiSelect";
 
 interface MovieFormProps {
     initialMovieInfo?: Partial<InitialMovieInfo>;
     onSubmit: (formData: MovieFormData) => void;
+    isLoading?: boolean;
+    resetMode?: "clear" | "restore";
 }
 
 const mapInitialInfoToDefaultValues = (initialInfo: Partial<InitialMovieInfo> = {}): Partial<MovieFormData> => ({
@@ -16,13 +19,29 @@ const mapInitialInfoToDefaultValues = (initialInfo: Partial<InitialMovieInfo> = 
     title: initialInfo.title ?? "",
     release_date: initialInfo.releaseDate ?? "",
     poster_path: initialInfo.imageUrl ?? "",
-    vote_average: initialInfo.rating,
+    vote_average: initialInfo.rating ?? 0,
     genres: initialInfo.genres ?? [],
-    runtime: initialInfo.duration,
+    runtime: initialInfo.duration ?? 0,
     overview: initialInfo.description ?? "",
 });
 
-export const MovieForm = ({ initialMovieInfo = {}, onSubmit }: MovieFormProps) => {
+const emptyMovieFormData: MovieFormData = {
+    title: "",
+    release_date: "",
+    poster_path: "",
+    vote_average: 0,
+    genres: [],
+    runtime: 0,
+    overview: "",
+};
+
+export const MovieForm = ({
+    initialMovieInfo = {},
+    onSubmit,
+    resetMode = "clear",
+    isLoading = false,
+}: MovieFormProps) => {
+    const dateInputRef = useRef<HTMLInputElement>(null);
     const {
         register,
         handleSubmit,
@@ -32,10 +51,16 @@ export const MovieForm = ({ initialMovieInfo = {}, onSubmit }: MovieFormProps) =
     } = useForm<MovieFormData>({
         defaultValues: mapInitialInfoToDefaultValues(initialMovieInfo),
         shouldFocusError: false,
+        disabled: isLoading,
         mode: "onChange",
         reValidateMode: "onChange",
     });
-    const dateInputRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        if (initialMovieInfo && initialMovieInfo.id) {
+            reset(mapInitialInfoToDefaultValues(initialMovieInfo));
+        }
+    }, [initialMovieInfo, reset]);
 
     const onSubmitHandler: SubmitHandler<MovieFormData> = (data) => {
         const submitData = initialMovieInfo.id ? { ...data, id: initialMovieInfo.id } : data;
@@ -53,7 +78,11 @@ export const MovieForm = ({ initialMovieInfo = {}, onSubmit }: MovieFormProps) =
     };
 
     const handleFormReset = () => {
-        reset(mapInitialInfoToDefaultValues(initialMovieInfo));
+        if (resetMode === "restore") {
+            reset(mapInitialInfoToDefaultValues(initialMovieInfo));
+        } else {
+            reset(emptyMovieFormData);
+        }
     };
 
     const handleCalendarIconClick = () => {
@@ -69,6 +98,7 @@ export const MovieForm = ({ initialMovieInfo = {}, onSubmit }: MovieFormProps) =
 
             const inputDate = parseISO(value);
             const minDate = parseISO("1900-01-01");
+            const maxDate = parseISO("2050-01-01");
 
             if (!isValid(inputDate)) {
                 return "Please enter a valid date";
@@ -78,13 +108,33 @@ export const MovieForm = ({ initialMovieInfo = {}, onSubmit }: MovieFormProps) =
                 return "Date must be 1900-01-01 or later";
             }
 
+            if (isAfter(inputDate, maxDate)) {
+                return "Date must be 2050-01-01 or earlier";
+            }
+
             return true;
         },
     });
 
     return (
-        <form onSubmit={(e) => onSubmitWithFocusPrevention(e)} onReset={handleFormReset} noValidate>
-            <div className="grid grid-cols-3 gap-x-6 gap-y-6">
+        <form onSubmit={(e) => onSubmitWithFocusPrevention(e)} noValidate className="relative">
+            {isLoading && (
+                <div
+                    className="
+                    absolute flex justify-center items-center z-10
+                    inset-0 bg-opacity-0 rounded
+                 "
+                >
+                    <Loader />
+                </div>
+            )}
+
+            <div
+                className={`
+                    grid grid-cols-3 gap-x-6 gap-y-6
+                    transition-all duration-300 ${isLoading ? "opacity-40 pointer-events-none" : ""}
+                `}
+            >
                 <div className="col-span-2">
                     <label htmlFor="title" className="form-label">
                         Title
@@ -181,6 +231,13 @@ export const MovieForm = ({ initialMovieInfo = {}, onSubmit }: MovieFormProps) =
                             valueAsNumber: true,
                             min: { value: 0, message: "Rating must be 0 or higher" },
                             max: { value: 10, message: "Rating must be 10 or lower" },
+                            validate: (value) => {
+                                const stringValue = value.toString();
+                                return (
+                                    /^\d+(\.\d)?$/.test(stringValue) ||
+                                    "Rating must be a whole number or have a single decimal place"
+                                );
+                            },
                         })}
                     />
                     {errors.vote_average && (
@@ -265,11 +322,11 @@ export const MovieForm = ({ initialMovieInfo = {}, onSubmit }: MovieFormProps) =
                 </div>
 
                 <div className="col-span-3 flex justify-end gap-x-4 mt-8">
-                    <button type="reset" className="btn btn-outline">
+                    <button type="button" onClick={handleFormReset} className="btn btn-outline" disabled={isLoading}>
                         Reset
                     </button>
-                    <button type="submit" className="btn">
-                        Submit
+                    <button type="submit" className="btn" disabled={isLoading}>
+                        {isLoading ? "Submitting..." : "Submit"}
                     </button>
                 </div>
             </div>
