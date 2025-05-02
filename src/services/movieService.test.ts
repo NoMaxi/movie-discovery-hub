@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 import { movieService, API_URL, APIMovieDetails, CreateMoviePayload } from "@/services/movieService";
 import { mockAPIMovie } from "@/mocks/movieData";
-import { mapAPIMovieDetailsToMovieData } from "@/utils/movieMapping";
+import { mapAPIMovieDetailsToMovie } from "@/utils/movieMapping";
 import { DEFAULT_MOVIES_PER_PAGE } from "@/constants/constants";
 
 jest.mock("axios");
@@ -36,7 +36,7 @@ describe("movieService", () => {
             });
 
             expect(result).toEqual({
-                movies: [mapAPIMovieDetailsToMovieData(mockAPIMovie)],
+                movies: [mapAPIMovieDetailsToMovie(mockAPIMovie)],
                 totalAmount: 100,
                 offset: 0,
                 limit: DEFAULT_MOVIES_PER_PAGE,
@@ -69,7 +69,7 @@ describe("movieService", () => {
             });
 
             expect(result).toEqual({
-                movies: [mapAPIMovieDetailsToMovieData(mockAPIMovie), mapAPIMovieDetailsToMovieData(mockAPIMovie)],
+                movies: [mapAPIMovieDetailsToMovie(mockAPIMovie), mapAPIMovieDetailsToMovie(mockAPIMovie)],
                 totalAmount: 2,
                 offset: 5,
                 limit: DEFAULT_MOVIES_PER_PAGE,
@@ -85,7 +85,7 @@ describe("movieService", () => {
             const result = await movieService.getMovieById(123);
 
             expect(mockedAxios.get).toHaveBeenCalledWith(`${API_URL}/123`);
-            expect(result).toEqual(mapAPIMovieDetailsToMovieData(mockAPIMovie));
+            expect(result).toEqual(mapAPIMovieDetailsToMovie(mockAPIMovie));
         });
     });
 
@@ -100,7 +100,7 @@ describe("movieService", () => {
             const result = await movieService.createMovie(createPayload);
 
             expect(mockedAxios.post).toHaveBeenCalledWith(API_URL, createPayload);
-            expect(result).toEqual(mapAPIMovieDetailsToMovieData(apiResponse));
+            expect(result).toEqual(mapAPIMovieDetailsToMovie(apiResponse));
         });
     });
 
@@ -113,7 +113,7 @@ describe("movieService", () => {
             const result = await movieService.updateMovie(updatePayload);
 
             expect(mockedAxios.put).toHaveBeenCalledWith(API_URL, updatePayload);
-            expect(result).toEqual(mapAPIMovieDetailsToMovieData(apiResponse));
+            expect(result).toEqual(mapAPIMovieDetailsToMovie(apiResponse));
         });
     });
 
