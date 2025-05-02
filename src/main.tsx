@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { RouterProvider } from "react-router-dom";
 import "./index.css";
+import { ScrollProvider } from "@/contexts/ScrollContext/ScrollProvider";
 import { MOVIE_LIST_STALE_TIME } from "@/constants/constants";
 import { router } from "@/router";
 
@@ -20,7 +21,9 @@ const queryClient = new QueryClient({
 createRoot(document.getElementById("root")!).render(
     <StrictMode>
         <QueryClientProvider client={queryClient}>
-            <RouterProvider router={router} />
+            <ScrollProvider>
+                <RouterProvider router={router} />
+            </ScrollProvider>
             <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
     </StrictMode>,
