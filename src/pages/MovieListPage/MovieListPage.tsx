@@ -1,24 +1,28 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { useInView } from "react-intersection-observer";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import { DEFAULT_ACTIVE_GENRE, DEFAULT_SORT_OPTION, GENRES } from "@/constants/constants";
 import { Genre, Movie, SortOption } from "@/types/common";
 import { InfiniteMovieListResult, movieService } from "@/services/movieService";
+import { useScrollContext } from "@/contexts/ScrollContext/useScrollContext";
+import { useNavigateWithSearchParams } from "@/hooks/useNavigateWithSearchParams/useNavigateWithSearchParams";
+import { Loader } from "@/components/common/Loader/Loader";
+import { NetflixRouletteText } from "@/components/common/NetflixRouletteText/NetflixRouletteText";
 import { GenreSelect } from "@/components/GenreSelect/GenreSelect";
 import { SortControl } from "@/components/SortControl/SortControl";
 import { MovieTile } from "@/components/MovieTile/MovieTile";
-import { NetflixRouletteText } from "@/components/common/NetflixRouletteText/NetflixRouletteText";
-import { Loader } from "@/components/common/Loader/Loader";
 import { TopBar } from "@/components/TopBar/TopBar";
 import { Header } from "@/components/Header/Header";
 
 export const MovieListPage = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const { movieId } = useParams<{ movieId: string }>();
-    const navigate = useNavigate();
-    const queryClient = useQueryClient();
+    const navigateWithSearchParams = useNavigateWithSearchParams();
     const lastClickedTileRef = useRef<HTMLDivElement | null>(null);
+    const { targetMovieId, setTargetMovieId, triggerScroll, setTriggerScroll } = useScrollContext();
+
+    const queryClient = useQueryClient();
     const { ref: loadMoreRef, inView: isLoadMoreVisible } = useInView({ threshold: 0.1 });
 
     const searchQuery = searchParams.get("query") ?? "";
@@ -43,6 +47,8 @@ export const MovieListPage = () => {
         initialPageParam: undefined,
     });
 
+    const allMovies = useMemo(() => data?.pages.flatMap(({ movies }) => movies) ?? [], [data]);
+
     useEffect(() => {
         if (isLoadMoreVisible && hasNextPage && !isFetchingNextPage) {
             fetchNextPage();
@@ -50,11 +56,22 @@ export const MovieListPage = () => {
     }, [isLoadMoreVisible, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
     useEffect(() => {
-        if (!movieId && lastClickedTileRef.current) {
+        if (triggerScroll && targetMovieId && !movieId) {
+            const movieTileElement = document.querySelector(`[data-movie-id="${targetMovieId}"]`);
+            if (movieTileElement) {
+                movieTileElement.scrollIntoView({ behavior: "smooth", block: "nearest" });
+            }
+            setTargetMovieId(null);
+            setTriggerScroll(false);
+        }
+    }, [triggerScroll, targetMovieId, movieId, allMovies, setTargetMovieId, setTriggerScroll]);
+
+    useEffect(() => {
+        if (!triggerScroll && !movieId && lastClickedTileRef.current) {
             lastClickedTileRef.current.scrollIntoView({ behavior: "smooth", block: "nearest" });
             lastClickedTileRef.current = null;
         }
-    }, [movieId]);
+    }, [movieId, triggerScroll]);
 
     const updateSearchParam = (key: "genre" | "sortBy", value: Genre | SortOption) => {
         const newParams = new URLSearchParams(searchParams);
@@ -70,11 +87,6 @@ export const MovieListPage = () => {
         updateSearchParam("sortBy", sortOption);
     };
 
-    const navigateWithSearchParams = (path: string) => {
-        const searchParamsString = searchParams.toString();
-        navigate(`${path}${searchParamsString ? `?${searchParamsString}` : ""}`);
-    };
-
     const handleMovieClick = (movie: Movie, event: React.MouseEvent<HTMLDivElement>) => {
         lastClickedTileRef.current = event.currentTarget;
         window.scrollTo({ top: 0, behavior: "smooth" });
@@ -86,7 +98,7 @@ export const MovieListPage = () => {
     };
 
     const handleMovieEdit = (movie: Movie) => {
-        console.log("Edit movie:", movie.id, "- Placeholder");
+        navigateWithSearchParams(`/${movie.id}/edit`);
     };
 
     const [isDeleting, setIsDeleting] = useState(false);
@@ -107,7 +119,6 @@ export const MovieListPage = () => {
         }
     };
 
-    const allMovies = data?.pages.flatMap(({ movies }) => movies) ?? [];
     const totalAmount = data?.pages[0]?.totalAmount ?? 0;
     const queryErrorMessage =
         queryError instanceof Error ? queryError.message : "An unknown error occurred while fetching movies.";
