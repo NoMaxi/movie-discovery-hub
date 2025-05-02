@@ -1,4 +1,4 @@
-import React, { MouseEvent, useMemo, useState } from "react";
+import React, { MouseEvent, useCallback, useMemo, useState } from "react";
 import { Movie } from "@/types/common";
 import { useScrollContext } from "@/contexts/ScrollContext/useScrollContext";
 import { ContextMenu } from "@/components/common/ContextMenu/ContextMenu";
@@ -27,17 +27,17 @@ export const MovieTile = ({ movie, onClick, onEdit, onDelete }: MovieTileProps) 
         }
     };
 
-    const handleMovieEdit = () => {
+    const handleMovieEdit = useCallback(() => {
         setTargetMovieId(movie.id);
         onEdit(movie);
-    };
+    }, [movie, onEdit, setTargetMovieId]);
 
     const contextMenuActions = useMemo(
         () => [
             { label: "Edit", onClick: handleMovieEdit },
             { label: "Delete", onClick: () => onDelete(movie) },
         ],
-        [onEdit, onDelete, movie, setTargetMovieId],
+        [handleMovieEdit, onDelete, movie],
     );
 
     return (
