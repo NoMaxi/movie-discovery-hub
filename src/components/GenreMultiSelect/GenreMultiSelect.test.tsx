@@ -1,10 +1,10 @@
 import React from "react";
-import { render, screen, act } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import userEvent, { UserEvent } from "@testing-library/user-event";
 import "@testing-library/jest-dom";
 import { SelectableGenre } from "@/types/common";
 import { SELECTABLE_GENRES } from "@/constants/constants";
-import { GenreMultiSelect, GenreMultiSelectRef } from "./GenreMultiSelect";
+import { GenreMultiSelect } from "./GenreMultiSelect";
 
 jest.mock("@/hooks/useClickOutside/useClickOutside", () => ({
     useClickOutside: jest.fn(),
@@ -31,11 +31,18 @@ describe("GenreMultiSelect", () => {
     });
 
     const renderComponent = (props: Partial<React.ComponentProps<typeof GenreMultiSelect>> = {}) => {
-        const ref = React.createRef<GenreMultiSelectRef>();
+        const ref = React.createRef<HTMLDivElement>();
         const mergedProps = { ...defaultProps, ...props };
         const view = render(<GenreMultiSelect {...mergedProps} ref={ref} />);
         return { ...view, ref };
     };
+
+    test("Should properly handle function refs", () => {
+        const mockRef = jest.fn();
+        render(<GenreMultiSelect {...defaultProps} ref={mockRef} />);
+
+        expect(mockRef).toHaveBeenCalledWith(expect.any(HTMLDivElement));
+    });
 
     test("Should render correctly with default props and no preselected genres", () => {
         const { asFragment } = renderComponent();
@@ -44,12 +51,6 @@ describe("GenreMultiSelect", () => {
         expect(screen.getByRole("button")).toHaveTextContent("Select Genre");
         expect(screen.getByTestId("select-arrow")).toBeInTheDocument();
         expect(screen.queryByRole("listbox")).not.toBeInTheDocument();
-
-        const hiddenInput = screen.getByTestId("hidden-input-genres");
-
-        expect(hiddenInput).toBeInTheDocument();
-        expect(hiddenInput).toHaveValue("");
-
         expect(asFragment()).toMatchSnapshot();
     });
 
@@ -58,12 +59,6 @@ describe("GenreMultiSelect", () => {
         const { asFragment } = renderComponent({ preselectedGenres });
 
         expect(screen.getByRole("button")).toHaveTextContent("Comedy, Horror");
-
-        const hiddenInput = screen.getByTestId("hidden-input-genres");
-
-        expect(hiddenInput).toBeInTheDocument();
-        expect(hiddenInput).toHaveValue("Comedy, Horror");
-
         expect(asFragment()).toMatchSnapshot();
     });
 
@@ -111,9 +106,6 @@ describe("GenreMultiSelect", () => {
         expect(comedyCheckbox).not.toBeChecked();
         expect(horrorCheckbox).toBeChecked();
         expect(screen.getByRole("button")).toHaveTextContent("Horror");
-
-        const hiddenInput = screen.getByTestId("hidden-input-genres");
-        expect(hiddenInput).toHaveValue("Horror");
     });
 
     test("Should display correct checkboxes state with preselected genres", async () => {
@@ -134,8 +126,9 @@ describe("GenreMultiSelect", () => {
         expect(horrorCheckbox).not.toBeChecked();
     });
 
-    test("Should update hidden input value when genres are selected", async () => {
-        renderComponent();
+    test("Should handle selections and trigger onChange callback", async () => {
+        const onChange = jest.fn();
+        renderComponent({ onChange });
         const button = screen.getByRole("button");
 
         await user.click(button);
@@ -144,15 +137,13 @@ describe("GenreMultiSelect", () => {
         const documentaryCheckbox = screen.getByLabelText("Documentary", { selector: "input[type='checkbox']" });
 
         await user.click(comedyCheckbox);
-        await user.click(documentaryCheckbox);
-
-        const hiddenInput = screen.getByTestId("hidden-input-genres");
-
-        expect(hiddenInput).toHaveValue("Comedy, Documentary");
+        expect(onChange).toHaveBeenCalledWith(["Comedy"]);
 
         await user.click(documentaryCheckbox);
+        expect(onChange).toHaveBeenCalledWith(["Comedy", "Documentary"]);
 
-        expect(hiddenInput).toHaveValue("Comedy");
+        await user.click(documentaryCheckbox);
+        expect(onChange).toHaveBeenCalledWith(["Comedy"]);
     });
 
     test("Should apply accessibility attributes correctly", () => {
@@ -181,50 +172,26 @@ describe("GenreMultiSelect", () => {
         expect(button).toHaveAttribute("aria-expanded", "false");
     });
 
-    test("Should reset to preselected genres when reset method is called", async () => {
-        const preselectedGenres: SelectableGenre[] = ["Comedy"];
-        const { ref } = renderComponent({ preselectedGenres });
-        const button = screen.getByRole("button");
-
-        await user.click(button);
-
-        const horrorCheckbox = screen.getByLabelText("Horror", { selector: "input[type='checkbox']" });
-        await user.click(horrorCheckbox);
-
-        expect(screen.getByRole("button")).toHaveTextContent("Comedy, Horror");
-
-        await act(async () => {
-            ref.current?.reset();
-        });
+    test("Should update selected genres when preselectedGenres prop changes", async () => {
+        const { rerender } = renderComponent({ preselectedGenres: ["Comedy"] });
 
         expect(screen.getByRole("button")).toHaveTextContent("Comedy");
 
-        const hiddenInput = screen.getByTestId("hidden-input-genres");
-        expect(hiddenInput).toHaveValue("Comedy");
-    });
+        rerender(<GenreMultiSelect {...defaultProps} preselectedGenres={["Horror"]} />);
 
-    test("Should reset to empty selection when reset method is called with no preselected genres", async () => {
-        const { ref } = renderComponent();
-        const button = screen.getByRole("button");
+        expect(screen.getByRole("button")).toHaveTextContent("Horror");
 
-        await user.click(button);
-
-        const comedyCheckbox = screen.getByLabelText("Comedy", { selector: "input[type='checkbox']" });
-        const horrorCheckbox = screen.getByLabelText("Horror", { selector: "input[type='checkbox']" });
-
-        await user.click(comedyCheckbox);
-        await user.click(horrorCheckbox);
-
-        expect(screen.getByRole("button")).toHaveTextContent("Comedy, Horror");
-
-        act(() => {
-            ref.current?.reset();
-        });
+        rerender(<GenreMultiSelect {...defaultProps} preselectedGenres={[]} />);
 
         expect(screen.getByRole("button")).toHaveTextContent("Select Genre");
+    });
 
-        const hiddenInput = screen.getByTestId("hidden-input-genres");
-        expect(hiddenInput).toHaveValue("");
+    test("Should apply error styles and aria-invalid when error prop is true", () => {
+        renderComponent({ error: true });
+        const button = screen.getByRole("button");
+
+        expect(button).toHaveClass("input-error");
+        expect(button).toHaveAttribute("aria-invalid", "true");
     });
 
     test("Should prevent event propagation when clicking on checkboxes", async () => {

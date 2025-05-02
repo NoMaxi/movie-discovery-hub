@@ -13,10 +13,14 @@ export interface GenreMultiSelectProps {
     error?: boolean;
 }
 
+const defaultEmptyGenres: string[] = [];
+
 export const GenreMultiSelect = forwardRef<HTMLDivElement, GenreMultiSelectProps>(
-    ({ preselectedGenres = [], onChange, id, ariaDescribedby, error }, ref) => {
+    ({ preselectedGenres = defaultEmptyGenres, onChange, id, ariaDescribedby, error }, ref) => {
         const [isOpen, setIsOpen] = useState(false);
-        const [selectedGenres, setSelectedGenres] = useState<Set<SelectableGenre | string>>(new Set(preselectedGenres));
+        const [selectedGenres, setSelectedGenres] = useState<Set<SelectableGenre | string>>(
+            () => new Set(preselectedGenres),
+        );
         const controlRef = useRef<HTMLDivElement>(null);
 
         useEffect(() => {
