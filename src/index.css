@@ -127,7 +127,7 @@ body {
 }
 
 .input-field.input-error {
-    @apply border-solid border-2 !border-[var(--color-error)];
+    @apply border-solid border-2 !border-[var(--color-input-error)];
 }
 
 .input-transparent-shadow-glow {
@@ -155,7 +155,7 @@ input[type="date"].input-field:valid {
 }
 
 .error-message {
-    @apply text-[var(--color-error)] text-base mt-1.5;
+    @apply text-[var(--color-input-error)] text-base mt-1.5;
 }
 
 .form-checkbox {
