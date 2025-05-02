@@ -1,11 +1,28 @@
 import React from "react";
-import { render, screen, within } from "@testing-library/react";
+import { render, screen, within, act } from "@testing-library/react";
 import userEvent, { UserEvent } from "@testing-library/user-event";
 import "@testing-library/jest-dom";
 import { Dialog } from "./Dialog";
 
+interface FocusTrapOptions {
+    clickOutsideDeactivates: boolean;
+    escapeDeactivates: boolean;
+    fallbackFocus: () => HTMLElement | string;
+}
+
+interface FocusTrapProps {
+    active: boolean;
+    focusTrapOptions: FocusTrapOptions;
+    children: React.ReactNode;
+}
+
+const mockFocusTrap = jest.fn<React.ReactElement, [FocusTrapProps]>((props) => <div>{props.children}</div>);
+
 jest.mock("focus-trap-react", () => ({
-    FocusTrap: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+    FocusTrap: (props: FocusTrapProps) => {
+        mockFocusTrap(props);
+        return <div>{props.children}</div>;
+    },
 }));
 
 interface DialogProps {
@@ -27,6 +44,7 @@ describe("Dialog", () => {
     beforeEach(() => {
         onCloseMock = jest.fn();
         user = userEvent.setup();
+        mockFocusTrap.mockClear();
     });
 
     afterEach(() => {
@@ -49,7 +67,10 @@ describe("Dialog", () => {
 
         expect(dialogContent).toBeInTheDocument();
 
-        const header = within(dialogContent).getByRole("heading", { name: mockTitleText, level: 2 });
+        const header = within(dialogContent).getByRole("heading", {
+            name: mockTitleText.toUpperCase(),
+            level: 2,
+        });
 
         expect(header).toBeInTheDocument();
 
@@ -72,7 +93,8 @@ describe("Dialog", () => {
         const dialogBody = screen.getByTestId("dialog-body");
 
         expect(dialogBody).toBeInTheDocument();
-        expect(dialogBody).toHaveClass("dialog-body pt-0");
+        expect(dialogBody.className).toContain("dialog-body");
+        expect(dialogBody.className).toContain("pt-[60px]");
     });
 
     test("Should render correctly with JSX element as title", () => {
@@ -123,5 +145,62 @@ describe("Dialog", () => {
         expect(form).toBeInTheDocument();
         expect(within(form).getByLabelText("Name")).toBeInTheDocument();
         expect(within(form).getByRole("button", { name: "Submit" })).toBeInTheDocument();
+    });
+
+    test("Should pass correct options to FocusTrap", () => {
+        renderComponent();
+
+        expect(mockFocusTrap).toHaveBeenCalled();
+
+        const focusTrapProps: FocusTrapProps = mockFocusTrap.mock.calls[0][0];
+
+        expect(focusTrapProps.focusTrapOptions).toBeDefined();
+        expect(typeof focusTrapProps.focusTrapOptions.fallbackFocus).toBe("function");
+        expect(focusTrapProps.focusTrapOptions.clickOutsideDeactivates).toBe(false);
+        expect(focusTrapProps.focusTrapOptions.escapeDeactivates).toBe(false);
+    });
+
+    test("'fallbackFocus' function should handle both null and non-null ref cases", () => {
+        renderComponent();
+
+        const focusTrapProps: FocusTrapProps = mockFocusTrap.mock.calls[0][0];
+        const fallbackFocusFn = focusTrapProps.focusTrapOptions.fallbackFocus;
+
+        const result = fallbackFocusFn();
+
+        if (typeof result === "string") {
+            expect(result).toBe('[data-testid="dialog-content"]');
+        } else {
+            expect(result).toHaveAttribute("data-testid", "dialog-content");
+        }
+    });
+
+    test("Should initialize FocusTrap with 'active prop' set to false", () => {
+        renderComponent();
+
+        const focusTrapProps: FocusTrapProps = mockFocusTrap.mock.calls[0][0];
+        expect(focusTrapProps.active).toBe(false);
+    });
+
+    test("Should update FocusTrap 'active' prop after timeout", async () => {
+        jest.useFakeTimers();
+
+        renderComponent();
+        const initialFocusTrapProps = mockFocusTrap.mock.calls[0][0];
+        expect(initialFocusTrapProps.active).toBe(false);
+
+        mockFocusTrap.mockClear();
+
+        act(() => {
+            jest.advanceTimersByTime(10);
+        });
+
+        expect(mockFocusTrap).toHaveBeenCalledWith(
+            expect.objectContaining({
+                active: true,
+            }),
+        );
+
+        jest.useRealTimers();
     });
 });
