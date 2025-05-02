@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ScrollProvider Should provide initial context values 1`] = `
+<DocumentFragment>
+  <div>
+    <div
+      data-testid="targetMovieId"
+    >
+      null
+    </div>
+    <div
+      data-testid="triggerScroll"
+    >
+      false
+    </div>
+    <button>
+      Set Target ID
+    </button>
+    <button>
+      Trigger Scroll
+    </button>
+    <button>
+      Reset Target ID
+    </button>
+    <button>
+      Reset Trigger Scroll
+    </button>
+  </div>
+</DocumentFragment>
+`;
