@@ -4,6 +4,15 @@ import "@testing-library/jest-dom";
 import { mockMovieDetails } from "@/mocks/movieData";
 import { MovieTile } from "./MovieTile";
 
+jest.mock("@/contexts/ScrollContext/useScrollContext", () => ({
+    useScrollContext: () => ({
+        setTargetMovieId: jest.fn(),
+        targetMovieId: null,
+        triggerScroll: false,
+        setTriggerScroll: jest.fn(),
+    }),
+}));
+
 describe("MovieTile", () => {
     let onClickMock: jest.Mock;
     let onEditMock: jest.Mock;
