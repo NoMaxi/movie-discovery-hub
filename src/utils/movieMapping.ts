@@ -1,28 +1,39 @@
-import { Movie, SortOption } from "@/types/common";
+import { InitialMovieInfo, Movie, SortOption } from "@/types/common";
 import { DEFAULT_DESCRIPTION, DEFAULT_TITLE } from "@/constants/constants";
 import { DEFAULT_IMAGE_URL } from "@/constants/assetConstants";
 import { getYearFromDate } from "@/utils/formatting";
 import { APIMovieDetails, SortBy, SortOrder } from "@/services/movieService";
 
-export const mapAPIMovieDetailsToMovieData = ({
+export const mapAPIMovieDetailsToMovie = ({
     id,
-    overview,
-    runtime,
     genres,
+    overview,
     poster_path,
-    vote_average,
     release_date,
+    runtime,
     title,
+    vote_average,
 }: APIMovieDetails): Movie => ({
     id,
     description: overview || DEFAULT_DESCRIPTION,
-    duration: runtime,
+    duration: runtime ?? 0,
     genres,
     imageUrl: poster_path || DEFAULT_IMAGE_URL,
     rating: vote_average ?? 0,
     releaseYear: getYearFromDate(release_date),
     title: title || DEFAULT_TITLE,
 });
+
+export const mapAPIMovieDetailsToInitialMovieInfo = (apiMovieDetails: APIMovieDetails): InitialMovieInfo => {
+    const movie = mapAPIMovieDetailsToMovie(apiMovieDetails);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { releaseYear, ...movieWithoutReleaseYear } = movie;
+
+    return {
+        ...movieWithoutReleaseYear,
+        releaseDate: apiMovieDetails.release_date ?? "",
+    };
+};
 
 const SORT_OPTION_TO_SORT_BY: Record<SortOption, SortBy> = {
     "Release Date": "release_date",

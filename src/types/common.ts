@@ -1,3 +1,5 @@
+import { APIMovieDetails } from "@/services/movieService";
+
 export type SelectableGenre = "Comedy" | "Crime" | "Documentary" | "Horror";
 
 export type Genre = "All" | SelectableGenre;
@@ -17,15 +19,23 @@ export interface InitialMovieInfo extends Omit<Movie, "releaseYear"> {
     releaseDate: string;
 }
 
-export interface MovieFormData {
+type MovieFormOmittedAPIFields =
+    | "id"
+    | "release_date"
+    | "runtime"
+    | "vote_average"
+    | "budget"
+    | "revenue"
+    | "tagline"
+    | "vote_count";
+
+type MovieFormBase = Omit<APIMovieDetails, MovieFormOmittedAPIFields>;
+
+export type MovieFormData = MovieFormBase & {
     id?: number;
-    title: string;
     release_date: string;
-    poster_path: string;
-    vote_average: number;
-    genres: string[];
     runtime: number;
-    overview: string;
-}
+    vote_average: number;
+};
 
 export type SortOption = "Release Date" | "Title";
