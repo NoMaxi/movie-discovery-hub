@@ -1,45 +1,57 @@
-import React, { forwardRef, useImperativeHandle } from "react";
-import { fireEvent, render, screen, within } from "@testing-library/react";
+import React, { forwardRef } from "react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent, { UserEvent } from "@testing-library/user-event";
 import "@testing-library/jest-dom";
-import { InitialMovieInfo, SelectableGenre } from "@/types/common";
+import { InitialMovieInfo, MovieFormData, SelectableGenre } from "@/types/common";
 import { mockMovieInfo } from "@/mocks/movieData";
-import { GenreMultiSelectProps, GenreMultiSelectRef } from "@/components/GenreMultiSelect/GenreMultiSelect";
+import { GenreMultiSelectProps } from "@/components/GenreMultiSelect/GenreMultiSelect";
 import { MovieForm } from "./MovieForm";
 
 jest.mock("@/components/common/CalendarIcon/CalendarIcon", () => ({
     CalendarIcon: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="calendar-icon" {...props} />,
 }));
 
-const mockGenreSelectReset = jest.fn();
-
 jest.mock("@/components/GenreMultiSelect/GenreMultiSelect", () => {
-    const MockGenreMultiSelectComponent = forwardRef<GenreMultiSelectRef, GenreMultiSelectProps>((props, ref) => {
-        const { id, name, preselectedGenres = [], ariaDescribedby } = props;
+    const MockGenreMultiSelectComponent = forwardRef<
+        HTMLDivElement,
+        GenreMultiSelectProps & { onChange?: (value: string[]) => void }
+    >((props, ref) => {
+        const { id, name, preselectedGenres = [], onChange, ariaDescribedby, error } = props;
+        const availableGenres: SelectableGenre[] = ["Comedy", "Crime", "Documentary", "Horror"];
 
-        useImperativeHandle(ref, () => ({
-            reset: mockGenreSelectReset,
-        }));
+        const handleCheckboxChange = (genre: SelectableGenre, checked: boolean) => {
+            const currentGenres = new Set(preselectedGenres);
+            if (checked) {
+                currentGenres.add(genre);
+            } else {
+                currentGenres.delete(genre);
+            }
+            onChange?.(Array.from(currentGenres));
+        };
+
+        const displayValue = preselectedGenres.length > 0 ? preselectedGenres.join(", ") : "Select Genre";
+        const areGenresSelected = preselectedGenres.length > 0;
 
         return (
-            <div data-testid="genre-multi-select">
-                <input
-                    type="hidden"
-                    name={name}
-                    defaultValue={preselectedGenres.join(", ")}
-                    data-testid={`hidden-${name}`}
-                />
-                <button type="button" aria-describedby={ariaDescribedby} id={id}>
-                    {preselectedGenres.length > 0 ? preselectedGenres.join(", ") : "Select Genre"}
+            <div data-testid="genre-multi-select" ref={ref}>
+                <button
+                    type="button"
+                    aria-describedby={ariaDescribedby}
+                    id={id}
+                    aria-invalid={error ? "true" : "false"}
+                    className={`mock-button ${areGenresSelected ? "selected" : ""}`}
+                >
+                    {displayValue}
                 </button>
                 <div>
-                    {(["Comedy", "Crime", "Documentary", "Horror"] as SelectableGenre[]).map((genre) => (
+                    {availableGenres.map((genre) => (
                         <label key={genre}>
                             {genre}
                             <input
                                 type="checkbox"
                                 value={genre}
-                                defaultChecked={preselectedGenres.includes(genre)}
+                                checked={preselectedGenres.includes(genre)}
+                                onChange={(e) => handleCheckboxChange(genre, e.target.checked)}
                                 name={`mock-${name}-${genre}`}
                             />
                         </label>
@@ -65,17 +77,31 @@ describe("MovieForm", () => {
         user = userEvent.setup();
         onSubmitMock = jest.fn();
         showPickerMock = jest.fn();
-        HTMLInputElement.prototype.showPicker = showPickerMock;
+        Object.defineProperty(window.HTMLInputElement.prototype, "showPicker", {
+            value: showPickerMock,
+            configurable: true,
+            writable: true,
+        });
     });
 
     afterEach(() => {
-        delete (HTMLInputElement.prototype as { showPicker?: () => void }).showPicker;
-        mockGenreSelectReset.mockClear();
+        delete (window.HTMLInputElement.prototype as { showPicker?: () => void }).showPicker;
         jest.clearAllMocks();
     });
 
-    const renderComponent = (initialMovieInfo?: InitialMovieInfo) => {
-        return render(<MovieForm initialMovieInfo={initialMovieInfo} onSubmit={onSubmitMock} />);
+    const renderComponent = (
+        initialMovieInfo?: Partial<InitialMovieInfo>,
+        resetMode?: "clear" | "restore",
+        isLoading = false,
+    ) => {
+        return render(
+            <MovieForm
+                initialMovieInfo={initialMovieInfo}
+                onSubmit={onSubmitMock}
+                resetMode={resetMode}
+                isLoading={isLoading}
+            />,
+        );
     };
 
     test("Should render empty form correctly for Add Movie mode", () => {
@@ -91,13 +117,13 @@ describe("MovieForm", () => {
         expect(screen.getByLabelText(/movie url/i)).toHaveValue("");
 
         expect(screen.getByLabelText(/rating/i)).toBeInTheDocument();
-        expect(screen.getByLabelText(/rating/i)).toHaveValue(null);
+        expect(screen.getByLabelText(/rating/i)).toHaveValue(0);
 
         expect(screen.getByTestId("genre-multi-select")).toBeInTheDocument();
         expect(within(screen.getByTestId("genre-multi-select")).getByRole("button")).toHaveTextContent("Select Genre");
 
         expect(screen.getByLabelText(/runtime/i)).toBeInTheDocument();
-        expect(screen.getByLabelText(/runtime/i)).toHaveValue(null);
+        expect(screen.getByLabelText(/runtime/i)).toHaveValue(0);
 
         expect(screen.getByLabelText(/overview/i)).toBeInTheDocument();
         expect(screen.getByLabelText(/overview/i)).toHaveValue("");
@@ -108,23 +134,31 @@ describe("MovieForm", () => {
         expect(asFragment()).toMatchSnapshot();
     });
 
-    test("Should render prefilled form correctly for Edit Movie mode", () => {
-        renderComponent(mockMovieInfo);
+    test("Should render prefilled form correctly for Edit Movie mode", async () => {
+        const { asFragment } = renderComponent(mockMovieInfo);
 
-        expect(screen.getByLabelText(/title/i)).toHaveValue(mockMovieInfo.title);
+        await waitFor(() => {
+            expect(screen.getByLabelText(/title/i)).toHaveValue(mockMovieInfo.title);
+        });
+
         expect(screen.getByLabelText(/release date/i)).toHaveValue(mockMovieInfo.releaseDate);
         expect(screen.getByLabelText(/movie url/i)).toHaveValue(mockMovieInfo.imageUrl);
         expect(screen.getByLabelText(/rating/i)).toHaveValue(mockMovieInfo.rating);
         expect(screen.getByLabelText(/runtime/i)).toHaveValue(mockMovieInfo.duration);
         expect(screen.getByLabelText(/overview/i)).toHaveValue(mockMovieInfo.description);
 
-        expect(within(screen.getByTestId("genre-multi-select")).getByRole("button")).toHaveTextContent(
-            mockMovieInfo.genres.join(", "),
-        );
-        expect(screen.getByLabelText("Comedy", { selector: "input[type='checkbox']" })).toBeChecked();
-        expect(screen.getByLabelText("Crime", { selector: "input[type='checkbox']" })).toBeChecked();
-        expect(screen.getByLabelText("Documentary", { selector: "input[type='checkbox']" })).not.toBeChecked();
-        expect(screen.getByLabelText("Horror", { selector: "input[type='checkbox']" })).not.toBeChecked();
+        const genreSelect = screen.getByTestId("genre-multi-select");
+        await waitFor(() => {
+            expect(within(genreSelect).getByRole("button")).toHaveTextContent(mockMovieInfo.genres.join(", "));
+        });
+        expect(within(genreSelect).getByLabelText("Comedy", { selector: "input[type='checkbox']" })).toBeChecked();
+        expect(within(genreSelect).getByLabelText("Crime", { selector: "input[type='checkbox']" })).toBeChecked();
+        expect(
+            within(genreSelect).getByLabelText("Documentary", { selector: "input[type='checkbox']" }),
+        ).not.toBeChecked();
+        expect(within(genreSelect).getByLabelText("Horror", { selector: "input[type='checkbox']" })).not.toBeChecked();
+        
+        expect(asFragment()).toMatchSnapshot();
     });
 
     test("Should call 'onSubmit' prop with processed data when valid form was submitted in Add Movie mode", async () => {
@@ -137,25 +171,35 @@ describe("MovieForm", () => {
         const runtimeInput = screen.getByLabelText(/runtime/i);
         const overviewInput = screen.getByLabelText(/overview/i);
         const submitButton = screen.getByRole("button", { name: /submit/i });
+        const genreSelect = screen.getByTestId("genre-multi-select");
 
         await user.type(titleInput, mockMovieInfo.title);
-        fireEvent.change(dateInput, { target: { value: mockMovieInfo.releaseDate } });
+        await user.clear(dateInput);
+        await user.type(dateInput, mockMovieInfo.releaseDate);
         await user.type(urlInput, mockMovieInfo.imageUrl);
+        await user.clear(ratingInput);
         await user.type(ratingInput, mockMovieInfo.rating.toString());
+        await user.clear(runtimeInput);
         await user.type(runtimeInput, mockMovieInfo.duration.toString());
         await user.type(overviewInput, mockMovieInfo.description);
 
         const selectedGenre = "Comedy";
-        const comedyCheckbox = screen.getByLabelText(selectedGenre, { selector: "input[type='checkbox']" });
+        const comedyCheckbox = within(genreSelect).getByLabelText(selectedGenre, {
+            selector: "input[type='checkbox']",
+        });
         await user.click(comedyCheckbox);
 
-        const hiddenGenreInput = screen.getByTestId("hidden-genres");
-        fireEvent.change(hiddenGenreInput, { target: { value: selectedGenre } });
+        await waitFor(() => {
+            expect(within(genreSelect).getByRole("button")).toHaveTextContent(selectedGenre);
+        });
 
         await user.click(submitButton);
 
-        expect(onSubmitMock).toHaveBeenCalledTimes(1);
-        expect(onSubmitMock).toHaveBeenCalledWith({
+        await waitFor(() => {
+            expect(onSubmitMock).toHaveBeenCalledTimes(1);
+        });
+
+        const expectedData: MovieFormData = {
             title: mockMovieInfo.title,
             release_date: mockMovieInfo.releaseDate,
             poster_path: mockMovieInfo.imageUrl,
@@ -163,8 +207,11 @@ describe("MovieForm", () => {
             genres: [selectedGenre],
             runtime: mockMovieInfo.duration,
             overview: mockMovieInfo.description,
-        });
+        };
+        expect(onSubmitMock).toHaveBeenCalledWith(expectedData);
+
         expect(screen.queryByText(/select at least one genre/i)).not.toBeInTheDocument();
+        expect(screen.queryByTestId("genre-error-message")).not.toBeInTheDocument();
     });
 
     test("Should call 'onSubmit' prop with processed data including id in Edit Movie mode", async () => {
@@ -173,17 +220,22 @@ describe("MovieForm", () => {
 
         const titleInput = screen.getByLabelText(/title/i);
         const submitButton = screen.getByRole("button", { name: /submit/i });
+        const genreSelect = screen.getByTestId("genre-multi-select");
+
+        await waitFor(() => {
+            expect(within(genreSelect).getByRole("button")).toHaveTextContent(mockMovieInfo.genres.join(", "));
+        });
 
         await user.clear(titleInput);
         await user.type(titleInput, mockUpdatedMovieTitle);
 
-        const hiddenGenreInput = screen.getByTestId("hidden-genres");
-        fireEvent.change(hiddenGenreInput, { target: { value: "Comedy,Crime" } });
-
         await user.click(submitButton);
 
-        expect(onSubmitMock).toHaveBeenCalledTimes(1);
-        expect(onSubmitMock).toHaveBeenCalledWith({
+        await waitFor(() => {
+            expect(onSubmitMock).toHaveBeenCalledTimes(1);
+        });
+
+        const expectedData: MovieFormData = {
             id: mockMovieInfo.id,
             title: mockUpdatedMovieTitle,
             release_date: mockMovieInfo.releaseDate,
@@ -192,22 +244,33 @@ describe("MovieForm", () => {
             genres: mockMovieInfo.genres,
             runtime: mockMovieInfo.duration,
             overview: mockMovieInfo.description,
-        });
+        };
+        expect(onSubmitMock).toHaveBeenCalledWith(expectedData);
     });
 
-    test("Should call 'onSubmit' with 0 for rating and runtime if non-numeric values were provided", async () => {
+    test("Should call 'onSubmit' with 0 for rating and runtime if non-numeric/empty values were provided", async () => {
         renderComponent();
 
         await user.type(screen.getByLabelText(/title/i), "Numeric Test");
-        fireEvent.change(screen.getByLabelText(/release date/i), { target: { value: "2024-01-17" } });
+        await user.clear(screen.getByLabelText(/release date/i));
+        await user.type(screen.getByLabelText(/release date/i), "2024-01-17");
         await user.type(screen.getByLabelText(/movie url/i), "https://numeric.test");
         await user.type(screen.getByLabelText(/overview/i), "Mock Description");
-        const hiddenGenreInput = screen.getByTestId("hidden-genres");
-        fireEvent.change(hiddenGenreInput, { target: { value: "Horror" } });
+
+        const genreSelect = screen.getByTestId("genre-multi-select");
+        const horrorCheckbox = within(genreSelect).getByLabelText("Horror", { selector: "input[type='checkbox']" });
+        await user.click(horrorCheckbox);
+
+        await waitFor(() => {
+            expect(within(genreSelect).getByRole("button")).toHaveTextContent("Horror");
+        });
 
         await user.click(screen.getByRole("button", { name: /submit/i }));
 
-        expect(onSubmitMock).toHaveBeenCalledTimes(1);
+        await waitFor(() => {
+            expect(onSubmitMock).toHaveBeenCalledTimes(1);
+        });
+
         expect(onSubmitMock).toHaveBeenCalledWith(
             expect.objectContaining({
                 vote_average: 0,
@@ -221,23 +284,83 @@ describe("MovieForm", () => {
     test("Should show genre validation error and not call onSubmit if no genre was selected", async () => {
         renderComponent();
 
-        await user.type(screen.getByLabelText(/title/i), "Movie Without Genre");
-        fireEvent.change(screen.getByLabelText(/release date/i), { target: { value: "2024-01-16" } });
+        await user.clear(screen.getByLabelText(/release date/i));
+        await user.type(screen.getByLabelText(/release date/i), "2024-01-16");
         await user.type(screen.getByLabelText(/movie url/i), "https://movie.com");
+        await user.clear(screen.getByLabelText(/rating/i));
         await user.type(screen.getByLabelText(/rating/i), "5");
+        await user.clear(screen.getByLabelText(/runtime/i));
         await user.type(screen.getByLabelText(/runtime/i), "100");
         await user.type(screen.getByLabelText(/overview/i), "Overview here.");
 
-        const hiddenGenreInput = screen.getByTestId("hidden-genres");
-        fireEvent.change(hiddenGenreInput, { target: { value: "" } });
+        const genreSelect = screen.getByTestId("genre-multi-select");
+        expect(within(genreSelect).getByRole("button")).toHaveTextContent("Select Genre");
 
         await user.click(screen.getByRole("button", { name: /submit/i }));
 
+        await waitFor(() => {
+            expect(screen.getByText("Title is required")).toBeInTheDocument();
+        });
+        await waitFor(() => {
+            expect(screen.getByText(/select at least one genre/i)).toBeInTheDocument();
+        });
+
+        expect(screen.getByLabelText(/title/i)).toHaveAttribute("aria-invalid", "true");
+        expect(screen.getByLabelText(/title/i)).toHaveClass("input-error");
+        expect(within(genreSelect).getByRole("button")).toHaveAttribute("aria-invalid", "true");
+
         expect(onSubmitMock).not.toHaveBeenCalled();
-        expect(screen.getByText(/select at least one genre/i)).toBeInTheDocument();
     });
 
-    test("Should reset fields to initial values and call GenreMultiSelect reset when Reset button is clicked", async () => {
+    test("Should reset fields to initial values when Reset button is clicked in 'restore' mode", async () => {
+        renderComponent(mockMovieInfo, "restore");
+
+        const titleInput = screen.getByLabelText(/title/i);
+        const dateInput = screen.getByLabelText(/release date/i);
+        const urlInput = screen.getByLabelText(/movie url/i);
+        const ratingInput = screen.getByLabelText(/rating/i);
+        const runtimeInput = screen.getByLabelText(/runtime/i);
+        const overviewInput = screen.getByLabelText(/overview/i);
+        const resetButton = screen.getByRole("button", { name: /reset/i });
+        const genreSelect = screen.getByTestId("genre-multi-select");
+
+        await waitFor(() => {
+            expect(titleInput).toHaveValue(mockMovieInfo.title);
+        });
+        expect(within(genreSelect).getByRole("button")).toHaveTextContent(mockMovieInfo.genres.join(", "));
+
+        await user.clear(titleInput);
+        await user.type(titleInput, "Temporary Title");
+        await user.clear(runtimeInput);
+        await user.type(runtimeInput, "10");
+        await user.clear(dateInput);
+        await user.type(dateInput, "2000-01-01");
+        const comedyCheckbox = within(genreSelect).getByLabelText("Comedy", { selector: "input[type='checkbox']" });
+        await user.click(comedyCheckbox);
+        await waitFor(() => {
+            expect(within(genreSelect).getByRole("button")).toHaveTextContent("Crime");
+        });
+
+        await user.click(resetButton);
+
+        await waitFor(() => {
+            expect(within(genreSelect).getByRole("button")).toHaveTextContent(mockMovieInfo.genres.join(", "));
+        });
+
+        expect(titleInput).toHaveValue(mockMovieInfo.title);
+        expect(dateInput).toHaveValue(mockMovieInfo.releaseDate);
+        expect(urlInput).toHaveValue(mockMovieInfo.imageUrl);
+        expect(ratingInput).toHaveValue(mockMovieInfo.rating);
+        expect(runtimeInput).toHaveValue(mockMovieInfo.duration);
+        expect(overviewInput).toHaveValue(mockMovieInfo.description);
+
+        expect(within(genreSelect).getByLabelText("Comedy", { selector: "input[type='checkbox']" })).toBeChecked();
+        expect(within(genreSelect).getByLabelText("Crime", { selector: "input[type='checkbox']" })).toBeChecked();
+
+        expect(screen.queryByText(/select at least one genre/i)).not.toBeInTheDocument();
+    });
+
+    test("Should clear fields on Reset button click in default 'clear' mode", async () => {
         renderComponent(mockMovieInfo);
 
         const titleInput = screen.getByLabelText(/title/i);
@@ -247,56 +370,28 @@ describe("MovieForm", () => {
         const runtimeInput = screen.getByLabelText(/runtime/i);
         const overviewInput = screen.getByLabelText(/overview/i);
         const resetButton = screen.getByRole("button", { name: /reset/i });
+        const genreSelect = screen.getByTestId("genre-multi-select");
 
-        await user.clear(titleInput);
-        await user.type(titleInput, "Temporary Title");
-        await user.clear(runtimeInput);
-        await user.type(runtimeInput, "10");
-        fireEvent.change(dateInput, { target: { value: "2000-01-01" } });
-
-        await user.click(resetButton);
-
-        expect(titleInput).toHaveValue(mockMovieInfo.title);
-        expect(dateInput).toHaveValue(mockMovieInfo.releaseDate);
-        expect(urlInput).toHaveValue(mockMovieInfo.imageUrl);
-        expect(ratingInput).toHaveValue(mockMovieInfo.rating);
-        expect(runtimeInput).toHaveValue(mockMovieInfo.duration);
-        expect(overviewInput).toHaveValue(mockMovieInfo.description);
-
-        expect(mockGenreSelectReset).toHaveBeenCalledTimes(1);
-        expect(screen.queryByText(/select at least one genre/i)).not.toBeInTheDocument();
-    });
-
-    test("Should clear fields and call GenreMultiSelect 'reset' on Reset button click in Add mode", async () => {
-        renderComponent();
-
-        const titleInput = screen.getByLabelText(/title/i);
-        const dateInput = screen.getByLabelText(/release date/i);
-        const urlInput = screen.getByLabelText(/movie url/i);
-        const ratingInput = screen.getByLabelText(/rating/i);
-        const runtimeInput = screen.getByLabelText(/runtime/i);
-        const overviewInput = screen.getByLabelText(/overview/i);
-        const resetButton = screen.getByRole("button", { name: /reset/i });
-        const hiddenGenreInput = screen.getByTestId("hidden-genres");
-
-        await user.type(titleInput, "Temporary Title");
-        fireEvent.change(dateInput, { target: { value: "2022-02-02" } });
-        await user.type(urlInput, "https://temp.com");
-        await user.type(ratingInput, "5.5");
-        await user.type(runtimeInput, "99");
-        await user.type(overviewInput, "Temp description");
-        fireEvent.change(hiddenGenreInput, { target: { value: "Crime" } });
+        await waitFor(() => {
+            expect(titleInput).toHaveValue(mockMovieInfo.title);
+        });
+        expect(within(genreSelect).getByRole("button")).toHaveTextContent(mockMovieInfo.genres.join(", "));
 
         await user.click(resetButton);
+
+        await waitFor(() => {
+            expect(within(genreSelect).getByRole("button")).toHaveTextContent("Select Genre");
+        });
 
         expect(titleInput).toHaveValue("");
         expect(dateInput).toHaveValue("");
         expect(urlInput).toHaveValue("");
-        expect(ratingInput).toHaveValue(null);
-        expect(runtimeInput).toHaveValue(null);
+        expect(ratingInput).toHaveValue(0);
+        expect(runtimeInput).toHaveValue(0);
         expect(overviewInput).toHaveValue("");
 
-        expect(mockGenreSelectReset).toHaveBeenCalledTimes(1);
+        expect(within(genreSelect).getByLabelText("Comedy", { selector: "input[type='checkbox']" })).not.toBeChecked();
+        expect(within(genreSelect).getByLabelText("Crime", { selector: "input[type='checkbox']" })).not.toBeChecked();
 
         expect(screen.queryByText(/select at least one genre/i)).not.toBeInTheDocument();
     });
@@ -308,5 +403,116 @@ describe("MovieForm", () => {
         await user.click(icon);
 
         expect(showPickerMock).toHaveBeenCalledTimes(1);
+    });
+
+    test("Should show validation error for invalid date format", async () => {
+        renderComponent();
+        const dateInput = screen.getByLabelText(/release date/i);
+        const submitButton = screen.getByRole("button", { name: /submit/i });
+
+        await user.clear(dateInput);
+        await user.click(submitButton);
+        const requiredErrorElement = await screen.findByText("Release date is required");
+        expect(requiredErrorElement).toHaveAttribute("role", "alert");
+        expect(onSubmitMock).not.toHaveBeenCalled();
+
+        await user.clear(dateInput);
+        await user.type(dateInput, "1899-12-31");
+        await user.click(screen.getByLabelText(/title/i));
+        const minDateErrorElement = await screen.findByText("Date must be 1900-01-01 or later");
+        expect(minDateErrorElement).toHaveAttribute("role", "alert");
+
+        await user.click(submitButton);
+        await screen.findByText("Date must be 1900-01-01 or later");
+        expect(onSubmitMock).not.toHaveBeenCalled();
+
+        await user.clear(dateInput);
+        await user.type(dateInput, "2050-01-02");
+        await user.click(screen.getByLabelText(/title/i));
+        const maxDateErrorElement = await screen.findByText("Date must be 2050-01-01 or earlier");
+        expect(maxDateErrorElement).toHaveAttribute("role", "alert");
+
+        await user.click(submitButton);
+        await screen.findByText("Date must be 2050-01-01 or earlier");
+        expect(onSubmitMock).not.toHaveBeenCalled();
+    });
+
+    test("Should show validation error for rating with too many decimal places", async () => {
+        renderComponent();
+        const ratingInput = screen.getByLabelText(/rating/i);
+
+        await user.type(screen.getByLabelText(/title/i), "Rating Test");
+        await user.clear(screen.getByLabelText(/release date/i));
+        await user.type(screen.getByLabelText(/release date/i), "2023-01-01");
+        await user.type(screen.getByLabelText(/movie url/i), "https://rating.test");
+        await user.clear(screen.getByLabelText(/runtime/i));
+        await user.type(screen.getByLabelText(/runtime/i), "120");
+        await user.type(screen.getByLabelText(/overview/i), "Rating validation test");
+        const genreSelect = screen.getByTestId("genre-multi-select");
+        await user.click(within(genreSelect).getByLabelText("Comedy", { selector: "input[type='checkbox']" }));
+        await waitFor(() => {
+            expect(within(genreSelect).getByRole("button")).toHaveTextContent("Comedy");
+        });
+
+        await user.clear(ratingInput);
+        await user.type(ratingInput, "7.89");
+        await user.click(screen.getByLabelText(/title/i));
+
+        await waitFor(() => {
+            expect(
+                screen.getByText(/rating must be a whole number or have a single decimal place/i),
+            ).toBeInTheDocument();
+        });
+
+        await user.click(screen.getByRole("button", { name: /submit/i }));
+        await waitFor(() => {
+            expect(
+                screen.getByText(/rating must be a whole number or have a single decimal place/i),
+            ).toBeInTheDocument();
+        });
+        expect(onSubmitMock).not.toHaveBeenCalled();
+    });
+
+    test("Should apply loading styles and disable form when isLoading is true", () => {
+        renderComponent(undefined, undefined, true);
+
+        const formGrid = screen.getByTestId("movie-form-grid");
+        expect(formGrid).toHaveClass("opacity-40");
+        expect(formGrid).toHaveClass("pointer-events-none");
+
+        expect(screen.getByLabelText(/title/i)).toBeDisabled();
+
+        expect(screen.getByRole("button", { name: /reset/i })).toBeDisabled();
+        expect(screen.getByRole("button", { name: /Submitting.../i })).toBeDisabled();
+
+        expect(screen.getByRole("button", { name: /Submitting.../i })).toBeInTheDocument();
+    });
+
+    test("Should show validation error for overview when it is empty", async () => {
+        renderComponent();
+
+        await user.type(screen.getByLabelText(/title/i), "Overview Test");
+        await user.clear(screen.getByLabelText(/release date/i));
+        await user.type(screen.getByLabelText(/release date/i), "2023-01-01");
+        await user.type(screen.getByLabelText(/movie url/i), "https://overview.test");
+        await user.clear(screen.getByLabelText(/rating/i));
+        await user.type(screen.getByLabelText(/rating/i), "8");
+        await user.clear(screen.getByLabelText(/runtime/i));
+        await user.type(screen.getByLabelText(/runtime/i), "110");
+        const genreSelect = screen.getByTestId("genre-multi-select");
+        await user.click(within(genreSelect).getByLabelText("Crime", { selector: "input[type='checkbox']" }));
+        await waitFor(() => {
+            expect(within(genreSelect).getByRole("button")).toHaveTextContent("Crime");
+        });
+
+        await user.click(screen.getByRole("button", { name: /submit/i }));
+
+        const overviewErrorElement = await screen.findByText("Overview is required");
+        expect(overviewErrorElement).toHaveAttribute("role", "alert");
+
+        expect(screen.getByLabelText(/overview/i)).toHaveAttribute("aria-invalid", "true");
+        expect(screen.getByLabelText(/overview/i)).toHaveClass("input-error");
+
+        expect(onSubmitMock).not.toHaveBeenCalled();
     });
 });

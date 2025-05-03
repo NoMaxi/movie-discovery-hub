@@ -130,6 +130,7 @@ export const MovieForm = ({
             )}
 
             <div
+                data-testid="movie-form-grid"
                 className={`
                     grid grid-cols-3 gap-x-6 gap-y-6
                     transition-all duration-300 ${isLoading ? "opacity-40 pointer-events-none" : ""}
