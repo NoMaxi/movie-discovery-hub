@@ -1,13 +1,19 @@
-import React from "react";
+import React, { ReactNode } from "react";
+import { useParams, useSearchParams } from "react-router-dom";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent, { UserEvent } from "@testing-library/user-event";
 import "@testing-library/jest-dom";
-import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider, useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { useInView } from "react-intersection-observer";
 import { Movie, SortOption } from "@/types/common";
-import { MovieListPage } from "./MovieListPage";
 import { movieService } from "@/services/movieService";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { ScrollProvider } from "@/contexts/ScrollContext/ScrollProvider";
+import { useScrollContext } from "@/contexts/ScrollContext/useScrollContext";
+import { useNavigateWithSearchParams } from "@/hooks/useNavigateWithSearchParams/useNavigateWithSearchParams";
+import { MovieListPage } from "./MovieListPage";
+
+jest.mock("@/contexts/ScrollContext/useScrollContext");
+jest.mock("@/hooks/useNavigateWithSearchParams/useNavigateWithSearchParams");
 
 beforeAll(() => {
     Element.prototype.scrollIntoView = jest.fn();
@@ -114,6 +120,7 @@ jest.mock("@/components/common/NetflixRouletteText/NetflixRouletteText", () => (
 }));
 
 jest.mock("@tanstack/react-query", () => ({
+    ...jest.requireActual("@tanstack/react-query"),
     useInfiniteQuery: jest.fn(),
     useQueryClient: jest.fn(),
 }));
@@ -130,39 +137,68 @@ jest.mock("@/services/movieService", () => ({
 }));
 
 jest.mock("react-router-dom", () => ({
-    useNavigate: jest.fn(),
+    ...jest.requireActual("react-router-dom"),
     useParams: jest.fn(),
     useSearchParams: jest.fn(),
 }));
+
+const renderWithProviders = (ui: React.ReactElement, { queryClient }: { queryClient?: QueryClient } = {}) => {
+    const client = queryClient || new QueryClient({ defaultOptions: { queries: { retry: false } } });
+    const Wrapper = ({ children }: { children: ReactNode }) => (
+        <QueryClientProvider client={client}>
+            <ScrollProvider>{children}</ScrollProvider>
+        </QueryClientProvider>
+    );
+    return render(ui, { wrapper: Wrapper });
+};
 
 describe("MovieListPage", () => {
     const useInfiniteQueryMock = useInfiniteQuery as jest.Mock;
     const useQueryClientMock = useQueryClient as jest.Mock;
     const useInViewMock = useInView as jest.Mock;
     const movieServiceDeleteMock = movieService.deleteMovie as jest.Mock;
+    const useScrollContextMock = useScrollContext as jest.Mock;
+    const useNavigateWithSearchParamsMock = useNavigateWithSearchParams as jest.Mock;
     let fetchNextPageSpy: jest.Mock;
     let invalidateQueriesSpy: jest.Mock;
+    let mockNavigateWithSearchParams: jest.Mock;
+    let mockSetTargetMovieId: jest.Mock;
+    let mockSetTriggerScroll: jest.Mock;
     let user: UserEvent;
+    let mockSetSearchParams: jest.Mock;
+    let currentSearchParamsState: URLSearchParams;
 
     beforeEach(() => {
         jest.clearAllMocks();
         fetchNextPageSpy = jest.fn();
         invalidateQueriesSpy = jest.fn();
+        mockNavigateWithSearchParams = jest.fn();
+        mockSetTargetMovieId = jest.fn();
+        mockSetTriggerScroll = jest.fn();
+
         useQueryClientMock.mockReturnValue({ invalidateQueries: invalidateQueriesSpy });
         useInViewMock.mockReturnValue({ ref: jest.fn(), inView: false });
         movieServiceDeleteMock.mockResolvedValue(undefined);
-        jest.spyOn(console, "log").mockImplementation();
-        jest.spyOn(console, "error").mockImplementation();
+        useScrollContextMock.mockReturnValue({
+            targetMovieId: null,
+            setTargetMovieId: mockSetTargetMovieId,
+            triggerScroll: false,
+            setTriggerScroll: mockSetTriggerScroll,
+        });
+        useNavigateWithSearchParamsMock.mockReturnValue(mockNavigateWithSearchParams);
+
+        jest.spyOn(console, "error").mockImplementation(() => {});
         user = userEvent.setup();
 
-        const mockNavigate = jest.fn();
-        const mockSetSearchParams = jest.fn();
-        (useNavigate as jest.Mock).mockReturnValue(mockNavigate);
+        currentSearchParamsState = new URLSearchParams({ sortBy: "Release Date", genre: "All" });
+
+        mockSetSearchParams = jest.fn((newParams) => {
+            currentSearchParamsState = newParams;
+            (useSearchParams as jest.Mock).mockReturnValue([currentSearchParamsState, mockSetSearchParams]);
+        });
+
         (useParams as jest.Mock).mockReturnValue({ movieId: undefined });
-        (useSearchParams as jest.Mock).mockReturnValue([
-            new URLSearchParams({ sortBy: "release_date", genre: "All" }),
-            mockSetSearchParams,
-        ]);
+        (useSearchParams as jest.Mock).mockReturnValue([currentSearchParamsState, mockSetSearchParams]);
     });
 
     const mockMovie: Movie = {
@@ -200,10 +236,18 @@ describe("MovieListPage", () => {
         });
     };
 
+    test("Should match snapshot for default state", () => {
+        setupInfiniteQuery();
+
+        const { asFragment } = renderWithProviders(<MovieListPage />);
+
+        expect(asFragment()).toMatchSnapshot();
+    });
+
     test("Should show total count banner and footer always", () => {
         setupInfiniteQuery();
 
-        render(<MovieListPage />);
+        renderWithProviders(<MovieListPage />);
         const countElement = screen.getByTestId("movie-count");
 
         expect(countElement).toBeInTheDocument();
@@ -215,16 +259,28 @@ describe("MovieListPage", () => {
         setupInfiniteQuery({ hasNextPage: true });
         useInViewMock.mockReturnValue({ ref: jest.fn(), inView: false });
 
-        const { rerender } = render(<MovieListPage />);
+        const { rerender } = renderWithProviders(<MovieListPage />);
         expect(fetchNextPageSpy).not.toHaveBeenCalled();
 
         useInViewMock.mockReturnValue({ ref: jest.fn(), inView: true });
-        rerender(<MovieListPage />);
+        rerender(
+            <QueryClientProvider client={new QueryClient()}>
+                <ScrollProvider>
+                    <MovieListPage />
+                </ScrollProvider>
+            </QueryClientProvider>,
+        );
 
         expect(fetchNextPageSpy).toHaveBeenCalledTimes(1);
 
         setupInfiniteQuery({ hasNextPage: false });
-        rerender(<MovieListPage />);
+        rerender(
+            <QueryClientProvider client={new QueryClient()}>
+                <ScrollProvider>
+                    <MovieListPage />
+                </ScrollProvider>
+            </QueryClientProvider>,
+        );
 
         expect(fetchNextPageSpy).toHaveBeenCalledTimes(1);
     });
@@ -233,7 +289,7 @@ describe("MovieListPage", () => {
         setupInfiniteQuery({ hasNextPage: true, isFetchingNextPage: true });
         useInViewMock.mockReturnValue({ ref: jest.fn(), inView: true });
 
-        render(<MovieListPage />);
+        renderWithProviders(<MovieListPage />);
 
         expect(fetchNextPageSpy).not.toHaveBeenCalled();
     });
@@ -241,7 +297,7 @@ describe("MovieListPage", () => {
     test("Should render 'Loading more...' when isFetchingNextPage", () => {
         setupInfiniteQuery({ isFetchingNextPage: true, hasNextPage: true });
 
-        render(<MovieListPage />);
+        renderWithProviders(<MovieListPage />);
 
         expect(screen.getByText("Loading more...")).toBeInTheDocument();
     });
@@ -258,7 +314,7 @@ describe("MovieListPage", () => {
             error: null,
         });
 
-        render(<MovieListPage />);
+        renderWithProviders(<MovieListPage />);
 
         expect(screen.getByTestId("loader")).toBeInTheDocument();
     });
@@ -275,7 +331,7 @@ describe("MovieListPage", () => {
             error: new Error("Test error"),
         });
 
-        render(<MovieListPage />);
+        renderWithProviders(<MovieListPage />);
 
         expect(screen.getByText(/Test error/)).toBeInTheDocument();
     });
@@ -292,7 +348,7 @@ describe("MovieListPage", () => {
             error: "String error",
         });
 
-        render(<MovieListPage />);
+        renderWithProviders(<MovieListPage />);
 
         expect(screen.getByText(/An unknown error occurred while fetching movies/)).toBeInTheDocument();
     });
@@ -309,7 +365,7 @@ describe("MovieListPage", () => {
             error: null,
         });
 
-        render(<MovieListPage />);
+        renderWithProviders(<MovieListPage />);
 
         expect(screen.getByText("No movies found.")).toBeInTheDocument();
     });
@@ -326,7 +382,7 @@ describe("MovieListPage", () => {
             error: null,
         });
 
-        render(<MovieListPage />);
+        renderWithProviders(<MovieListPage />);
         const countElement = screen.getByTestId("movie-count");
 
         expect(countElement).toHaveTextContent("0 movies found");
@@ -337,7 +393,7 @@ describe("MovieListPage", () => {
     test("Should render movies when data is available", async () => {
         setupInfiniteQuery();
 
-        render(<MovieListPage />);
+        renderWithProviders(<MovieListPage />);
 
         expect(screen.getByTestId("movie-tile")).toBeInTheDocument();
         expect(screen.getByTestId("movie-tile")).toHaveTextContent("Movie A");
@@ -345,103 +401,126 @@ describe("MovieListPage", () => {
 
     test("Should navigate to movie details when a tile is clicked", async () => {
         setupInfiniteQuery();
-        const mockNavigate = jest.fn();
-        (useNavigate as jest.Mock).mockReturnValue(mockNavigate);
         (useSearchParams as jest.Mock).mockReturnValue([
-            new URLSearchParams({ sortBy: "release_date", genre: "All" }),
+            new URLSearchParams({ sortBy: "Release Date", genre: "All" }),
             jest.fn(),
         ]);
 
-        render(<MovieListPage />);
+        renderWithProviders(<MovieListPage />);
         const tile = screen.getByTestId("movie-tile");
 
         await user.click(tile);
 
-        expect(mockNavigate).toHaveBeenCalledWith("1?sortBy=release_date&genre=All");
+        expect(mockNavigateWithSearchParams).toHaveBeenCalledWith(String(mockMovie.id));
         expect(window.scrollTo).toHaveBeenCalledWith({ top: 0, behavior: "smooth" });
     });
 
     test("Should scroll to the last clicked tile when returning from movie details", async () => {
         setupInfiniteQuery();
-        (useParams as jest.Mock).mockReturnValue({ movieId: undefined });
+        const scrollIntoViewMock = jest.fn();
+        const mockRef = { current: null as HTMLDivElement | null };
+        jest.spyOn(React, "useRef").mockReturnValue(mockRef);
+        Object.defineProperty(HTMLElement.prototype, "scrollIntoView", {
+            configurable: true,
+            value: scrollIntoViewMock,
+        });
 
-        const { rerender } = render(<MovieListPage />);
+        (useParams as jest.Mock).mockReturnValue({ movieId: undefined });
+        const { rerender } = renderWithProviders(<MovieListPage />);
         const tile = screen.getByTestId("movie-tile");
 
         await user.click(tile);
+        expect(mockNavigateWithSearchParams).toHaveBeenCalledWith(String(mockMovie.id));
+        mockRef.current = tile as HTMLDivElement;
 
         (useParams as jest.Mock).mockReturnValue({ movieId: "1" });
-
-        rerender(<MovieListPage />);
+        rerender(
+            <QueryClientProvider client={new QueryClient()}>
+                <ScrollProvider>
+                    <MovieListPage />
+                </ScrollProvider>
+            </QueryClientProvider>,
+        );
+        expect(scrollIntoViewMock).not.toHaveBeenCalled();
 
         (useParams as jest.Mock).mockReturnValue({ movieId: undefined });
+        rerender(
+            <QueryClientProvider client={new QueryClient()}>
+                <ScrollProvider>
+                    <MovieListPage />
+                </ScrollProvider>
+            </QueryClientProvider>,
+        );
 
-        rerender(<MovieListPage />);
-
-        expect(Element.prototype.scrollIntoView).toHaveBeenCalledWith({
-            behavior: "smooth",
-            block: "nearest",
+        await waitFor(() => {
+            expect(scrollIntoViewMock).toHaveBeenCalledWith({
+                behavior: "smooth",
+                block: "nearest",
+            });
         });
+        expect(mockRef.current).toBeNull();
+
+        Object.defineProperty(HTMLElement.prototype, "scrollIntoView", {
+            configurable: true,
+            value: Element.prototype.scrollIntoView,
+        });
+        jest.restoreAllMocks();
     });
 
     test("Should handle genre selection by updating search params", async () => {
         setupInfiniteQuery();
-        const mockSetSearchParams = jest.fn();
-        (useSearchParams as jest.Mock).mockReturnValue([
-            new URLSearchParams({ sortBy: "release_date", genre: "All" }),
-            mockSetSearchParams,
-        ]);
 
-        render(<MovieListPage />);
+        renderWithProviders(<MovieListPage />);
         const genreSelect = screen.getByTestId("genre-select");
 
         await user.click(genreSelect);
 
-        expect(mockSetSearchParams).toHaveBeenCalled();
+        expect(mockSetSearchParams).toHaveBeenCalledTimes(1);
+
+        expect(currentSearchParamsState.get("genre")).toBe("Documentary");
+        expect(currentSearchParamsState.get("sortBy")).toBe("Release Date");
     });
 
     test("Should handle sort criterion change by updating search params", async () => {
         setupInfiniteQuery();
-        const mockSetSearchParams = jest.fn();
-        (useSearchParams as jest.Mock).mockReturnValue([
-            new URLSearchParams({ sortBy: "release_date", genre: "All" }),
-            mockSetSearchParams,
-        ]);
 
-        render(<MovieListPage />);
+        renderWithProviders(<MovieListPage />);
         const sortControl = screen.getByTestId("sort-control");
 
         await user.click(sortControl);
 
-        expect(mockSetSearchParams).toHaveBeenCalled();
+        expect(mockSetSearchParams).toHaveBeenCalledTimes(1);
+
+        expect(currentSearchParamsState.get("sortBy")).toBe("Title");
+        expect(currentSearchParamsState.get("genre")).toBe("All");
     });
 
     test("Should handle add movie click", async () => {
         setupInfiniteQuery();
 
-        render(<MovieListPage />);
+        renderWithProviders(<MovieListPage />);
         const addButton = screen.getByTestId("top-bar");
 
         await user.click(addButton);
 
-        expect(console.log).toHaveBeenCalledWith("Add movie - Placeholder");
+        expect(mockNavigateWithSearchParams).toHaveBeenCalledWith("/new");
     });
 
     test("Should handle movie edit", async () => {
         setupInfiniteQuery();
 
-        render(<MovieListPage />);
+        renderWithProviders(<MovieListPage />);
         const editButton = screen.getByTestId("edit-movie-button");
 
         await user.click(editButton);
 
-        expect(console.log).toHaveBeenCalledWith("Edit movie:", mockMovie.id, "- Placeholder");
+        expect(mockNavigateWithSearchParams).toHaveBeenCalledWith(`/${mockMovie.id}/edit`);
     });
 
     test("Should handle successful movie deletion", async () => {
         setupInfiniteQuery();
 
-        render(<MovieListPage />);
+        renderWithProviders(<MovieListPage />);
         const deleteButton = screen.getByTestId("delete-movie-button");
 
         await user.click(deleteButton);
@@ -459,18 +538,18 @@ describe("MovieListPage", () => {
     test("Should invalidate queries with correct parameters after movie deletion", async () => {
         setupInfiniteQuery();
         (useSearchParams as jest.Mock).mockReturnValue([
-            new URLSearchParams({ query: "search term", sortBy: "title", genre: "Documentary" }),
+            new URLSearchParams({ query: "search term", sortBy: "Title", genre: "Documentary" }),
             jest.fn(),
         ]);
 
-        render(<MovieListPage />);
+        renderWithProviders(<MovieListPage />);
         const deleteButton = screen.getByTestId("delete-movie-button");
 
         await user.click(deleteButton);
 
         await waitFor(() => {
             expect(invalidateQueriesSpy).toHaveBeenCalledWith({
-                queryKey: ["movies", "Documentary", "title", "search term"],
+                queryKey: ["movies", "Documentary", "Title", "search term"],
             });
         });
     });
@@ -479,7 +558,7 @@ describe("MovieListPage", () => {
         setupInfiniteQuery();
         movieServiceDeleteMock.mockRejectedValue(new Error("Delete failed"));
 
-        render(<MovieListPage />);
+        renderWithProviders(<MovieListPage />);
         const deleteButton = screen.getByTestId("delete-movie-button");
 
         await user.click(deleteButton);
@@ -495,15 +574,15 @@ describe("MovieListPage", () => {
     test("Should extract search query, sort criterion, and genre from URL parameters", () => {
         setupInfiniteQuery();
         (useSearchParams as jest.Mock).mockReturnValue([
-            new URLSearchParams({ query: "test search", sortBy: "title", genre: "Documentary" }),
+            new URLSearchParams({ query: "test search", sortBy: "Title", genre: "Documentary" }),
             jest.fn(),
         ]);
 
-        render(<MovieListPage />);
+        renderWithProviders(<MovieListPage />);
 
         expect(useInfiniteQuery).toHaveBeenCalledWith(
             expect.objectContaining({
-                queryKey: ["movies", "Documentary", "title", "test search"],
+                queryKey: ["movies", "Documentary", "Title", "test search"],
             }),
         );
     });
@@ -512,7 +591,7 @@ describe("MovieListPage", () => {
         setupInfiniteQuery();
         (useSearchParams as jest.Mock).mockReturnValue([new URLSearchParams({}), jest.fn()]);
 
-        render(<MovieListPage />);
+        renderWithProviders(<MovieListPage />);
 
         expect(useInfiniteQuery).toHaveBeenCalledWith(
             expect.objectContaining({
@@ -523,31 +602,99 @@ describe("MovieListPage", () => {
 
     test("Should navigate without query params when no search params exist", async () => {
         setupInfiniteQuery();
-        const mockNavigate = jest.fn();
-        (useNavigate as jest.Mock).mockReturnValue(mockNavigate);
         (useSearchParams as jest.Mock).mockReturnValue([new URLSearchParams({}), jest.fn()]);
 
-        render(<MovieListPage />);
+        renderWithProviders(<MovieListPage />);
         const tile = screen.getByTestId("movie-tile");
 
         await user.click(tile);
 
-        expect(mockNavigate).toHaveBeenCalledWith("1");
+        expect(mockNavigateWithSearchParams).toHaveBeenCalledWith(String(mockMovie.id));
     });
 
-    test("Should not scroll when movieId is present", () => {
+    test("Should not scroll when movieId is present in URL", () => {
         setupInfiniteQuery();
         (useParams as jest.Mock).mockReturnValue({ movieId: "1" });
         const scrollIntoViewMock = jest.fn();
-
         Object.defineProperty(HTMLElement.prototype, "scrollIntoView", {
             configurable: true,
             value: scrollIntoViewMock,
         });
 
-        render(<MovieListPage />);
+        useScrollContextMock.mockReturnValue({
+            targetMovieId: 1,
+            setTargetMovieId: mockSetTargetMovieId,
+            triggerScroll: true,
+            setTriggerScroll: mockSetTriggerScroll,
+        });
+
+        renderWithProviders(<MovieListPage />);
 
         expect(scrollIntoViewMock).not.toHaveBeenCalled();
+        expect(mockSetTargetMovieId).not.toHaveBeenCalled();
+        expect(mockSetTriggerScroll).not.toHaveBeenCalled();
+
+        Object.defineProperty(HTMLElement.prototype, "scrollIntoView", {
+            configurable: true,
+            value: Element.prototype.scrollIntoView,
+        });
+    });
+
+    test("Should scroll to target movie when triggerScroll is true and movieId is not present", async () => {
+        setupInfiniteQuery();
+        (useParams as jest.Mock).mockReturnValue({ movieId: undefined });
+        const scrollIntoViewMock = jest.fn();
+        const mockMovieElement = document.createElement("div");
+        mockMovieElement.setAttribute("data-movie-id", String(mockMovie.id));
+        jest.spyOn(document, "querySelector").mockReturnValue(mockMovieElement);
+        Object.defineProperty(mockMovieElement, "scrollIntoView", {
+            configurable: true,
+            value: scrollIntoViewMock,
+        });
+
+        useScrollContextMock.mockReturnValue({
+            targetMovieId: mockMovie.id,
+            setTargetMovieId: mockSetTargetMovieId,
+            triggerScroll: true,
+            setTriggerScroll: mockSetTriggerScroll,
+        });
+
+        renderWithProviders(<MovieListPage />);
+
+        await waitFor(() => {
+            expect(scrollIntoViewMock).toHaveBeenCalledWith({ behavior: "smooth", block: "nearest" });
+        });
+        await waitFor(() => {
+            expect(mockSetTargetMovieId).toHaveBeenCalledWith(null);
+        });
+        await waitFor(() => {
+            expect(mockSetTriggerScroll).toHaveBeenCalledWith(false);
+        });
+
+        jest.restoreAllMocks();
+    });
+
+    test("Should not scroll if targetMovieId is null even if triggerScroll is true", async () => {
+        setupInfiniteQuery();
+        (useParams as jest.Mock).mockReturnValue({ movieId: undefined });
+        const scrollIntoViewMock = jest.fn();
+        Object.defineProperty(HTMLElement.prototype, "scrollIntoView", {
+            configurable: true,
+            value: scrollIntoViewMock,
+        });
+
+        useScrollContextMock.mockReturnValue({
+            targetMovieId: null,
+            setTargetMovieId: mockSetTargetMovieId,
+            triggerScroll: true,
+            setTriggerScroll: mockSetTriggerScroll,
+        });
+
+        renderWithProviders(<MovieListPage />);
+
+        expect(scrollIntoViewMock).not.toHaveBeenCalled();
+        expect(mockSetTargetMovieId).not.toHaveBeenCalled();
+        expect(mockSetTriggerScroll).not.toHaveBeenCalled();
 
         Object.defineProperty(HTMLElement.prototype, "scrollIntoView", {
             configurable: true,
@@ -557,29 +704,32 @@ describe("MovieListPage", () => {
 
     test("Should update multiple search params sequentially", async () => {
         setupInfiniteQuery();
-        const mockSetSearchParams = jest.fn();
-        const mockSearchParams = new URLSearchParams({
-            sortBy: "release_date",
-            genre: "All",
-        });
+        const { rerender } = renderWithProviders(<MovieListPage />);
 
-        (useSearchParams as jest.Mock).mockReturnValue([mockSearchParams, mockSetSearchParams]);
-
-        render(<MovieListPage />);
+        expect(currentSearchParamsState.get("genre")).toBe("All");
+        expect(currentSearchParamsState.get("sortBy")).toBe("Release Date");
 
         const genreSelect = screen.getByTestId("genre-select");
         await user.click(genreSelect);
+
+        expect(mockSetSearchParams).toHaveBeenCalledTimes(1);
+        expect(currentSearchParamsState.get("genre")).toBe("Documentary");
+        expect(currentSearchParamsState.get("sortBy")).toBe("Release Date");
+
+        rerender(
+            <QueryClientProvider client={new QueryClient()}>
+                <ScrollProvider>
+                    <MovieListPage />
+                </ScrollProvider>
+            </QueryClientProvider>,
+        );
 
         const sortControl = screen.getByTestId("sort-control");
         await user.click(sortControl);
 
         expect(mockSetSearchParams).toHaveBeenCalledTimes(2);
-
-        const firstCallNewParams = mockSetSearchParams.mock.calls[0][0];
-        expect(firstCallNewParams.get("genre")).toBe("Documentary");
-
-        const secondCallNewParams = mockSetSearchParams.mock.calls[1][0];
-        expect(secondCallNewParams.get("sortBy")).toBe("Title");
+        expect(currentSearchParamsState.get("genre")).toBe("Documentary");
+        expect(currentSearchParamsState.get("sortBy")).toBe("Title");
     });
 
     test("Should call movieService.getMovies with correct parameters", async () => {
@@ -599,7 +749,7 @@ describe("MovieListPage", () => {
             jest.fn(),
         ]);
 
-        render(<MovieListPage />);
+        renderWithProviders(<MovieListPage />);
 
         const queryFnArg = useInfiniteQueryMock.mock.calls[0][0];
         const queryFn = queryFnArg.queryFn;
