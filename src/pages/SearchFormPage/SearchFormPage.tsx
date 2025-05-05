@@ -1,5 +1,5 @@
 import { SearchForm } from "@/components/SearchForm/SearchForm";
-import { useSearchParams } from "react-router-dom";
+import { Outlet, useSearchParams } from "react-router-dom";
 
 export const SearchFormPage = () => {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -8,7 +8,13 @@ export const SearchFormPage = () => {
 
     const handleSearch = (query: string) => {
         const newParams = new URLSearchParams(searchParams);
-        newParams.set("query", query);
+
+        if (query) {
+            newParams.set("query", query);
+        } else {
+            newParams.delete("query");
+        }
+
         setSearchParams(newParams, { replace: true });
     };
 
@@ -17,6 +23,7 @@ export const SearchFormPage = () => {
             <h2 className="text-[40px] font-light uppercase mb-8 mt-[25px] tracking-[1px]">Find Your Movie</h2>
             <div className="w-full">
                 <SearchForm initialQuery={searchQuery} onSearch={handleSearch} />
+                <Outlet />
             </div>
         </div>
     );

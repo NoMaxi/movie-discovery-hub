@@ -9,10 +9,12 @@
     --color-gray-light: #555555;
     --color-gray-lighter: #aaaaaa;
     --color-pink-shade: #f65261;
+    --color-red-soft: #fca5a5;
     --color-primary: var(--color-pink-shade);
     --color-text: var(--color-white);
     --color-background: var(--color-gray-light);
     --color-content-background: var(--color-dark);
+    --color-input-error: var(--color-red-soft);
     --content-width: 1200px;
 }
 
@@ -57,9 +59,14 @@ body {
     }
 
     &:disabled {
-        background-color: var(--color-gray-light);
+        background-color: var(--color-gray-lighter);
+        border-color: transparent;
+        box-shadow: none;
         cursor: not-allowed;
+        filter: grayscale(0.5);
         opacity: 0.7;
+        pointer-events: none;
+        transform: none;
     }
 }
 
@@ -119,6 +126,10 @@ body {
     height: 57px;
 }
 
+.input-field.input-error {
+    @apply border-solid border-2 !border-[var(--color-input-error)];
+}
+
 .input-transparent-shadow-glow {
     @apply bg-transparent shadow-[inset_0_0_15px_var(--color-primary),inset_0_0_3px_var(--color-primary)];
 }
@@ -141,6 +152,10 @@ input[type="date"].input-field:placeholder-shown {
 
 input[type="date"].input-field:valid {
     color: var(--color-text);
+}
+
+.error-message {
+    @apply text-[var(--color-input-error)] text-base mt-1.5;
 }
 
 .form-checkbox {

@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 import { Genre, Movie, SortOption } from "@/types/common";
 import { DEFAULT_MOVIES_PER_PAGE } from "@/constants/constants";
-import { mapAPIMovieDetailsToMovieData, mapSortOptionToSortBy, mapSortOptionToSortOrder } from "@/utils/movieMapping";
+import { mapAPIMovieDetailsToMovie, mapSortOptionToSortBy, mapSortOptionToSortOrder } from "@/utils/movieMapping";
 
 export interface CreateMoviePayload {
     genres: string[];
@@ -17,8 +17,9 @@ export interface CreateMoviePayload {
     vote_count?: number;
 }
 
-export interface APIMovieDetails extends CreateMoviePayload {
+export interface APIMovieDetails extends Omit<CreateMoviePayload, "runtime"> {
     id: number;
+    runtime: number | null;
 }
 
 export interface MoviesResponse {
@@ -26,10 +27,6 @@ export interface MoviesResponse {
     totalAmount: number;
     offset: number;
     limit: number;
-}
-
-export interface BadRequestError {
-    messages: string[];
 }
 
 export type SearchBy = "title" | "genres";
@@ -83,7 +80,7 @@ export const movieService = {
         const { data: moviesResponse } = await axios.get<MoviesResponse>(API_URL, { params, signal });
 
         const { offset: responseOffset, totalAmount, limit, data } = moviesResponse;
-        const movies: Movie[] = data.map(mapAPIMovieDetailsToMovieData);
+        const movies = data.map(mapAPIMovieDetailsToMovie);
         const currentTotalFetched = offset + movies.length;
         const nextOffset = currentTotalFetched < totalAmount ? currentTotalFetched : undefined;
 
@@ -96,9 +93,14 @@ export const movieService = {
         };
     },
 
-    async getMovieById(id: number): Promise<Movie> {
+    async getAPIMovieDetailsById(id: number): Promise<APIMovieDetails> {
         const response = await axios.get<APIMovieDetails>(`${API_URL}/${id}`);
-        return mapAPIMovieDetailsToMovieData(response.data);
+        return response.data;
+    },
+
+    async getMovieById(id: number): Promise<Movie> {
+        const movieDetails = await this.getAPIMovieDetailsById(id);
+        return mapAPIMovieDetailsToMovie(movieDetails);
     },
 
     async createMovie(movieData: CreateMoviePayload): Promise<Movie> {
@@ -106,7 +108,7 @@ export const movieService = {
             API_URL,
             movieData,
         );
-        return mapAPIMovieDetailsToMovieData(data);
+        return mapAPIMovieDetailsToMovie(data);
     },
 
     async updateMovie(movieData: APIMovieDetails): Promise<Movie> {
@@ -114,7 +116,7 @@ export const movieService = {
             API_URL,
             movieData,
         );
-        return mapAPIMovieDetailsToMovieData(data);
+        return mapAPIMovieDetailsToMovie(data);
     },
 
     async deleteMovie(id: number): Promise<void> {

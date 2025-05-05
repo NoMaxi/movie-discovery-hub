@@ -10,12 +10,12 @@ interface ContextMenuAction {
 }
 
 describe("ContextMenu", () => {
-    let onCloseMock: jest.Mock;
+    const onCloseMock = jest.fn();
     let user: UserEvent;
     let mockActions: ContextMenuAction[];
 
     beforeEach(() => {
-        onCloseMock = jest.fn();
+        onCloseMock.mockClear();
         mockActions = [
             { label: "Edit", onClick: jest.fn() },
             { label: "Delete", onClick: jest.fn() },

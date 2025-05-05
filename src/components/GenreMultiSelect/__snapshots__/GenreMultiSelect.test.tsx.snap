@@ -8,10 +8,11 @@ exports[`GenreMultiSelect Should render correctly with default props and no pres
     <button
       aria-expanded="false"
       aria-haspopup="listbox"
+      aria-invalid="false"
       class="
                         input-field relative flex items-center justify-between w-full
                         text-left text-[var(--color-primary)] font-normal opacity-80
-                        cursor-pointer
+                        cursor-pointer 
                     "
       id="genre-select"
       type="button"
@@ -30,12 +31,6 @@ exports[`GenreMultiSelect Should render correctly with default props and no pres
         />
       </span>
     </button>
-    <input
-      data-testid="hidden-input-genres"
-      name="genres"
-      type="hidden"
-      value=""
-    />
   </div>
 </DocumentFragment>
 `;
@@ -48,10 +43,11 @@ exports[`GenreMultiSelect Should render correctly with preselected genres 1`] = 
     <button
       aria-expanded="false"
       aria-haspopup="listbox"
+      aria-invalid="false"
       class="
                         input-field relative flex items-center justify-between w-full
                         text-left text-[var(--color-primary)] font-normal opacity-80
-                        cursor-pointer
+                        cursor-pointer 
                     "
       id="genre-select"
       type="button"
@@ -70,12 +66,6 @@ exports[`GenreMultiSelect Should render correctly with preselected genres 1`] = 
         />
       </span>
     </button>
-    <input
-      data-testid="hidden-input-genres"
-      name="genres"
-      type="hidden"
-      value="Comedy, Horror"
-    />
   </div>
 </DocumentFragment>
 `;

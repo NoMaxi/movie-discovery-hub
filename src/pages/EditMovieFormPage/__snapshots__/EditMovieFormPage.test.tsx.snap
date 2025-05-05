@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`EditMovieFormPage Should render correctly with Dialog and MovieForm after successful fetch 1`] = `
+<DocumentFragment>
+  <div
+    class="max-w-[976px]"
+    data-testid="mock-dialog"
+  >
+    <h2
+      data-testid="mock-dialog-title"
+    >
+      Edit Movie
+    </h2>
+    <button
+      data-testid="mock-dialog-close-button"
+    >
+      Close
+    </button>
+    <form
+      data-testid="mock-movie-form"
+    >
+      Mock Movie Form
+    </form>
+  </div>
+</DocumentFragment>
+`;

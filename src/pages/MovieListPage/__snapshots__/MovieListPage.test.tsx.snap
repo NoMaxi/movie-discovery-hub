@@ -1,0 +1,93 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MovieListPage Should match snapshot for default state 1`] = `
+<DocumentFragment>
+  <div
+    class="movie-list-page flex flex-col items-center relative w-full min-h-screen"
+  >
+    <div
+      data-testid="top-bar"
+    >
+      Top Bar
+    </div>
+    <div
+      data-testid="header"
+    >
+      <div>
+        Header Component
+      </div>
+    </div>
+    <main
+      class="
+                    flex-grow w-[var(--content-width)] px-16 pb-6 mb-[60px]
+                    bg-[var(--color-content-background)]
+                "
+    >
+      <div
+        class="
+                        flex justify-between items-center h-[60px] mb-6
+                        border-b-2 border-[var(--color-gray-light)]
+                    "
+      >
+        <div
+          data-testid="genre-select"
+        >
+          Genre Select: All
+        </div>
+        <div
+          data-testid="sort-control"
+        >
+          Sort Control: Release Date
+        </div>
+      </div>
+      <div
+        class="mb-6"
+        data-testid="movie-count"
+      >
+        <span
+          class="font-semibold"
+        >
+          1
+        </span>
+         movies found
+      </div>
+      <div
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-[64px] gap-y-8"
+      >
+        <div
+          data-movie-id="1"
+          data-testid="movie-tile"
+        >
+          Movie A
+          <button
+            data-testid="edit-movie-button"
+          >
+            Edit
+          </button>
+          <button
+            data-testid="delete-movie-button"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+      <div
+        class="h-10 w-full mt-4"
+      />
+    </main>
+    <footer
+      class="
+                    flex justify-center items-center
+                    fixed bottom-0 left-0 right-0 h-[60px]
+                    bg-[var(--color-gray)] z-50
+                "
+    >
+      <div
+        data-testid="footer-text"
+      >
+        Netflix Roulette
+      </div>
+    </footer>
+  </div>
+</DocumentFragment>
+`;

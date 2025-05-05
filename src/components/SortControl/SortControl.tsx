@@ -36,7 +36,7 @@ export const SortControl = ({ currentSelection, onSelectionChange }: SortControl
                 <button
                     type="button"
                     className="
-                        sort-control-button inline-flex items-center justify-center gap-x-2
+                        sort-control-button inline-flex items-center justify-center gap-x-2 min-w-[140px]
                         text-[16px] font-medium uppercase
                         focus:outline-none cursor-pointer
                     "

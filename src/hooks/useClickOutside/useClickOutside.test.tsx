@@ -1,54 +1,57 @@
-import { fireEvent, renderHook } from "@testing-library/react";
+import { renderHook } from "@testing-library/react";
+import userEvent, { UserEvent } from "@testing-library/user-event";
 import { useClickOutside } from "./useClickOutside";
 
 describe("useClickOutside", () => {
     let container: HTMLDivElement;
+    let user: UserEvent;
     const handler = jest.fn();
 
     beforeEach(() => {
         container = document.createElement("div");
         document.body.appendChild(container);
         handler.mockClear();
+        user = userEvent.setup();
     });
 
     afterEach(() => {
         document.body.removeChild(container);
     });
 
-    it("Should call handler when clicking outside", () => {
+    it("Should call handler when clicking outside", async () => {
         const ref = { current: container };
         renderHook(() => useClickOutside(ref, handler, true));
 
-        fireEvent.click(document.body);
+        await user.click(document.body);
 
         expect(handler).toHaveBeenCalledTimes(1);
     });
 
-    it("Should not call handler when clicking inside", () => {
+    it("Should not call handler when clicking inside", async () => {
         const ref = { current: container };
         renderHook(() => useClickOutside(ref, handler, true));
 
-        fireEvent.click(container);
+        await user.click(container);
 
         expect(handler).not.toHaveBeenCalled();
     });
 
-    it("Should not listen for clicks when 'isActive' is false", () => {
+    it("Should not listen for clicks when 'isActive' is false", async () => {
         const ref = { current: container };
         renderHook(() => useClickOutside(ref, handler, false));
 
-        fireEvent.click(document.body);
+        await user.click(document.body);
 
         expect(handler).not.toHaveBeenCalled();
     });
 
-    it("Should remove event listener on unmount", () => {
+    it("Should remove event listener on unmount", async () => {
         const ref = { current: container };
         const { unmount } = renderHook(() => useClickOutside(ref, handler, true));
 
         unmount();
 
-        fireEvent.click(document.body);
+        await user.click(document.body);
 
         expect(handler).not.toHaveBeenCalled();
     });
