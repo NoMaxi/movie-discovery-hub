@@ -36,7 +36,7 @@ export const Dialog = ({ title, children, onClose, className = "" }: DialogProps
                     className="
                         dialog-overlay
                         fixed flex justify-center items-center z-1000 p-4
-                        bg-black bg-opacity-70 inset-0
+                        bg-black/30 backdrop-blur-md inset-0
                     "
                 >
                     <div
