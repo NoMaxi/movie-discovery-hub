@@ -1,8 +1,15 @@
 import { FormEvent, useRef, useEffect } from "react";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
-import { isAfter, isBefore, isValid, parseISO } from "date-fns";
 import { InitialMovieInfo, MovieFormData } from "@/types/common";
-import { urlValidationRegExp } from "@/constants/constants";
+import {
+    titleValidation,
+    releaseDateValidation,
+    posterPathValidation,
+    ratingValidation,
+    genreValidation,
+    runtimeValidation,
+    overviewValidation,
+} from "./validationRules";
 import { Loader } from "@/components/common/Loader/Loader";
 import { CalendarIcon } from "@/components/common/CalendarIcon/CalendarIcon";
 import { GenreMultiSelect } from "@/components/GenreMultiSelect/GenreMultiSelect";
@@ -88,32 +95,7 @@ export const MovieForm = ({
         dateInputRef.current?.showPicker();
     };
 
-    const { ref: rhfDateRef, ...dateRegisterProps } = register("release_date", {
-        required: "Release date is required",
-        validate: (value) => {
-            if (!value) {
-                return true;
-            }
-
-            const inputDate = parseISO(value);
-            const minDate = parseISO("1900-01-01");
-            const maxDate = parseISO("2050-01-01");
-
-            if (!isValid(inputDate)) {
-                return "Please enter a valid date";
-            }
-
-            if (isBefore(inputDate, minDate)) {
-                return "Date must be 1900-01-01 or later";
-            }
-
-            if (isAfter(inputDate, maxDate)) {
-                return "Date must be 2050-01-01 or earlier";
-            }
-
-            return true;
-        },
-    });
+    const { ref: rhfDateRef, ...dateRegisterProps } = register("release_date", releaseDateValidation);
 
     return (
         <form onSubmit={(e) => onSubmitWithFocusPrevention(e)} noValidate className="relative">
@@ -147,9 +129,7 @@ export const MovieForm = ({
                         aria-invalid={errors.title ? "true" : "false"}
                         aria-describedby="title-error"
                         autoFocus
-                        {...register("title", {
-                            required: "Title is required",
-                        })}
+                        {...register("title", titleValidation)}
                     />
                     {errors.title && (
                         <p id="title-error" className="error-message" role="alert">
@@ -199,13 +179,7 @@ export const MovieForm = ({
                         className={`input-field ${errors.poster_path ? "input-error" : ""}`}
                         aria-invalid={errors.poster_path ? "true" : "false"}
                         aria-describedby="poster_path-error"
-                        {...register("poster_path", {
-                            required: "Movie URL is required",
-                            pattern: {
-                                value: urlValidationRegExp,
-                                message: "Please enter a valid URL",
-                            },
-                        })}
+                        {...register("poster_path", posterPathValidation)}
                     />
                     {errors.poster_path && (
                         <p id="poster_path-error" className="error-message" role="alert">
@@ -226,19 +200,7 @@ export const MovieForm = ({
                         step="0.1"
                         aria-invalid={errors.vote_average ? "true" : "false"}
                         aria-describedby="vote_average-error"
-                        {...register("vote_average", {
-                            required: "Rating is required",
-                            valueAsNumber: true,
-                            min: { value: 0, message: "Rating must be 0 or higher" },
-                            max: { value: 10, message: "Rating must be 10 or lower" },
-                            validate: (value) => {
-                                const stringValue = value.toString();
-                                return (
-                                    /^\d+(\.\d)?$/.test(stringValue) ||
-                                    "Rating must be a whole number or have a single decimal place"
-                                );
-                            },
-                        })}
+                        {...register("vote_average", ratingValidation)}
                     />
                     {errors.vote_average && (
                         <p id="vote_average-error" className="error-message" role="alert">
@@ -254,9 +216,7 @@ export const MovieForm = ({
                     <Controller
                         name="genres"
                         control={control}
-                        rules={{
-                            validate: (value: string[]) => value.length > 0 || "Select at least one genre to proceed",
-                        }}
+                        rules={genreValidation}
                         render={({ field, fieldState: { error } }) => (
                             <>
                                 <GenreMultiSelect
@@ -288,12 +248,7 @@ export const MovieForm = ({
                         className={`input-field ${errors.runtime ? "input-error" : ""}`}
                         aria-invalid={errors.runtime ? "true" : "false"}
                         aria-describedby="runtime-error"
-                        {...register("runtime", {
-                            required: "Runtime is required",
-                            valueAsNumber: true,
-                            min: { value: 0, message: "Runtime must be 0 or higher" },
-                            max: { value: 60 * 10, message: "Runtime is too long" },
-                        })}
+                        {...register("runtime", runtimeValidation)}
                     />
                     {errors.runtime && (
                         <p id="runtime-error" className="error-message" role="alert">
@@ -312,7 +267,7 @@ export const MovieForm = ({
                         className={`input-field min-h-[200px] h-auto py-3 ${errors.overview ? "input-error" : ""}`}
                         aria-invalid={errors.overview ? "true" : "false"}
                         aria-describedby="overview-error"
-                        {...register("overview", { required: "Overview is required" })}
+                        {...register("overview", overviewValidation)}
                     ></textarea>
                     {errors.overview && (
                         <p id="overview-error" className="error-message" role="alert">
