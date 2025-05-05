@@ -50,7 +50,6 @@ export const MovieForm = ({
         reset,
     } = useForm<MovieFormData>({
         defaultValues: mapInitialInfoToDefaultValues(initialMovieInfo),
-        shouldFocusError: false,
         disabled: isLoading,
         mode: "onChange",
         reValidateMode: "onChange",
