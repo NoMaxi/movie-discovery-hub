@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { fn } from "@storybook/test";
+import { ScrollProvider } from "@/contexts/ScrollContext/ScrollProvider";
 import { MovieTile } from "./MovieTile";
 
 const meta = {
@@ -25,6 +26,13 @@ const meta = {
         onEdit: fn(),
         onDelete: fn(),
     },
+    decorators: [
+        (Story) => (
+            <ScrollProvider>
+                <Story />
+            </ScrollProvider>
+        ),
+    ],
 } satisfies Meta<typeof MovieTile>;
 
 export default meta;
