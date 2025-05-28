@@ -1,9 +1,10 @@
-import { render, screen, within } from "@testing-library/react";
+import { act, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent, { UserEvent } from "@testing-library/user-event";
 import "@testing-library/jest-dom";
 import { mockMovieDetails } from "@/mocks/movieData";
 import { MovieTile } from "./MovieTile";
 
+jest.mock("@/assets/no-poster-image.png", () => "mocked-no-poster-image.png");
 jest.mock("@/contexts/ScrollContext/useScrollContext", () => ({
     useScrollContext: () => ({
         setTargetMovieId: jest.fn(),
@@ -155,5 +156,80 @@ describe("MovieTile", () => {
 
         expect(screen.queryByTestId("context-menu")).not.toBeInTheDocument();
         expect(onClickMock).not.toHaveBeenCalled();
+    });
+
+    test("Should display fallback image when movie poster fails to load", async () => {
+        renderComponent();
+        const img = screen.getByAltText(`${mockMovieDetails.title} poster`);
+
+        expect(img).toHaveAttribute("src", mockMovieDetails.imageUrl);
+
+        act(() => {
+            img.dispatchEvent(new Event("error"));
+        });
+
+        await waitFor(() => {
+            expect(img).toHaveAttribute("src", "mocked-no-poster-image.png");
+        });
+    });
+
+    test("Should reset image error state when movie changes", async () => {
+        const { rerender } = renderComponent();
+        const img = screen.getByAltText(`${mockMovieDetails.title} poster`);
+
+        act(() => {
+            img.dispatchEvent(new Event("error"));
+        });
+
+        await waitFor(() => {
+            expect(img).toHaveAttribute("src", "mocked-no-poster-image.png");
+        });
+
+        const newMovie = { ...mockMovieDetails, id: 2, imageUrl: "new-image-url.jpg" };
+        rerender(<MovieTile movie={newMovie} onClick={onClickMock} onEdit={onEditMock} onDelete={onDeleteMock} />);
+        const newImg = screen.getByAltText(`${newMovie.title} poster`);
+
+        expect(newImg).toHaveAttribute("src", newMovie.imageUrl);
+    });
+
+    test("Should have onError handler attached to image element", () => {
+        renderComponent();
+        const img = screen.getByAltText(`${mockMovieDetails.title} poster`);
+
+        expect(img).toHaveAttribute("src", mockMovieDetails.imageUrl);
+        expect(img.onerror).toBeDefined();
+    });
+
+    test("Should not show fallback image when image loads successfully", () => {
+        renderComponent();
+        const img = screen.getByAltText(`${mockMovieDetails.title} poster`);
+
+        expect(img).toHaveAttribute("src", mockMovieDetails.imageUrl);
+        expect(img).not.toHaveAttribute("src", "mocked-no-poster-image.png");
+    });
+
+    test("Should handle fallback image error gracefully", async () => {
+        const consoleSpy = jest.spyOn(console, "error").mockImplementation(() => {});
+
+        renderComponent();
+        const img = screen.getByAltText(`${mockMovieDetails.title} poster`);
+
+        act(() => {
+            img.dispatchEvent(new Event("error"));
+        });
+
+        await waitFor(() => {
+            expect(img).toHaveAttribute("src", "mocked-no-poster-image.png");
+        });
+
+        act(() => {
+            img.dispatchEvent(new Event("error"));
+        });
+
+        await waitFor(() => {
+            expect(img).toHaveAttribute("src", "mocked-no-poster-image.png");
+        });
+
+        consoleSpy.mockRestore();
     });
 });

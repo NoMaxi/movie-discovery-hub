@@ -33,7 +33,7 @@ describe("Header", () => {
         const header = screen.getByTestId("header");
 
         expect(header).toBeInTheDocument();
-        expect(header).toHaveStyle({ backgroundImage: expect.stringContaining("bg_header.png") });
+        expect(header).toHaveStyle({ backgroundImage: expect.stringContaining("bg-header.png") });
         expect(header).toHaveClass("relative");
         expect(header).toHaveClass("w-[var(--content-width)]");
         expect(asFragment()).toMatchSnapshot();

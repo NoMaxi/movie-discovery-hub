@@ -1,6 +1,8 @@
 import React, { MouseEvent, useCallback, useMemo, useState } from "react";
 import { Movie } from "@/types/common";
+import noPosterImage from "@/assets/no-poster-image.png";
 import { useScrollContext } from "@/contexts/ScrollContext/useScrollContext";
+import { useImageFallback } from "@/hooks/useImageFallback/useImageFallback";
 import { ContextMenu } from "@/components/common/ContextMenu/ContextMenu";
 
 interface MovieTileProps {
@@ -13,11 +15,16 @@ interface MovieTileProps {
 export const MovieTile = ({ movie, onClick, onEdit, onDelete }: MovieTileProps) => {
     const [isContextMenuOpen, setIsContextMenuOpen] = useState(false);
     const { setTargetMovieId } = useScrollContext();
+    const imageProps = useImageFallback(movie.imageUrl, noPosterImage);
 
     const handleMenuToggle = (e: MouseEvent) => {
         e.stopPropagation();
         setIsContextMenuOpen(!isContextMenuOpen);
     };
+
+    const handleContextMenuClose = useCallback(() => {
+        setIsContextMenuOpen(false);
+    }, []);
 
     const handleTileClick = (event: React.MouseEvent<HTMLDivElement>) => {
         if (isContextMenuOpen) {
@@ -32,12 +39,16 @@ export const MovieTile = ({ movie, onClick, onEdit, onDelete }: MovieTileProps) 
         onEdit(movie);
     }, [movie, onEdit, setTargetMovieId]);
 
+    const handleMovieDelete = useCallback(() => {
+        onDelete(movie);
+    }, [movie, onDelete]);
+
     const contextMenuActions = useMemo(
         () => [
             { label: "Edit", onClick: handleMovieEdit },
-            { label: "Delete", onClick: () => onDelete(movie) },
+            { label: "Delete", onClick: handleMovieDelete },
         ],
-        [handleMovieEdit, onDelete, movie],
+        [handleMovieEdit, handleMovieDelete],
     );
 
     return (
@@ -66,13 +77,18 @@ export const MovieTile = ({ movie, onClick, onEdit, onDelete }: MovieTileProps) 
 
             <ContextMenu
                 isOpen={isContextMenuOpen}
-                onClose={() => setIsContextMenuOpen(false)}
+                onClose={handleContextMenuClose}
                 actions={contextMenuActions}
                 className="w-[120px] top-4 right-14"
                 withCloseButton
             />
 
-            <img src={movie.imageUrl} alt={`${movie.title} poster`} className="w-full h-[455px] object-cover mb-4" />
+            <img
+                src={imageProps.src}
+                alt={`${movie.title} poster`}
+                className="w-full h-[455px] object-cover mb-4"
+                onError={imageProps.onError}
+            />
 
             <div className="flex justify-between items-start mb-1">
                 <h3 className="text-[18px] font-medium text-[var(--color-gray-lighter)] pr-2">{movie.title}</h3>
