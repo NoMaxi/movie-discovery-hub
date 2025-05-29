@@ -1,5 +1,7 @@
 import { Movie } from "@/types/common";
 import { formatDuration } from "@/utils/formatting";
+import noPosterImage from "@/assets/no-poster-image.png";
+import { useImageFallback } from "@/hooks/useImageFallback/useImageFallback";
 
 interface MovieDetailsProps {
     details: Movie;
@@ -8,6 +10,7 @@ interface MovieDetailsProps {
 export const MovieDetails = ({
     details: { description, duration, genres, imageUrl, rating, releaseYear, title },
 }: MovieDetailsProps) => {
+    const imageProps = useImageFallback(imageUrl, noPosterImage);
     return (
         <div
             data-testid="movie-details"
@@ -17,9 +20,10 @@ export const MovieDetails = ({
             "
         >
             <img
-                src={imageUrl}
+                src={imageProps.src}
                 alt={`${title} poster`}
                 className="movie-details-poster flex-shrink-0 w-[320px] h-[485px] object-cover"
+                onError={imageProps.onError}
             />
 
             <div className="movie-details-info flex flex-col flex-grow">

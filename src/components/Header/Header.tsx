@@ -1,4 +1,4 @@
-import bgHeaderImage from "@/assets/bg_header.png";
+import bgHeaderImage from "@/assets/bg-header.png";
 import { Outlet, useParams } from "react-router-dom";
 
 export const Header = () => {
