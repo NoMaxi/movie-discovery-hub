@@ -20,7 +20,7 @@ describe("GenreSelect", () => {
         expect(screen.getByText("Comedy")).toBeInTheDocument();
         expect(screen.getByText("Action")).toBeInTheDocument();
         expect(screen.getByText("Horror")).toBeInTheDocument();
-        expect(screen.getByText("More")).toBeInTheDocument();
+        expect(screen.getByText("More Genres")).toBeInTheDocument();
         expect(asFragment()).toMatchSnapshot();
     });
 
@@ -66,16 +66,12 @@ describe("GenreSelect", () => {
 
     test("Should call 'onSelect' prop when secondary genre is selected from dropdown", async () => {
         render(<GenreSelect selectedGenre="All" onSelect={onSelectMock} />);
-        
-        // Click on the "More" dropdown button to open it
-        const moreButton = screen.getByText("More");
+        const moreButton = screen.getByText("More Genres");
         await user.click(moreButton);
-        
-        // Find and click on a secondary genre option (e.g., "Adventure")
+
         const adventureOption = screen.getByText("Adventure");
         await user.click(adventureOption);
-        
-        // Verify that onSelect was called with the selected secondary genre
+
         expect(onSelectMock).toHaveBeenCalledWith("Adventure");
     });
 });

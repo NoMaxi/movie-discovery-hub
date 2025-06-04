@@ -293,7 +293,7 @@ exports[`GenreSelect Should highlight selected main genre 1`] = `
                 "
           type="button"
         >
-          More
+          More Genres
           <span
             class="transform transition-transform rotate-0"
           >
@@ -456,7 +456,7 @@ exports[`GenreSelect Should render main genre tabs and More dropdown 1`] = `
                 "
           type="button"
         >
-          More
+          More Genres
           <span
             class="transform transition-transform rotate-0"
           >

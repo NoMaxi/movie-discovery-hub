@@ -460,7 +460,7 @@ describe("GenreMoreDropdown", () => {
                 "right-0",
                 "top-full",
                 "mt-1",
-                "w-48",
+                "w-44",
                 "rounded",
                 "max-h-[400px]",
                 "overflow-y-auto",

@@ -42,7 +42,7 @@ export const GenreMoreDropdown = ({
         onClick: () => handleOptionSelect(option),
     }));
 
-    const displayText = selectedGenre || "More";
+    const displayText = selectedGenre || "More Genres";
 
     return (
         <div
@@ -74,7 +74,7 @@ export const GenreMoreDropdown = ({
                 className="
                     genre-more-dropdown-menu
                     absolute right-0 top-full
-                    mt-1 w-48 rounded
+                    mt-1 w-44 rounded
                     max-h-[400px] overflow-y-auto overflow-x-hidden
                 "
             />

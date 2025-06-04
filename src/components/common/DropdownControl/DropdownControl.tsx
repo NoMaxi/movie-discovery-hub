@@ -48,9 +48,9 @@ export const DropdownControl = <T extends string>({
     }));
 
     return (
-        <div 
-            className={`dropdown-control relative inline-block text-left ${className}`} 
-            ref={controlRef} 
+        <div
+            className={`dropdown-control relative inline-block text-left ${className}`}
+            ref={controlRef}
             data-testid={testId}
         >
             <div className="flex items-center gap-x-4 text-base">
@@ -79,7 +79,7 @@ export const DropdownControl = <T extends string>({
                 className={`
                     dropdown-control-dropdown
                     absolute right-0
-                    mt-2 w-48 origin-top-right rounded
+                    mt-2 w-44 origin-top-right rounded
                     ${dropdownClassName}
                 `}
             />

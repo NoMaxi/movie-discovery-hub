@@ -418,7 +418,7 @@ describe("DropdownControl", () => {
                 "absolute",
                 "right-0",
                 "mt-2",
-                "w-48",
+                "w-44",
                 "origin-top-right",
                 "rounded",
                 "custom-position",

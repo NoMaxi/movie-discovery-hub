@@ -16,7 +16,7 @@ exports[`GenreMoreDropdown Initial Rendering Should render correctly with defaul
                 "
       type="button"
     >
-      More
+      More Genres
       <span
         class="transform transition-transform rotate-0"
       >
