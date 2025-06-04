@@ -2,7 +2,7 @@ import React, { forwardRef } from "react";
 import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent, { UserEvent } from "@testing-library/user-event";
 import "@testing-library/jest-dom";
-import { InitialMovieInfo, MovieFormData, SelectableGenre } from "@/types/common";
+import { InitialMovieInfo, MovieFormData, Genre } from "@/types/common";
 import { mockMovieInfo } from "@/mocks/movieData";
 import { GenreMultiSelectProps } from "@/components/GenreMultiSelect/GenreMultiSelect";
 import { MovieForm } from "./MovieForm";
@@ -17,9 +17,9 @@ jest.mock("@/components/GenreMultiSelect/GenreMultiSelect", () => {
         GenreMultiSelectProps & { onChange?: (value: string[]) => void }
     >((props, ref) => {
         const { id, name, preselectedGenres = [], onChange, ariaDescribedby, error } = props;
-        const availableGenres: SelectableGenre[] = ["Comedy", "Crime", "Documentary", "Horror"];
+        const availableGenres: Genre[] = ["Comedy", "Crime", "Documentary", "Horror"];
 
-        const handleCheckboxChange = (genre: SelectableGenre, checked: boolean) => {
+        const handleCheckboxChange = (genre: Genre, checked: boolean) => {
             const currentGenres = new Set(preselectedGenres);
             if (checked) {
                 currentGenres.add(genre);

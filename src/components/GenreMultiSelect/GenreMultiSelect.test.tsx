@@ -2,7 +2,7 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import userEvent, { UserEvent } from "@testing-library/user-event";
 import "@testing-library/jest-dom";
-import { SelectableGenre } from "@/types/common";
+import { Genre } from "@/types/common";
 import { SELECTABLE_GENRES } from "@/constants/constants";
 import { GenreMultiSelect } from "./GenreMultiSelect";
 
@@ -55,7 +55,7 @@ describe("GenreMultiSelect", () => {
     });
 
     test("Should render correctly with preselected genres", () => {
-        const preselectedGenres: SelectableGenre[] = ["Comedy", "Horror"];
+        const preselectedGenres: Genre[] = ["Comedy", "Horror"];
         const { asFragment } = renderComponent({ preselectedGenres });
 
         expect(screen.getByRole("button")).toHaveTextContent("Comedy, Horror");
@@ -109,7 +109,7 @@ describe("GenreMultiSelect", () => {
     });
 
     test("Should display correct checkboxes state with preselected genres", async () => {
-        const preselectedGenres: SelectableGenre[] = ["Comedy", "Crime"];
+        const preselectedGenres: Genre[] = ["Comedy", "Crime"];
         renderComponent({ preselectedGenres });
         const button = screen.getByRole("button");
 

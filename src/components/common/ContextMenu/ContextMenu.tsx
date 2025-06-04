@@ -44,10 +44,9 @@ export const ContextMenu = ({
             className={`
                 context-menu
                 absolute z-20 min-w-[100px]
-                flex flex-col justify-center
+                flex flex-col
                 bg-[var(--color-content-background)]
                 ring-1 ring-black shadow-lg rounded
-                overflow-hidden
                 ${className}
             `}
             onClick={handleMenuClick}
@@ -68,7 +67,7 @@ export const ContextMenu = ({
                 </button>
             )}
 
-            <ul>
+            <ul className="m-0 p-0 list-none">
                 {actions.map((action) => (
                     <li key={action.label}>
                         <button

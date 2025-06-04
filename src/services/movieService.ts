@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios";
-import { Genre, Movie, SortOption } from "@/types/common";
+import { GenreFilter, Movie, SortOption } from "@/types/common";
 import { DEFAULT_MOVIES_PER_PAGE } from "@/constants/constants";
 import { mapAPIMovieDetailsToMovie, mapSortOptionToSortBy, mapSortOptionToSortOrder } from "@/utils/movieMapping";
 
@@ -40,7 +40,7 @@ export interface MoviesRequestParams {
     search?: string;
     limit?: number;
     offset?: number;
-    filter?: Genre;
+    filter?: GenreFilter;
 }
 
 export interface InfiniteMovieListResult {
@@ -57,7 +57,7 @@ export const movieService = {
     async getMovies(
         searchQuery: string,
         sortCriterion: SortOption,
-        activeGenre: Genre,
+        activeGenre: GenreFilter,
         signal: AbortSignal | undefined,
         offset: number = 0,
     ): Promise<InfiniteMovieListResult> {

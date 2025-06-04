@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DropdownControl Initial Rendering Should render correctly with initial selection 1`] = `
+<DocumentFragment>
+  <div
+    class="dropdown-control relative inline-block text-left "
+  >
+    <div
+      class="flex items-center gap-x-4 text-base"
+    >
+      <span
+        class="dropdown-control-label text-[16px] uppercase opacity-60"
+      >
+        Test Label
+      </span>
+      <button
+        class="
+                        dropdown-control-button inline-flex items-center justify-center gap-x-2 min-w-[140px]
+                        text-[16px] font-medium uppercase
+                        focus:outline-none cursor-pointer
+                        
+                    "
+        type="button"
+      >
+        option1
+        <span
+          class="transform transition-transform rotate-0"
+        >
+          <svg
+            data-testid="select-arrow"
+          />
+        </span>
+      </button>
+    </div>
+  </div>
+</DocumentFragment>
+`;

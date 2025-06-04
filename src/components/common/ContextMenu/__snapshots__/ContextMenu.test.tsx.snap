@@ -6,10 +6,9 @@ exports[`ContextMenu Should render correctly with close button when 'withCloseBu
     class="
                 context-menu
                 absolute z-20 min-w-[100px]
-                flex flex-col justify-center
+                flex flex-col
                 bg-[var(--color-content-background)]
                 ring-1 ring-black shadow-lg rounded
-                overflow-hidden
                 
             "
     data-testid="context-menu"
@@ -26,7 +25,9 @@ exports[`ContextMenu Should render correctly with close button when 'withCloseBu
     >
       ×
     </button>
-    <ul>
+    <ul
+      class="m-0 p-0 list-none"
+    >
       <li>
         <button
           class="
@@ -68,15 +69,16 @@ exports[`ContextMenu Should render correctly without close button by default whe
     class="
                 context-menu
                 absolute z-20 min-w-[100px]
-                flex flex-col justify-center
+                flex flex-col
                 bg-[var(--color-content-background)]
                 ring-1 ring-black shadow-lg rounded
-                overflow-hidden
                 custom-class
             "
     data-testid="context-menu"
   >
-    <ul>
+    <ul
+      class="m-0 p-0 list-none"
+    >
       <li>
         <button
           class="

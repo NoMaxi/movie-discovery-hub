@@ -1,8 +1,27 @@
 import { APIMovieDetails } from "@/services/movieService";
 
-export type SelectableGenre = "Comedy" | "Crime" | "Documentary" | "Horror";
+export type Genre = 
+    | "Drama"
+    | "Romance"
+    | "Animation"
+    | "Adventure"
+    | "Family"
+    | "Comedy"
+    | "Fantasy"
+    | "Science Fiction"
+    | "Action"
+    | "Thriller"
+    | "History"
+    | "Crime"
+    | "Mystery"
+    | "Music"
+    | "War"
+    | "Horror"
+    | "Western"
+    | "TV Movie"
+    | "Documentary";
 
-export type Genre = "All" | SelectableGenre;
+export type GenreFilter = "All" | Genre;
 
 export interface Movie {
     id: number;

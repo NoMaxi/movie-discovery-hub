@@ -1,5 +1,5 @@
 import { forwardRef, useCallback, useEffect, useRef, useState } from "react";
-import { SelectableGenre } from "@/types/common";
+import { Genre } from "@/types/common";
 import { SELECTABLE_GENRES } from "@/constants/constants";
 import { useClickOutside } from "@/hooks/useClickOutside/useClickOutside";
 import SelectArrow from "@/components/common/SelectArrow/SelectArrow";
@@ -18,7 +18,7 @@ const defaultEmptyGenres: string[] = [];
 export const GenreMultiSelect = forwardRef<HTMLDivElement, GenreMultiSelectProps>(
     ({ preselectedGenres = defaultEmptyGenres, onChange, id, ariaDescribedby, error }, ref) => {
         const [isOpen, setIsOpen] = useState(false);
-        const [selectedGenres, setSelectedGenres] = useState<Set<SelectableGenre | string>>(
+        const [selectedGenres, setSelectedGenres] = useState<Set<Genre | string>>(
             () => new Set(preselectedGenres),
         );
         const controlRef = useRef<HTMLDivElement>(null);
@@ -32,7 +32,7 @@ export const GenreMultiSelect = forwardRef<HTMLDivElement, GenreMultiSelectProps
         const toggleDropdown = () => setIsOpen(!isOpen);
 
         const handleCheckboxChange = useCallback(
-            (genre: SelectableGenre, isChecked: boolean) => {
+            (genre: Genre, isChecked: boolean) => {
                 const newSelected = new Set(selectedGenres);
                 if (isChecked) {
                     newSelected.add(genre);
