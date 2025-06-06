@@ -1,37 +1,21 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`SortControl Should render correctly with initial selection 1`] = `
+exports[`SortControl Should render DropdownControl with correct props 1`] = `
 <DocumentFragment>
   <div
-    class="sort-control relative inline-block text-left"
+    class="sort-control"
     data-testid="sort-control"
   >
-    <div
-      class="flex items-center gap-x-4 text-base"
+    <span
+      data-testid="dropdown-label"
     >
-      <span
-        class="sort-control-label text-[16px] uppercase opacity-60"
-      >
-        Sort by
-      </span>
-      <button
-        class="
-                        sort-control-button inline-flex items-center justify-center gap-x-2 min-w-[140px]
-                        text-[16px] font-medium uppercase
-                        focus:outline-none cursor-pointer
-                    "
-        type="button"
-      >
-        Release Date
-        <span
-          class="transform transition-transform rotate-0"
-        >
-          <svg
-            data-testid="select-arrow"
-          />
-        </span>
-      </button>
-    </div>
+      Sort by
+    </span>
+    <button
+      data-testid="dropdown-button"
+    >
+      Release Date
+    </button>
   </div>
 </DocumentFragment>
 `;

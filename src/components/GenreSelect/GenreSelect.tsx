@@ -1,50 +1,71 @@
-import { Genre } from "@/types/common";
+import { GenreFilter, Genre } from "@/types/common";
+import { MAIN_GENRES, SECONDARY_GENRES } from "@/constants/constants";
+import { GenreMoreDropdown } from "@/components/common/GenreMoreDropdown/GenreMoreDropdown";
 
 interface GenreSelectProps {
-    genres: Genre[];
-    selectedGenre: Genre;
-    onSelect: (genre: Genre) => void;
+    selectedGenre: GenreFilter;
+    onSelect: (genre: GenreFilter) => void;
 }
 
-export const GenreSelect = ({ genres, selectedGenre, onSelect }: GenreSelectProps) => (
-    <div className="flex flex-wrap gap-x-8" data-testid="genre-select">
-        {genres.map((genre) => (
-            <div
-                key={genre}
-                className={`
-                    group
-                    relative
-                    px-2
-                    py-1
-                    text-lg
-                    font-medium
-                    cursor-pointer
-                    transition-colors
-                    duration-200
-                    uppercase
-                    ${
-                        genre === selectedGenre
-                            ? "text-[var(--color-text)]"
-                            : "text-[var(--color-gray-lighter)] hover:text-[var(--color-text)]"
-                    }
-                `}
-                onClick={() => onSelect(genre)}
-            >
-                {genre}
+export const GenreSelect = ({ selectedGenre, onSelect }: GenreSelectProps) => {
+    const isSecondaryGenre = selectedGenre !== "All" && SECONDARY_GENRES.includes(selectedGenre);
+
+    return (
+        <div className="flex flex-wrap items-center gap-x-8" data-testid="genre-select">
+            {MAIN_GENRES.map((genre) => (
+                <div
+                    key={genre}
+                    className={`
+                        group relative px-2 py-1
+                        text-lg font-medium uppercase
+                        cursor-pointer
+                        transition-colors duration-200
+                        ${
+                            genre === selectedGenre
+                                ? "text-[var(--color-text)]"
+                                : "text-[var(--color-gray-lighter)] hover:text-[var(--color-text)]"
+                        }
+                    `}
+                    onClick={() => onSelect(genre)}
+                >
+                    {genre}
+                    <span
+                        className={`
+                            className={
+                            absolute left-0
+                            h-[3px] w-0 -bottom-[16px]
+                            bg-[var(--color-primary)]
+                            transition-all duration-300
+                            ${genre === selectedGenre ? "w-full" : "group-hover:w-full"}
+                        `}
+                    ></span>
+                </div>
+            ))}
+
+            <div className="relative group">
+                <GenreMoreDropdown
+                    options={SECONDARY_GENRES}
+                    selectedGenre={isSecondaryGenre ? selectedGenre : undefined}
+                    onSelectionChange={(genre: Genre) => onSelect(genre)}
+                    className="genre-more-control"
+                    buttonClassName={`
+                        ${
+                            isSecondaryGenre
+                                ? "text-[var(--color-text)]"
+                                : "text-[var(--color-gray-lighter)] hover:text-[var(--color-text)]"
+                        }
+                    `}
+                />
                 <span
                     className={`
-                        absolute
-                        left-0
-                        -bottom-[16px]
-                        h-[3px]
-                        w-0
+                        absolute left-0
+                        h-[3px] w-0 -bottom-[16px]
                         bg-[var(--color-primary)]
-                        transition-all
-                        duration-300
-                        ${genre === selectedGenre ? "w-full" : "group-hover:w-full"}
+                        transition-all duration-300
+                        ${isSecondaryGenre ? "w-full" : "group-hover:w-full"}
                     `}
                 ></span>
             </div>
-        ))}
-    </div>
-);
+        </div>
+    );
+};

@@ -1,8 +1,9 @@
-import React, { MouseEvent, useCallback, useMemo, useState } from "react";
+import React, { MouseEvent, useCallback, useMemo, useState, useRef } from "react";
 import { Movie } from "@/types/common";
 import noPosterImage from "@/assets/no-poster-image.png";
 import { useScrollContext } from "@/contexts/ScrollContext/useScrollContext";
 import { useImageFallback } from "@/hooks/useImageFallback/useImageFallback";
+import { useClickOutside } from "@/hooks/useClickOutside/useClickOutside";
 import { ContextMenu } from "@/components/common/ContextMenu/ContextMenu";
 
 interface MovieTileProps {
@@ -14,8 +15,11 @@ interface MovieTileProps {
 
 export const MovieTile = ({ movie, onClick, onEdit, onDelete }: MovieTileProps) => {
     const [isContextMenuOpen, setIsContextMenuOpen] = useState(false);
+    const movieTileRef = useRef<HTMLDivElement>(null);
     const { setTargetMovieId } = useScrollContext();
     const imageProps = useImageFallback(movie.imageUrl, noPosterImage);
+
+    useClickOutside(movieTileRef, () => setIsContextMenuOpen(false), isContextMenuOpen);
 
     const handleMenuToggle = (e: MouseEvent) => {
         e.stopPropagation();
@@ -53,6 +57,7 @@ export const MovieTile = ({ movie, onClick, onEdit, onDelete }: MovieTileProps) 
 
     return (
         <div
+            ref={movieTileRef}
             className="movie-tile relative group w-[320px] text-[var(--color-text)] cursor-pointer "
             onClick={handleTileClick}
             data-testid="movie-tile"

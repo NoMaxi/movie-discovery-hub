@@ -1,22 +1,16 @@
 import { Meta, StoryFn, StoryObj } from "@storybook/react";
 import { fn } from "@storybook/test";
 import { GenreSelect } from "./GenreSelect";
-import { Genre } from "@/types/common";
+import { GenreFilter } from "@/types/common";
 import { useState } from "react";
-
-const ALL_GENRES: Genre[] = ["All", "Comedy", "Crime", "Documentary", "Horror"];
 
 const meta = {
     title: "Components/GenreSelect",
     component: GenreSelect,
     argTypes: {
-        genres: {
-            control: { type: "object" },
-            description: "Array of genre strings to be displayed as selectable options.",
-        },
         selectedGenre: {
             control: { type: "select" },
-            options: ALL_GENRES,
+            options: ["All", "Drama", "Comedy", "Action", "Horror", "Adventure", "Animation", "Crime", "Documentary", "Family", "Fantasy", "History", "Music", "Mystery", "Romance", "Science Fiction", "Thriller", "TV Movie", "War", "Western"],
             description: "Currently selected genre",
         },
         onSelect: {
@@ -34,13 +28,12 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
     args: {
-        genres: ALL_GENRES,
         selectedGenre: "Comedy",
     },
 };
 
 export const Interactive: StoryFn<typeof GenreSelect> = () => {
-    const [selectedGenre, setSelectedGenre] = useState<Genre>("All");
+    const [selectedGenre, setSelectedGenre] = useState<GenreFilter>("All");
 
-    return <GenreSelect genres={ALL_GENRES} selectedGenre={selectedGenre} onSelect={setSelectedGenre} />;
+    return <GenreSelect selectedGenre={selectedGenre} onSelect={setSelectedGenre} />;
 };

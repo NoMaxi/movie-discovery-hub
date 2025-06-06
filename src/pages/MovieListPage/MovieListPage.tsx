@@ -2,8 +2,8 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { useInView } from "react-intersection-observer";
 import { useParams, useSearchParams } from "react-router-dom";
-import { DEFAULT_ACTIVE_GENRE, DEFAULT_SORT_OPTION, GENRES } from "@/constants/constants";
-import { Genre, Movie, SortOption } from "@/types/common";
+import { DEFAULT_ACTIVE_GENRE, DEFAULT_SORT_OPTION } from "@/constants/constants";
+import { GenreFilter, Movie, SortOption } from "@/types/common";
 import { InfiniteMovieListResult, movieService } from "@/services/movieService";
 import { useScrollContext } from "@/contexts/ScrollContext/useScrollContext";
 import { useNavigateWithSearchParams } from "@/hooks/useNavigateWithSearchParams/useNavigateWithSearchParams";
@@ -27,7 +27,7 @@ export const MovieListPage = () => {
 
     const searchQuery = searchParams.get("query") ?? "";
     const sortCriterion = (searchParams.get("sortBy") as SortOption) ?? DEFAULT_SORT_OPTION;
-    const activeGenre = (searchParams.get("genre") as Genre) ?? DEFAULT_ACTIVE_GENRE;
+    const activeGenre = (searchParams.get("genre") as GenreFilter) ?? DEFAULT_ACTIVE_GENRE;
 
     const {
         data,
@@ -73,13 +73,13 @@ export const MovieListPage = () => {
         }
     }, [movieId, triggerScroll]);
 
-    const updateSearchParam = (key: "genre" | "sortBy", value: Genre | SortOption) => {
+    const updateSearchParam = (key: "genre" | "sortBy", value: GenreFilter | SortOption) => {
         const newParams = new URLSearchParams(searchParams);
         newParams.set(key, value);
         setSearchParams(newParams, { replace: true });
     };
 
-    const handleGenreSelect = (genre: Genre) => {
+    const handleGenreSelect = (genre: GenreFilter) => {
         updateSearchParam("genre", genre);
     };
 
@@ -145,7 +145,7 @@ export const MovieListPage = () => {
                         border-b-2 border-[var(--color-gray-light)]
                     "
                 >
-                    <GenreSelect genres={GENRES} selectedGenre={activeGenre} onSelect={handleGenreSelect} />
+                    <GenreSelect selectedGenre={activeGenre} onSelect={handleGenreSelect} />
                     <SortControl currentSelection={sortCriterion} onSelectionChange={handleSortChange} />
                 </div>
 

@@ -28,11 +28,8 @@ describe("useScrollContext", () => {
     });
 
     test("Should throw an error when used outside of ScrollProvider", () => {
-        try {
+        expect(() => {
             renderHook(() => useScrollContext());
-        } catch (error) {
-            expect(error).toBeInstanceOf(Error);
-            expect((error as Error).message).toBe("useScrollContext must be used within a ScrollProvider");
-        }
+        }).toThrow("useScrollContext must be used within a ScrollProvider");
     });
 });

@@ -3,12 +3,34 @@ import userEvent, { UserEvent } from "@testing-library/user-event";
 import "@testing-library/jest-dom";
 import { SortOption } from "@/types/common";
 import { SortControl } from "./SortControl";
+import { DropdownControlProps } from "@/components/common/DropdownControl/DropdownControl";
 
-jest.mock("@/components/common/SelectArrow/SelectArrow", () => () => <svg data-testid="select-arrow"></svg>);
+jest.mock("@/components/common/DropdownControl/DropdownControl", () => ({
+    DropdownControl: <T extends string>({
+        label,
+        options,
+        currentSelection,
+        onSelectionChange,
+        testId,
+        className,
+    }: DropdownControlProps<T>) => (
+        <div data-testid={testId} className={className}>
+            <span data-testid="dropdown-label">{label}</span>
+            <button
+                data-testid="dropdown-button"
+                onClick={() => {
+                    const currentIndex = options.indexOf(currentSelection);
+                    const nextIndex = (currentIndex + 1) % options.length;
+                    onSelectionChange(options[nextIndex]);
+                }}
+            >
+                {currentSelection}
+            </button>
+        </div>
+    ),
+}));
 
 describe("SortControl", () => {
-    const SORT_OPTIONS: SortOption[] = ["Release Date", "Title"];
-    const initialSelection = SORT_OPTIONS[0];
     let onSelectionChangeMock: jest.Mock;
     let user: UserEvent;
 
@@ -21,88 +43,48 @@ describe("SortControl", () => {
         return render(<SortControl currentSelection={currentSelection} onSelectionChange={onSelectionChangeMock} />);
     };
 
-    test("Should render correctly with initial selection", () => {
-        const { asFragment } = renderComponent(initialSelection);
+    test("Should render DropdownControl with correct props", () => {
+        const currentSelection = "Release Date";
+        const { asFragment } = renderComponent(currentSelection);
 
-        expect(screen.getByText("Sort by")).toBeInTheDocument();
-        expect(screen.getByText("Sort by")).toHaveClass("opacity-60");
-
-        const selectionButton = screen.getByRole("button", { name: /release date/i });
-
-        expect(selectionButton).toBeInTheDocument();
-        expect(selectionButton).toHaveTextContent(initialSelection);
-        expect(screen.queryByRole("button", { name: SORT_OPTIONS[1] })).not.toBeInTheDocument();
+        expect(screen.getByTestId("sort-control")).toBeInTheDocument();
+        expect(screen.getByTestId("sort-control")).toHaveClass("sort-control");
+        expect(screen.getByTestId("dropdown-label")).toHaveTextContent("Sort by");
+        expect(screen.getByTestId("dropdown-button")).toHaveTextContent(currentSelection);
         expect(asFragment()).toMatchSnapshot();
     });
 
-    test("Should open context menu when selection button is clicked", async () => {
-        renderComponent(initialSelection);
-        const selectionButton = screen.getByRole("button", { name: /release date/i });
+    test("Should pass correct options to DropdownControl", () => {
+        renderComponent("Title");
 
-        await user.click(selectionButton);
-
-        const releaseDateButtons = screen.getAllByRole("button", { name: SORT_OPTIONS[0] });
-        expect(releaseDateButtons).toHaveLength(2);
-
-        const titleOptionButton = screen.getByRole("button", { name: SORT_OPTIONS[1] });
-        expect(titleOptionButton).toBeInTheDocument();
+        expect(screen.getByTestId("dropdown-button")).toHaveTextContent("Title");
     });
 
-    test("Should call 'onSelectionChange' prop with correct value when menu option is clicked", async () => {
-        renderComponent(initialSelection);
-        const selectionButton = screen.getByRole("button", { name: /release date/i });
+    test("Should call onSelectionChange when DropdownControl triggers change", async () => {
+        renderComponent("Release Date");
+        const button = screen.getByTestId("dropdown-button");
 
-        await user.click(selectionButton);
-
-        const expectedSelection = SORT_OPTIONS[1];
-        const titleOptionButton = screen.getByRole("button", { name: expectedSelection });
-
-        await user.click(titleOptionButton);
+        await user.click(button);
 
         expect(onSelectionChangeMock).toHaveBeenCalledTimes(1);
-        expect(onSelectionChangeMock).toHaveBeenCalledWith(expectedSelection);
+        expect(onSelectionChangeMock).toHaveBeenCalledWith("Title");
     });
 
-    test("Should close context menu after option is selected", async () => {
-        renderComponent(initialSelection);
-        const selectionButton = screen.getByRole("button", { name: /release date/i });
+    test("Should update displayed selection when currentSelection prop changes", () => {
+        const { rerender } = renderComponent("Release Date");
 
-        await user.click(selectionButton);
+        expect(screen.getByTestId("dropdown-button")).toHaveTextContent("Release Date");
 
-        expect(screen.getByRole("button", { name: SORT_OPTIONS[1] })).toBeInTheDocument();
+        rerender(<SortControl currentSelection="Title" onSelectionChange={onSelectionChangeMock} />);
 
-        const titleOptionButton = screen.getByRole("button", { name: SORT_OPTIONS[1] });
-
-        await user.click(titleOptionButton);
-
-        expect(screen.queryByRole("button", { name: SORT_OPTIONS[1] })).not.toBeInTheDocument();
+        expect(screen.getByTestId("dropdown-button")).toHaveTextContent("Title");
     });
 
-    test("Should close context menu when clicking outside the component", async () => {
-        renderComponent(initialSelection);
-        const selectionButton = screen.getByRole("button", { name: /release date/i });
+    test("Should render with correct testId and className", () => {
+        renderComponent("Release Date");
 
-        await user.click(selectionButton);
-
-        expect(screen.getByRole("button", { name: SORT_OPTIONS[1] })).toBeInTheDocument();
-
-        await user.click(document.body);
-
-        expect(screen.queryByRole("button", { name: SORT_OPTIONS[1] })).not.toBeInTheDocument();
-    });
-
-    test("Should display the updated selection when 'currentSelection' prop changes", () => {
-        const { rerender } = renderComponent(initialSelection);
-        const selectionButtonInitial = screen.getByRole("button", { name: /release date/i });
-
-        expect(selectionButtonInitial).toHaveTextContent(initialSelection);
-
-        const updatedSelection = SORT_OPTIONS[1];
-
-        rerender(<SortControl currentSelection={updatedSelection} onSelectionChange={onSelectionChangeMock} />);
-        const selectionButtonUpdated = screen.getByRole("button", { name: /title/i });
-
-        expect(selectionButtonUpdated).toBeInTheDocument();
-        expect(selectionButtonUpdated).toHaveTextContent(updatedSelection);
+        const sortControl = screen.getByTestId("sort-control");
+        expect(sortControl).toBeInTheDocument();
+        expect(sortControl).toHaveClass("sort-control");
     });
 });

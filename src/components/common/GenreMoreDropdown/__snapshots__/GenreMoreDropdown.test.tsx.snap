@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`GenreMoreDropdown Initial Rendering Should render correctly with default 'More' text when no genre is selected 1`] = `
+<DocumentFragment>
+  <div
+    class="genre-more-dropdown relative inline-block text-left "
+    data-testid="genre-more-dropdown"
+  >
+    <button
+      class="
+                    genre-more-button inline-flex items-center justify-center gap-x-2 min-w-[80px]
+                    px-2 py-1 text-lg font-medium uppercase
+                    cursor-pointer transition-colors duration-200
+                    focus:outline-none
+                    
+                "
+      type="button"
+    >
+      More Genres
+      <span
+        class="transform transition-transform rotate-0"
+      >
+        <svg
+          data-testid="select-arrow"
+        />
+      </span>
+    </button>
+  </div>
+</DocumentFragment>
+`;
