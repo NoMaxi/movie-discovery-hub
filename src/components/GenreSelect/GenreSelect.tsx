@@ -22,8 +22,8 @@ export const GenreSelect = ({ selectedGenre, onSelect }: GenreSelectProps) => {
                         transition-colors duration-200
                         ${
                             genre === selectedGenre
-                                ? "text-[var(--color-text)]"
-                                : "text-[var(--color-gray-lighter)] hover:text-[var(--color-text)]"
+                                ? "text-text"
+                                : "text-gray-lighter hover:text-text"
                         }
                     `}
                     onClick={() => onSelect(genre)}
@@ -31,10 +31,9 @@ export const GenreSelect = ({ selectedGenre, onSelect }: GenreSelectProps) => {
                     {genre}
                     <span
                         className={`
-                            className={
                             absolute left-0
                             h-[3px] w-0 -bottom-[16px]
-                            bg-[var(--color-primary)]
+                            bg-primary
                             transition-all duration-300
                             ${genre === selectedGenre ? "w-full" : "group-hover:w-full"}
                         `}
@@ -51,8 +50,8 @@ export const GenreSelect = ({ selectedGenre, onSelect }: GenreSelectProps) => {
                     buttonClassName={`
                         ${
                             isSecondaryGenre
-                                ? "text-[var(--color-text)]"
-                                : "text-[var(--color-gray-lighter)] hover:text-[var(--color-text)]"
+                                ? "text-text"
+                                : "text-gray-lighter hover:text-text"
                         }
                     `}
                 />
@@ -60,7 +59,7 @@ export const GenreSelect = ({ selectedGenre, onSelect }: GenreSelectProps) => {
                     className={`
                         absolute left-0
                         h-[3px] w-0 -bottom-[16px]
-                        bg-[var(--color-primary)]
+                        bg-primary
                         transition-all duration-300
                         ${isSecondaryGenre ? "w-full" : "group-hover:w-full"}
                     `}

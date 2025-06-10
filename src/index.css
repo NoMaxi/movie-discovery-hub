@@ -1,9 +1,33 @@
 @import "tailwindcss";
 
+/* To be removed */
+/*
 :root {
-    /* Fonts */
     --font-family-base: "Montserrat";
     --font-size-base: 20px;
+    --color-white: #ffffff;
+    --color-dark: #232323;
+    --color-gray: #424242;
+    --color-gray-medium: #777777;
+    --color-gray-light: #555555;
+    --color-gray-lighter: #aaaaaa;
+    --color-pink-shade: #f65261;
+    --color-red-soft: #fca5a5;
+    --color-primary: var(--color-pink-shade);
+    --color-text: var(--color-white);
+    --color-background: var(--color-gray-light);
+    --color-content-background: var(--color-dark);
+    --color-input-error: var(--color-red-soft);
+    --content-width: 1200px;
+}
+*/
+
+@theme {
+    /* Fonts */
+    --font-base: "Montserrat", sans-serif;
+
+    /* Text Sizes */
+    --text-xl: 20px; /* From original --font-size-base */
 
     /* Colors */
     --color-white: #ffffff;
@@ -15,7 +39,7 @@
     --color-pink-shade: #f65261;
     --color-red-soft: #fca5a5;
 
-    /* Color Variables */
+    /* Color Variables (Aliases - now primary definitions in the theme) */
     --color-primary: var(--color-pink-shade);
     --color-text: var(--color-white);
     --color-background: var(--color-gray-light);
@@ -23,7 +47,7 @@
     --color-input-error: var(--color-red-soft);
 
     /* Sizes */
-    --content-width: 1200px;
+    --spacing-content-width: 1200px; /* From original --content-width */
 }
 
 html {
@@ -31,11 +55,11 @@ html {
 }
 
 body {
+    @apply text-text;
     background: url("src/assets/bg-content.jpg") no-repeat fixed;
     background-size: cover;
-    color: var(--color-text);
-    font-family: var(--font-family-base), sans-serif;
-    font-size: var(--font-size-base);
+    font-family: var(--font-base), sans-serif;
+    font-size: var(--text-xl);
 }
 
 ::-webkit-scrollbar {
@@ -66,13 +90,9 @@ body {
 }
 
 .btn {
-    @apply inline-flex items-center justify-center;
-    background-color: var(--color-primary);
+    @apply inline-flex items-center justify-center bg-primary text-text rounded cursor-pointer;
     border: none;
-    border-radius: 4px;
-    color: var(--color-text);
-    cursor: pointer;
-    font-size: 20px;
+    font-size: var(--text-xl);
     font-weight: 500;
     height: 57px;
     min-width: 180px;
@@ -89,12 +109,12 @@ body {
     }
 
     &:focus {
+        @apply ring-2 ring-primary ring-offset-2 ring-offset-background;
         outline: none;
-        @apply ring-2 ring-[var(--color-primary)] ring-offset-2 ring-offset-[var(--color-background)];
     }
 
     &:disabled {
-        background-color: var(--color-gray-lighter);
+        @apply bg-gray-lighter;
         border-color: transparent;
         box-shadow: none;
         cursor: not-allowed;
@@ -106,13 +126,11 @@ body {
 }
 
 .btn-outline {
+    @apply border-2 border-primary text-primary;
     background-color: transparent;
-    border: 2px solid var(--color-primary);
-    color: var(--color-primary);
 
     &:not(:disabled):hover {
-        background-color: var(--color-primary);
-        color: var(--color-text);
+        @apply bg-primary text-text;
         filter: brightness(0.8);
         transition:
             background-color 0.3s ease,
@@ -125,13 +143,10 @@ body {
 }
 
 .btn-add-movie {
-    @apply inline-flex items-center justify-center;
+    @apply inline-flex items-center justify-center text-primary rounded cursor-pointer;
     background-color: rgba(96, 96, 96, 0.7);
     backdrop-filter: blur(3px);
     border: none;
-    border-radius: 4px;
-    color: var(--color-primary);
-    cursor: pointer;
     font-size: 20px;
     font-weight: 600;
     height: 46px;
@@ -151,22 +166,21 @@ body {
 
 .input-field {
     @apply w-full px-6 py-3 rounded-md
-    border-transparent
-    bg-[var(--color-gray)]
-    text-[var(--color-text)]
-    placeholder:opacity-50
-    shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)]
-    focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent
-    transition-all duration-300;
+        border-transparent
+        bg-gray text-text
+        placeholder:opacity-50
+        shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)]
+        focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent
+        transition-all duration-300;
     height: 57px;
 }
 
 .input-field.input-error {
-    @apply border-solid border-2 !border-[var(--color-input-error)];
+    @apply border-solid border-2 !border-input-error;
 }
 
 .input-transparent-shadow-glow {
-    @apply bg-transparent shadow-[inset_0_0_15px_var(--color-primary),inset_0_0_3px_var(--color-primary)];
+    @apply bg-transparent shadow-[inset_0_0_15px_theme(colors.primary),inset_0_0_3px_theme(colors.primary)];
 }
 
 input[type="date"].input-field {
@@ -186,32 +200,32 @@ input[type="date"].input-field:placeholder-shown {
 }
 
 input[type="date"].input-field:valid {
-    color: var(--color-text);
+    @apply text-text;
 }
 
 .error-message {
-    @apply text-[var(--color-input-error)] text-base mt-1.5;
+    @apply text-input-error text-base mt-1.5;
 }
 
 .form-checkbox {
     @apply relative appearance-none w-4 h-4
-    border-2 border-[var(--color-gray-lighter)] rounded-sm
-    bg-[var(--color-background)]
-    checked:bg-[var(--color-primary)]
-    checked:border-transparent
-    focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-[var(--color-primary)]
-    cursor-pointer;
+        border-2 border-gray-lighter rounded-sm
+        bg-background
+        checked:bg-primary
+        checked:border-transparent
+        focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-primary
+        cursor-pointer;
 }
 
 .form-checkbox:checked::after {
     @apply block w-1.5 h-3
-    border-solid border-white border-r-[3px] border-b-[3px]
-    transform rotate-45 translate-x-[3px] translate-y-[0px];
+        border-solid border-white border-r-[3px] border-b-[3px]
+        transform rotate-45 translate-x-[3px] translate-y-[0px];
     content: "";
 }
 
 .form-label {
     @apply block mb-2
-    uppercase text-[var(--color-primary)] opacity-80
-    font-semibold tracking-wide;
+        uppercase text-primary opacity-80
+        font-semibold tracking-wide;
 }

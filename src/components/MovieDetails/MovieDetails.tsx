@@ -15,8 +15,8 @@ export const MovieDetails = ({
         <div
             data-testid="movie-details"
             className="
-                movie-details flex w-full gap-x-14 p-8 text-[var(--color-text)]
-                bg-[var(--color-content-background)]
+                movie-details flex w-full gap-x-14 p-8 text-text
+                bg-content-background
             "
         >
             <img
@@ -41,7 +41,7 @@ export const MovieDetails = ({
 
                 <p className="movie-details-genres text-[14px] opacity-50 mb-6">{genres.join(", ")}</p>
 
-                <div className="flex items-center gap-x-6 text-[24px] font-light text-[var(--color-primary)] mb-6">
+                <div className="flex items-center gap-x-6 text-[24px] font-light text-primary mb-6">
                     <span className="movie-details-date">{releaseYear}</span>
                     <span className="movie-details-duration">{formatDuration(duration)}</span>
                 </div>

@@ -136,13 +136,13 @@ export const MovieListPage = () => {
             <main
                 className="
                     flex-grow w-[var(--content-width)] px-16 pb-6 mb-[60px]
-                    bg-[var(--color-content-background)]
+                    bg-content-background
                 "
             >
                 <div
                     className="
                         flex justify-between items-center h-[60px] mb-6
-                        border-b-2 border-[var(--color-gray-light)]
+                        border-b-2 border-gray-light
                     "
                 >
                     <GenreSelect selectedGenre={activeGenre} onSelect={handleGenreSelect} />
@@ -187,7 +187,7 @@ export const MovieListPage = () => {
                 className="
                     flex justify-center items-center
                     fixed bottom-0 left-0 right-0 h-[60px]
-                    bg-[var(--color-gray)] z-50
+                    bg-gray z-50
                 "
             >
                 <NetflixRouletteText />
