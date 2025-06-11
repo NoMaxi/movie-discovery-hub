@@ -91,7 +91,7 @@ export const Dialog = ({ title, children, onClose, className = "" }: DialogProps
                         </div>
                         <div
                             data-testid="dialog-body"
-                            className={`dialog-body flex-grow px-3xl pb-3xl overflow-y-auto ${!title ? "pt-3xl" : ""}`}
+                            className={`dialog-body flex-grow px-3xl pb-3xl overflow-y-auto ${title ? "" : "pt-3xl"}`}
                         >
                             {children}
                         </div>
