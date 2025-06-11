@@ -54,12 +54,12 @@ export const DropdownControl = <T extends string>({
             data-testid={testId}
         >
             <div className="flex items-center gap-x-4 text-base">
-                <span className="dropdown-control-label text-[16px] uppercase opacity-60">{label}</span>
+                <span className="dropdown-control-label text-lg uppercase opacity-60">{label}</span>
                 <button
                     type="button"
                     className={`
                         dropdown-control-button inline-flex items-center justify-center gap-x-2 min-w-[140px]
-                        text-[16px] font-medium uppercase
+                        text-lg font-medium uppercase
                         focus:outline-none cursor-pointer
                         ${buttonClassName}
                     `}

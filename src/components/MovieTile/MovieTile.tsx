@@ -101,13 +101,13 @@ export const MovieTile = ({ movie, onClick, onEdit, onDelete }: MovieTileProps) 
                     className="
                         flex-shrink-0
                         border border-gray-light px-3 py-1 rounded
-                        text-[14px] font-medium text-gray-lighter
+                        text-md font-medium text-gray-lighter
                     "
                 >
                     {movie.releaseYear}
                 </span>
             </div>
-            <p className="text-[14px] text-gray-light">{movie.genres.join(", ")}</p>
+            <p className="text-md text-gray-light">{movie.genres.join(", ")}</p>
         </div>
     );
 };

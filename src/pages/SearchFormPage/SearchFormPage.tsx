@@ -20,7 +20,7 @@ export const SearchFormPage = () => {
 
     return (
         <div className="flex flex-col items-start px-[60px]">
-            <h2 className="text-[40px] font-light uppercase mb-8 mt-[25px] tracking-[1px]">Find Your Movie</h2>
+            <h2 className="text-2xl font-light uppercase mb-8 mt-[25px] tracking-[1px]">Find Your Movie</h2>
             <div className="w-full">
                 <SearchForm initialQuery={searchQuery} onSearch={handleSearch} />
                 <Outlet />

@@ -1,33 +1,15 @@
 @import "tailwindcss";
 
-/* To be removed */
-/*
-:root {
-    --font-family-base: "Montserrat";
-    --font-size-base: 20px;
-    --color-white: #ffffff;
-    --color-dark: #232323;
-    --color-gray: #424242;
-    --color-gray-medium: #777777;
-    --color-gray-light: #555555;
-    --color-gray-lighter: #aaaaaa;
-    --color-pink-shade: #f65261;
-    --color-red-soft: #fca5a5;
-    --color-primary: var(--color-pink-shade);
-    --color-text: var(--color-white);
-    --color-background: var(--color-gray-light);
-    --color-content-background: var(--color-dark);
-    --color-input-error: var(--color-red-soft);
-    --content-width: 1200px;
-}
-*/
-
 @theme {
     /* Fonts */
-    --font-base: "Montserrat", sans-serif;
+    --font-brand: "Montserrat", sans-serif;
 
     /* Text Sizes */
-    --text-xl: 20px; /* From original --font-size-base */
+    --text-2xl: 40px;
+    --text-2xl--line-height: 1.5;
+    --text-xl: 20px;
+    --text-lg: 16px;
+    --text-md: 14px;
 
     /* Colors */
     --color-white: #ffffff;
@@ -39,15 +21,27 @@
     --color-pink-shade: #f65261;
     --color-red-soft: #fca5a5;
 
-    /* Color Variables (Aliases - now primary definitions in the theme) */
+    /* Color Variables */
     --color-primary: var(--color-pink-shade);
     --color-text: var(--color-white);
     --color-background: var(--color-gray-light);
     --color-content-background: var(--color-dark);
     --color-input-error: var(--color-red-soft);
 
-    /* Sizes */
-    --spacing-content-width: 1200px; /* From original --content-width */
+    /* Spacing */
+    --spacing-4xl: 80px;
+    --spacing-3xl: 60px;
+    --spacing-2xl: 40px;
+    --spacing-xl: 20px;
+    --spacing-lg: 16px;
+    --spacing-md: 10px;
+
+    /* Layout Constants */
+    --container-content-width: 1200px;
+
+    /* Component-Specific Constants */
+    --spacing-header-height-collapsed: 290px;
+    --spacing-header-height-expanded: 540px;
 }
 
 html {
@@ -58,7 +52,7 @@ body {
     @apply text-text;
     background: url("src/assets/bg-content.jpg") no-repeat fixed;
     background-size: cover;
-    font-family: var(--font-base), sans-serif;
+    font-family: var(--font-brand), sans-serif;
     font-size: var(--text-xl);
 }
 
@@ -90,9 +84,8 @@ body {
 }
 
 .btn {
-    @apply inline-flex items-center justify-center bg-primary text-text rounded cursor-pointer;
+    @apply inline-flex items-center justify-center bg-primary text-text rounded cursor-pointer text-xl;
     border: none;
-    font-size: var(--text-xl);
     font-weight: 500;
     height: 57px;
     min-width: 180px;
@@ -143,11 +136,10 @@ body {
 }
 
 .btn-add-movie {
-    @apply inline-flex items-center justify-center text-primary rounded cursor-pointer;
+    @apply inline-flex items-center justify-center text-primary rounded cursor-pointer text-xl;
     background-color: rgba(96, 96, 96, 0.7);
     backdrop-filter: blur(3px);
     border: none;
-    font-size: 20px;
     font-weight: 600;
     height: 46px;
     width: 177px;

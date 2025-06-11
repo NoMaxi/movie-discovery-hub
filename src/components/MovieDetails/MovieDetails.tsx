@@ -28,7 +28,7 @@ export const MovieDetails = ({
 
             <div className="movie-details-info flex flex-col flex-grow">
                 <div className="flex items-center gap-x-5 mb-2">
-                    <h1 className="movie-details-title text-[40px] font-light tracking-[1px] uppercase">{title}</h1>
+                    <h1 className="movie-details-title text-2xl font-light tracking-[1px] uppercase">{title}</h1>{" "}
                     <div
                         className="
                             movie-details-rating flex flex-shrink-0 items-center justify-center
@@ -39,7 +39,7 @@ export const MovieDetails = ({
                     </div>
                 </div>
 
-                <p className="movie-details-genres text-[14px] opacity-50 mb-6">{genres.join(", ")}</p>
+                <p className="movie-details-genres text-md opacity-50 mb-6">{genres.join(", ")}</p>
 
                 <div className="flex items-center gap-x-6 text-[24px] font-light text-primary mb-6">
                     <span className="movie-details-date">{releaseYear}</span>

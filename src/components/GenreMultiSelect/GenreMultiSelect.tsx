@@ -18,9 +18,7 @@ const defaultEmptyGenres: string[] = [];
 export const GenreMultiSelect = forwardRef<HTMLDivElement, GenreMultiSelectProps>(
     ({ preselectedGenres = defaultEmptyGenres, onChange, id, ariaDescribedby, error }, ref) => {
         const [isOpen, setIsOpen] = useState(false);
-        const [selectedGenres, setSelectedGenres] = useState<Set<Genre | string>>(
-            () => new Set(preselectedGenres),
-        );
+        const [selectedGenres, setSelectedGenres] = useState<Set<Genre | string>>(() => new Set(preselectedGenres));
         const controlRef = useRef<HTMLDivElement>(null);
 
         useEffect(() => {
@@ -71,15 +69,11 @@ export const GenreMultiSelect = forwardRef<HTMLDivElement, GenreMultiSelectProps
                     aria-invalid={error ? "true" : "false"}
                     className={`
                         input-field relative flex items-center justify-between w-full
-                        text-left text-[var(--color-primary)] font-normal opacity-80
+                        text-left text-primary font-normal opacity-80
                         cursor-pointer ${error ? "input-error" : ""}
                     `}
                 >
-                    <span
-                        className={`truncate ${
-                            areGenresSelected ? "text-[var(--color-text)]" : "text-[var(--color-text)] opacity-30"
-                        }`}
-                    >
+                    <span className={`truncate ${areGenresSelected ? "text-text" : "text-text opacity-30"}`}>
                         {displayValue}
                     </span>
                     <span className={`transform transition-transform ${isOpen ? "rotate-180" : "rotate-0"}`}>
@@ -91,8 +85,8 @@ export const GenreMultiSelect = forwardRef<HTMLDivElement, GenreMultiSelectProps
                     <div
                         role="listbox"
                         className="
-                        absolute z-30 mt-1 w-full bg-[var(--color-background)]
-                        border border-[var(--color-gray-light)] rounded-md shadow-lg
+                        absolute z-30 mt-1 w-full bg-background
+                        border border-gray-light rounded-md shadow-lg
                         max-h-60 overflow-y-auto
                     "
                     >
@@ -101,7 +95,7 @@ export const GenreMultiSelect = forwardRef<HTMLDivElement, GenreMultiSelectProps
                                 key={genre}
                                 className="
                                     flex items-center px-4 py-3 space-x-3
-                                    hover:bg-[var(--color-gray)]
+                                    hover:bg-gray
                                     cursor-pointer transition-colors
                                 "
                             >
@@ -112,7 +106,7 @@ export const GenreMultiSelect = forwardRef<HTMLDivElement, GenreMultiSelectProps
                                     onChange={(e) => handleCheckboxChange(genre, e.target.checked)}
                                     onClick={(e) => e.stopPropagation()}
                                 />
-                                <span className="text-[var(--color-text)] text-[16px]">{genre}</span>
+                                <span className="text-text text-lg">{genre}</span>
                             </label>
                         ))}
                     </div>

@@ -135,7 +135,7 @@ export const MovieListPage = () => {
 
             <main
                 className="
-                    flex-grow w-[var(--content-width)] px-16 pb-6 mb-[60px]
+                    flex-grow w-content-width px-16 pb-6 mb-[60px]
                     bg-content-background
                 "
             >
@@ -183,6 +183,7 @@ export const MovieListPage = () => {
                     {isFetchingNextPage && <div className="text-center py-5 text-lg">Loading more...</div>}
                 </div>
             </main>
+
             <footer
                 className="
                     flex justify-center items-center

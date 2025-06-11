@@ -56,17 +56,13 @@ export const Dialog = ({ title, children, onClose, className = "" }: DialogProps
                             className="
                                 dialog-header-container
                                 sticky top-0 px-[60px] pt-[60px] pb-[38px]
-                                bg-[var(--color-background)] z-10
+                                bg-background z-10
                             "
                         >
                             {title && (
                                 <div className="dialog-header flex justify-between items-start">
                                     {typeof title === "string" ? (
-                                        <h2
-                                            className="
-                                                font-light text-[40px] text-[var(--color-text)] uppercase tracking-wide
-                                            "
-                                        >
+                                        <h2 className="font-light text-2xl text-text uppercase tracking-wide">
                                             {title.toUpperCase()}
                                         </h2>
                                     ) : (
@@ -82,7 +78,7 @@ export const Dialog = ({ title, children, onClose, className = "" }: DialogProps
                                     dialog-close-button
                                     flex items-center justify-center w-[20px] h-[20px]
                                     absolute top-[30px] right-[30px]
-                                    hover:text-[var(--color-primary)]
+                                    hover:text-primary
                                     before:content-[''] before:block before:absolute before:w-[2px] before:h-[24px]
                                     before:bg-current before:rotate-45
                                     after:content-[''] after:block after:absolute after:w-[2px] after:h-[24px]

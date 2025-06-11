@@ -52,7 +52,7 @@ export class Counter extends React.Component<CounterProps, CounterState> {
             React.createElement(
                 "button",
                 {
-                    className: `bg-[var(--color-primary)] hover:brightness-80 active:brightness-60 w-[40px] h-[40px]
+                    className: `bg-primary hover:brightness-80 active:brightness-60 w-[40px] h-[40px]
                     text-xl font-bold py-2 px-4 rounded-full cursor-pointer`,
                     onClick: this.increment,
                 },
