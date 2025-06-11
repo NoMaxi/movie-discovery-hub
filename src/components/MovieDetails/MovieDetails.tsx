@@ -15,7 +15,7 @@ export const MovieDetails = ({
         <div
             data-testid="movie-details"
             className="
-                movie-details flex w-full gap-x-14 p-8 text-text
+                movie-details flex w-full max-h-header-height-expanded gap-x-14 p-8 text-text
                 bg-content-background
             "
         >
@@ -32,7 +32,7 @@ export const MovieDetails = ({
                     <div
                         className="
                             movie-details-rating flex flex-shrink-0 items-center justify-center
-                            w-[60px] h-[60px] border-2 rounded-full
+                            w-3xl h-3xl border-2 rounded-full
                         "
                     >
                         <span className="font-light">{rating}</span>
@@ -46,7 +46,12 @@ export const MovieDetails = ({
                     <span className="movie-details-duration">{formatDuration(duration)}</span>
                 </div>
 
-                <p className="movie-details-description font-light opacity-50 leading-relaxed">{description}</p>
+                <p
+                    className="
+                    movie-details-description font-light opacity-50 leading-relaxed overflow-y-scroll"
+                >
+                    {description}
+                </p>
             </div>
         </div>
     );

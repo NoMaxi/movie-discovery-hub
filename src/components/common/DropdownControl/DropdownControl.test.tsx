@@ -393,7 +393,7 @@ describe("DropdownControl", () => {
             expect(dropdown).toHaveClass("dropdown-control", "relative", "inline-block", "text-left");
 
             const label = screen.getByText("Test Label");
-            expect(label).toHaveClass("dropdown-control-label", "text-[16px]", "uppercase", "opacity-60");
+            expect(label).toHaveClass("dropdown-control-label", "text-lg", "uppercase", "opacity-60");
 
             const button = screen.getByRole("button");
             expect(button).toHaveClass(

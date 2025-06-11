@@ -6,7 +6,7 @@ exports[`Counter Should render the default initial value if not provided in prop
     class="p-4 flex items-center justify-center gap-4"
   >
     <button
-      class="bg-[var(--color-primary)] hover:brightness-80 active:brightness-60 w-[40px] h-[40px] 
+      class="bg-primary hover:brightness-80 active:brightness-60 w-2xl h-2xl 
                     text-xl font-bold py-2 px-4 rounded-full cursor-pointer
                     opacity-50 cursor-not-allowed"
       disabled=""
@@ -19,7 +19,7 @@ exports[`Counter Should render the default initial value if not provided in prop
       0
     </div>
     <button
-      class="bg-[var(--color-primary)] hover:brightness-80 active:brightness-60 w-[40px] h-[40px]
+      class="bg-primary hover:brightness-80 active:brightness-60 w-2xl h-2xl
                     text-xl font-bold py-2 px-4 rounded-full cursor-pointer"
     >
       +
@@ -34,7 +34,7 @@ exports[`Counter Should render the initial value provided in props 1`] = `
     class="p-4 flex items-center justify-center gap-4"
   >
     <button
-      class="bg-[var(--color-primary)] hover:brightness-80 active:brightness-60 w-[40px] h-[40px] 
+      class="bg-primary hover:brightness-80 active:brightness-60 w-2xl h-2xl 
                     text-xl font-bold py-2 px-4 rounded-full cursor-pointer
                     "
     >
@@ -46,7 +46,7 @@ exports[`Counter Should render the initial value provided in props 1`] = `
       5
     </div>
     <button
-      class="bg-[var(--color-primary)] hover:brightness-80 active:brightness-60 w-[40px] h-[40px]
+      class="bg-primary hover:brightness-80 active:brightness-60 w-2xl h-2xl
                     text-xl font-bold py-2 px-4 rounded-full cursor-pointer"
     >
       +

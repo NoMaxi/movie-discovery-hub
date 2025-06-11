@@ -4,8 +4,8 @@ exports[`MovieDetails Should render different movie details correctly 1`] = `
 <DocumentFragment>
   <div
     class="
-                movie-details flex w-full gap-x-14 p-8 text-[var(--color-text)]
-                bg-[var(--color-content-background)]
+                movie-details flex w-full max-h-header-height-expanded gap-x-14 p-8 text-text
+                bg-content-background
             "
     data-testid="movie-details"
   >
@@ -21,14 +21,15 @@ exports[`MovieDetails Should render different movie details correctly 1`] = `
         class="flex items-center gap-x-5 mb-2"
       >
         <h1
-          class="movie-details-title text-[40px] font-light tracking-[1px] uppercase"
+          class="movie-details-title text-2xl font-light tracking-[1px] uppercase"
         >
           Another Great Film
         </h1>
+         
         <div
           class="
                             movie-details-rating flex flex-shrink-0 items-center justify-center
-                            w-[60px] h-[60px] border-2 rounded-full
+                            w-3xl h-3xl border-2 rounded-full
                         "
         >
           <span
@@ -39,12 +40,12 @@ exports[`MovieDetails Should render different movie details correctly 1`] = `
         </div>
       </div>
       <p
-        class="movie-details-genres text-[14px] opacity-50 mb-6"
+        class="movie-details-genres text-md opacity-50 mb-6"
       >
         Comedy, Crime
       </p>
       <div
-        class="flex items-center gap-x-6 text-[24px] font-light text-[var(--color-primary)] mb-6"
+        class="flex items-center gap-x-6 text-[24px] font-light text-primary mb-6"
       >
         <span
           class="movie-details-date"
@@ -58,7 +59,8 @@ exports[`MovieDetails Should render different movie details correctly 1`] = `
         </span>
       </div>
       <p
-        class="movie-details-description font-light opacity-50 leading-relaxed"
+        class="
+                    movie-details-description font-light opacity-50 leading-relaxed overflow-y-scroll"
       >
         The greatest movie in history of cinema.
       </p>
@@ -71,8 +73,8 @@ exports[`MovieDetails Should render movie details correctly with provided data 1
 <DocumentFragment>
   <div
     class="
-                movie-details flex w-full gap-x-14 p-8 text-[var(--color-text)]
-                bg-[var(--color-content-background)]
+                movie-details flex w-full max-h-header-height-expanded gap-x-14 p-8 text-text
+                bg-content-background
             "
     data-testid="movie-details"
   >
@@ -88,14 +90,15 @@ exports[`MovieDetails Should render movie details correctly with provided data 1
         class="flex items-center gap-x-5 mb-2"
       >
         <h1
-          class="movie-details-title text-[40px] font-light tracking-[1px] uppercase"
+          class="movie-details-title text-2xl font-light tracking-[1px] uppercase"
         >
           Pulp Fiction
         </h1>
+         
         <div
           class="
                             movie-details-rating flex flex-shrink-0 items-center justify-center
-                            w-[60px] h-[60px] border-2 rounded-full
+                            w-3xl h-3xl border-2 rounded-full
                         "
         >
           <span
@@ -106,12 +109,12 @@ exports[`MovieDetails Should render movie details correctly with provided data 1
         </div>
       </div>
       <p
-        class="movie-details-genres text-[14px] opacity-50 mb-6"
+        class="movie-details-genres text-md opacity-50 mb-6"
       >
         Comedy, Crime
       </p>
       <div
-        class="flex items-center gap-x-6 text-[24px] font-light text-[var(--color-primary)] mb-6"
+        class="flex items-center gap-x-6 text-[24px] font-light text-primary mb-6"
       >
         <span
           class="movie-details-date"
@@ -125,7 +128,8 @@ exports[`MovieDetails Should render movie details correctly with provided data 1
         </span>
       </div>
       <p
-        class="movie-details-description font-light opacity-50 leading-relaxed"
+        class="
+                    movie-details-description font-light opacity-50 leading-relaxed overflow-y-scroll"
       >
         Jules Winnfield (Samuel L. Jackson) and Vincent Vega (John Travolta) are two hit men who are out to retrieve a suitcase stolen from their employer, mob boss Marsellus Wallace (Ving Rhames). Wallace has also asked Vincent to take his wife Mia (Uma Thurman) out a few days later when Wallace himself will be out of town. Butch Coolidge (Bruce Willis) is an aging boxer who is paid by Wallace to lose his fight. The lives of these seemingly unrelated people are woven together comprising of a series of funny, bizarre and uncalled-for incidents.—Soumitra
       </p>

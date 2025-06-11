@@ -28,7 +28,7 @@ describe("GenreSelect", () => {
         const { asFragment } = render(<GenreSelect selectedGenre="Comedy" onSelect={onSelectMock} />);
         const selectedGenre = screen.getByText("Comedy");
 
-        expect(selectedGenre).toHaveClass("text-[var(--color-text)]");
+        expect(selectedGenre).toHaveClass("text-text");
         expect(asFragment()).toMatchSnapshot();
     });
 
@@ -36,15 +36,15 @@ describe("GenreSelect", () => {
         const { rerender } = render(<GenreSelect selectedGenre="Comedy" onSelect={onSelectMock} />);
         const initialSelectedGenre = screen.getByText("Comedy");
 
-        expect(initialSelectedGenre).toHaveClass("text-[var(--color-text)]");
+        expect(initialSelectedGenre).toHaveClass("text-text");
 
         rerender(<GenreSelect selectedGenre="Action" onSelect={onSelectMock} />);
 
         const newSelectedGenre = screen.getByText("Action");
 
-        expect(initialSelectedGenre).not.toHaveClass("text-[var(--color-text)]");
-        expect(initialSelectedGenre).toHaveClass("text-[var(--color-gray-lighter)]");
-        expect(newSelectedGenre).toHaveClass("text-[var(--color-text)]");
+        expect(initialSelectedGenre).not.toHaveClass("text-text");
+        expect(initialSelectedGenre).toHaveClass("text-gray-lighter");
+        expect(newSelectedGenre).toHaveClass("text-text");
     });
 
     test("Should call 'onSelect' prop with clicked main genre", async () => {
@@ -60,7 +60,7 @@ describe("GenreSelect", () => {
         const { asFragment } = render(<GenreSelect selectedGenre="Romance" onSelect={onSelectMock} />);
         const moreButton = screen.getByText("Romance");
 
-        expect(moreButton).toHaveClass("text-[var(--color-text)]");
+        expect(moreButton).toHaveClass("text-text");
         expect(asFragment()).toMatchSnapshot();
     });
 

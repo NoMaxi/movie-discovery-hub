@@ -9,7 +9,7 @@ export const Header = () => {
         <header
             data-testid="header"
             className="
-                relative w-content-width px-[60px] pt-[80px] pb-[20px] mb-[10px]
+                relative w-content-width px-3xl pt-4xl pb-xl mb-md
                 bg-content-background bg-cover bg-center bg-no-repeat
             "
             style={{ backgroundImage: `url(${bgHeaderImage})` }}

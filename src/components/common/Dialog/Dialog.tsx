@@ -46,7 +46,7 @@ export const Dialog = ({ title, children, onClose, className = "" }: DialogProps
                         className={`
                             dialog-content
                             relative flex flex-col w-full
-                            bg-[var(--color-background)] rounded-md shadow-2xl
+                            bg-background rounded-md shadow-2xl
                             max-h-[95vh] overflow-hidden
                             ${className}
                         `}
@@ -55,7 +55,7 @@ export const Dialog = ({ title, children, onClose, className = "" }: DialogProps
                         <div
                             className="
                                 dialog-header-container
-                                sticky top-0 px-[60px] pt-[60px] pb-[38px]
+                                sticky top-0 px-3xl pt-3xl pb-[38px]
                                 bg-background z-10
                             "
                         >
@@ -76,7 +76,7 @@ export const Dialog = ({ title, children, onClose, className = "" }: DialogProps
                                 onClick={onClose}
                                 className="
                                     dialog-close-button
-                                    flex items-center justify-center w-[20px] h-[20px]
+                                    flex items-center justify-center w-xl h-xl
                                     absolute top-[30px] right-[30px]
                                     hover:text-primary
                                     before:content-[''] before:block before:absolute before:w-[2px] before:h-[24px]
@@ -91,10 +91,7 @@ export const Dialog = ({ title, children, onClose, className = "" }: DialogProps
                         </div>
                         <div
                             data-testid="dialog-body"
-                            className={`
-                                dialog-body flex-grow px-[60px] pb-[60px] overflow-y-auto
-                                ${!title ? "pt-[60px]" : ""}
-                            `}
+                            className={`dialog-body flex-grow px-3xl pb-3xl overflow-y-auto ${!title ? "pt-3xl" : ""}`}
                         >
                             {children}
                         </div>

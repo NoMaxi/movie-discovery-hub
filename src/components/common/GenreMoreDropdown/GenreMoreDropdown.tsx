@@ -53,7 +53,7 @@ export const GenreMoreDropdown = ({
             <button
                 type="button"
                 className={`
-                    genre-more-button inline-flex items-center justify-center gap-x-2 min-w-[80px]
+                    genre-more-button inline-flex items-center justify-center gap-x-2 min-w-4xl
                     px-2 py-1 text-lg font-medium uppercase
                     cursor-pointer transition-colors duration-200
                     focus:outline-none

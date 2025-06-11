@@ -135,13 +135,13 @@ export const MovieListPage = () => {
 
             <main
                 className="
-                    flex-grow w-content-width px-16 pb-6 mb-[60px]
+                    flex-grow w-content-width px-16 pb-6 mb-3xl
                     bg-content-background
                 "
             >
                 <div
                     className="
-                        flex justify-between items-center h-[60px] mb-6
+                        flex justify-between items-center h-3xl mb-6
                         border-b-2 border-gray-light
                     "
                 >
@@ -187,7 +187,7 @@ export const MovieListPage = () => {
             <footer
                 className="
                     flex justify-center items-center
-                    fixed bottom-0 left-0 right-0 h-[60px]
+                    fixed bottom-0 left-0 right-0 h-3xl
                     bg-gray z-50
                 "
             >

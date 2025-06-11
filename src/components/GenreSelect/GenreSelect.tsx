@@ -28,11 +28,10 @@ export const GenreSelect = ({ selectedGenre, onSelect }: GenreSelectProps) => {
                     `}
                     onClick={() => onSelect(genre)}
                 >
-                    {genre}
-                    <span
+                    {genre}                    <span
                         className={`
                             absolute left-0
-                            h-[3px] w-0 -bottom-[16px]
+                            h-[3px] w-0 -bottom-lg
                             bg-primary
                             transition-all duration-300
                             ${genre === selectedGenre ? "w-full" : "group-hover:w-full"}
@@ -54,11 +53,10 @@ export const GenreSelect = ({ selectedGenre, onSelect }: GenreSelectProps) => {
                                 : "text-gray-lighter hover:text-text"
                         }
                     `}
-                />
-                <span
+                />                <span
                     className={`
                         absolute left-0
-                        h-[3px] w-0 -bottom-[16px]
+                        h-[3px] w-0 -bottom-lg
                         bg-primary
                         transition-all duration-300
                         ${isSecondaryGenre ? "w-full" : "group-hover:w-full"}

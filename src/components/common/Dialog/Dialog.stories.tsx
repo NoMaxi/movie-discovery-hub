@@ -92,7 +92,7 @@ export const ComplexChildren: Story = {
                 }}
             >
                 <div className="mb-4">
-                    <label htmlFor="item-name" className="form-label block mb-2 text-[var(--color-text)]">
+                    <label htmlFor="item-name" className="form-label block mb-2 text-text">
                         Item Name
                     </label>
                     <input
@@ -101,13 +101,13 @@ export const ComplexChildren: Story = {
                         placeholder="Enter item name"
                         className="
                             input-field
-                            w-full p-3 border border-[var(--color-gray)]
-                            rounded-md bg-[var(--color-background-light)]
+                            w-full p-3 border border-gray
+                            rounded-md bg-background
                         "
                     />
                 </div>
                 <div className="mb-4">
-                    <label htmlFor="item-desc" className="form-label block mb-2 text-[var(--color-text)]">
+                    <label htmlFor="item-desc" className="form-label block mb-2 text-text">
                         Description
                     </label>
                     <textarea
@@ -116,8 +116,8 @@ export const ComplexChildren: Story = {
                         placeholder="Describe the item"
                         className="
                             input-field
-                            w-full p-3 border border-[var(--color-gray)]
-                            rounded-md bg-[var(--color-background-light)]
+                            w-full p-3 border border-gray
+                            rounded-md bg-background-light
                         "
                     ></textarea>
                 </div>
@@ -184,7 +184,7 @@ export const CustomClasses: Story = {
             </p>
         ),
         className:
-            "max-w-[500px] h-[600px] ring-4 ring-offset-4 ring-indigo-500 text-[var(--color-text-light)] rounded-lg shadow-lg",
+            "max-w-[500px] h-[600px] ring-4 ring-offset-4 ring-indigo-500 text-gray-light rounded-lg shadow-lg",
     },
 };
 
@@ -228,7 +228,7 @@ export const DeleteConfirmation: Story = {
         title: "Delete Movie",
         children: (
             <div className="flex flex-col">
-                <p className="text-[var(--color-text)] opacity-80 mb-16 text-left text-2xl">
+                <p className="text-text opacity-80 mb-16 text-left text-2xl">
                     Are you sure you want to delete this movie?
                 </p>
                 <div className="flex justify-end">

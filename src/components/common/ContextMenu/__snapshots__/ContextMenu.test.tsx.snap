@@ -7,7 +7,7 @@ exports[`ContextMenu Should render correctly with close button when 'withCloseBu
                 context-menu
                 absolute z-20 min-w-[100px]
                 flex flex-col
-                bg-[var(--color-content-background)]
+                bg-content-background
                 ring-1 ring-black shadow-lg rounded
                 
             "
@@ -17,8 +17,8 @@ exports[`ContextMenu Should render correctly with close button when 'withCloseBu
       class="
                     context-menu-close-button
                     absolute top-1 right-2
-                    text-xl leading-none text-[var(--color-gray-lighter)]
-                    hover:text-[var(--color-text)]
+                    text-xl leading-none text-gray-lighter
+                    hover:text-text
                     cursor-pointer
                 "
       data-testid="context-menu-close-button"
@@ -33,8 +33,8 @@ exports[`ContextMenu Should render correctly with close button when 'withCloseBu
           class="
                                 context-menu-edit-button
                                 block w-full text-left px-4 py-2
-                                text-base text-[var(--color-text)]
-                                hover:bg-[var(--color-primary)]
+                                text-base text-text
+                                hover:bg-primary
                                 transition-colors duration-150
                                 cursor-pointer
                             "
@@ -48,8 +48,8 @@ exports[`ContextMenu Should render correctly with close button when 'withCloseBu
           class="
                                 context-menu-delete-button
                                 block w-full text-left px-4 py-2
-                                text-base text-[var(--color-text)]
-                                hover:bg-[var(--color-primary)]
+                                text-base text-text
+                                hover:bg-primary
                                 transition-colors duration-150
                                 cursor-pointer
                             "
@@ -70,7 +70,7 @@ exports[`ContextMenu Should render correctly without close button by default whe
                 context-menu
                 absolute z-20 min-w-[100px]
                 flex flex-col
-                bg-[var(--color-content-background)]
+                bg-content-background
                 ring-1 ring-black shadow-lg rounded
                 custom-class
             "
@@ -84,8 +84,8 @@ exports[`ContextMenu Should render correctly without close button by default whe
           class="
                                 context-menu-edit-button
                                 block w-full text-left px-4 py-2
-                                text-base text-[var(--color-text)]
-                                hover:bg-[var(--color-primary)]
+                                text-base text-text
+                                hover:bg-primary
                                 transition-colors duration-150
                                 cursor-pointer
                             "
@@ -99,8 +99,8 @@ exports[`ContextMenu Should render correctly without close button by default whe
           class="
                                 context-menu-delete-button
                                 block w-full text-left px-4 py-2
-                                text-base text-[var(--color-text)]
-                                hover:bg-[var(--color-primary)]
+                                text-base text-text
+                                hover:bg-primary
                                 transition-colors duration-150
                                 cursor-pointer
                             "

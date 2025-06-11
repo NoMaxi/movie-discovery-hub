@@ -94,7 +94,7 @@ describe("Dialog", () => {
 
         expect(dialogBody).toBeInTheDocument();
         expect(dialogBody.className).toContain("dialog-body");
-        expect(dialogBody.className).toContain("pt-[60px]");
+        expect(dialogBody.className).toContain("pt-3xl");
     });
 
     test("Should render correctly with JSX element as title", () => {
