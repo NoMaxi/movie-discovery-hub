@@ -33,7 +33,8 @@ export const SearchForm = ({ initialQuery = "", onSearch }: SearchFormProps) => 
                 onChange={handleInputChange}
                 onKeyDown={handleKeyDown}
                 placeholder="What do you want to watch?"
-                className="input-field input-transparent-shadow-glow"            />
+                className="input-field input-transparent-shadow-glow"
+            />
             <button data-testid="search-button" type="submit" className="btn ml-[14px]">
                 Search
             </button>

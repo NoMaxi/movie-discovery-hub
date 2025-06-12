@@ -183,8 +183,7 @@ export const CustomClasses: Story = {
                 your design requirements.
             </p>
         ),
-        className:
-            "max-w-[500px] h-[600px] ring-4 ring-offset-4 ring-indigo-500 text-gray-light rounded-lg shadow-lg",
+        className: "max-w-[500px] h-[600px] ring-4 ring-offset-4 ring-indigo-500 text-gray-light rounded-lg shadow-lg",
     },
 };
 

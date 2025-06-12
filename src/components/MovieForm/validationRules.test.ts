@@ -1,8 +1,4 @@
-import {
-    releaseDateValidation,
-    ratingValidation,
-    genreValidation,
-} from "./validationRules";
+import { releaseDateValidation, ratingValidation, genreValidation } from "./validationRules";
 
 describe("MovieForm Validation Rules", () => {
     describe("releaseDateValidation", () => {
