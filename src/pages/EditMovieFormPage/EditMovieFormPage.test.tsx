@@ -49,7 +49,8 @@ jest.mock("@/components/common/Dialog/Dialog", () => ({
 }));
 
 let mockMovieFormSubmit: (formData: MovieFormData) => void;
-let lastMovieFormProps: { initialMovieInfo?: InitialMovieInfo | null; isLoading?: boolean; resetMode?: string } | null = null;
+let lastMovieFormProps: { initialMovieInfo?: InitialMovieInfo | null; isLoading?: boolean; resetMode?: string } | null =
+    null;
 
 jest.mock("@/components/MovieForm/MovieForm", () => ({
     MovieForm: ({
@@ -166,7 +167,7 @@ describe("EditMovieFormPage", () => {
         consoleErrorSpy.mockRestore();
     });
 
-     test("Should show error message if movieId is missing", async () => {
+    test("Should show error message if movieId is missing", async () => {
         useParams.mockReturnValue({ movieId: undefined });
         renderComponent();
 
@@ -310,7 +311,7 @@ describe("EditMovieFormPage", () => {
         expect(mockNavigateWithSearchParams).toHaveBeenCalledWith(`/${mockMovieId}`);
     });
 
-     test("Should handle dialog close when movie info failed to load", async () => {
+    test("Should handle dialog close when movie info failed to load", async () => {
         mockGetAPIMovieDetailsById.mockRejectedValue(new Error("Fetch Error"));
         renderComponent();
 
@@ -328,7 +329,7 @@ describe("EditMovieFormPage", () => {
         expect(mockNavigateWithSearchParams).toHaveBeenCalledWith("/");
     });
 
-     test("Should handle dialog close when movieId is missing", async () => {
+    test("Should handle dialog close when movieId is missing", async () => {
         useParams.mockReturnValue({ movieId: undefined });
         renderComponent();
 

@@ -157,7 +157,6 @@ describe("MovieForm", () => {
             within(genreSelect).getByLabelText("Documentary", { selector: "input[type='checkbox']" }),
         ).not.toBeChecked();
         expect(within(genreSelect).getByLabelText("Horror", { selector: "input[type='checkbox']" })).not.toBeChecked();
-        
         expect(asFragment()).toMatchSnapshot();
     });
 

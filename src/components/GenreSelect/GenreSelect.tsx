@@ -17,22 +17,16 @@ export const GenreSelect = ({ selectedGenre, onSelect }: GenreSelectProps) => {
                     key={genre}
                     className={`
                         group relative px-2 py-1
-                        text-lg font-medium uppercase
-                        cursor-pointer
+                        text-lg font-medium uppercase cursor-pointer
                         transition-colors duration-200
-                        ${
-                            genre === selectedGenre
-                                ? "text-text"
-                                : "text-gray-lighter hover:text-text"
-                        }
+                        ${genre === selectedGenre ? "text-text" : "text-gray-lighter hover:text-text"}
                     `}
                     onClick={() => onSelect(genre)}
                 >
-                    {genre}                    <span
+                    {genre}
+                    <span
                         className={`
-                            absolute left-0
-                            h-[3px] w-0 -bottom-lg
-                            bg-primary
+                            absolute left-0 h-[3px] w-0 -bottom-lg bg-primary
                             transition-all duration-300
                             ${genre === selectedGenre ? "w-full" : "group-hover:w-full"}
                         `}
@@ -46,18 +40,11 @@ export const GenreSelect = ({ selectedGenre, onSelect }: GenreSelectProps) => {
                     selectedGenre={isSecondaryGenre ? selectedGenre : undefined}
                     onSelectionChange={(genre: Genre) => onSelect(genre)}
                     className="genre-more-control"
-                    buttonClassName={`
-                        ${
-                            isSecondaryGenre
-                                ? "text-text"
-                                : "text-gray-lighter hover:text-text"
-                        }
-                    `}
-                />                <span
+                    buttonClassName={`${isSecondaryGenre ? "text-text" : "text-gray-lighter hover:text-text"}`}
+                />
+                <span
                     className={`
-                        absolute left-0
-                        h-[3px] w-0 -bottom-lg
-                        bg-primary
+                        absolute left-0 h-[3px] w-0 -bottom-lg bg-primary
                         transition-all duration-300
                         ${isSecondaryGenre ? "w-full" : "group-hover:w-full"}
                     `}

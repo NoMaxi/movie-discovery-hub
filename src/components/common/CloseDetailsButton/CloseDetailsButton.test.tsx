@@ -20,10 +20,7 @@ describe("CloseDetailsButton", () => {
 
     const mockSearchParams = (params: string = "") => {
         const mockSearchParamsInstance = new URLSearchParams(params);
-        (useSearchParams as jest.Mock).mockReturnValue([
-            mockSearchParamsInstance,
-            jest.fn(),
-        ]);
+        (useSearchParams as jest.Mock).mockReturnValue([mockSearchParamsInstance, jest.fn()]);
     };
 
     const renderButton = (searchParamsString: string = "") => {

@@ -1,6 +1,6 @@
 import { APIMovieDetails } from "@/services/movieService";
 
-export type Genre = 
+export type Genre =
     | "Drama"
     | "Romance"
     | "Animation"
