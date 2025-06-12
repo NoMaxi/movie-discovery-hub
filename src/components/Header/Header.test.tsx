@@ -35,18 +35,18 @@ describe("Header", () => {
         expect(header).toBeInTheDocument();
         expect(header).toHaveStyle({ backgroundImage: expect.stringContaining("bg-header.png") });
         expect(header).toHaveClass("relative");
-        expect(header).toHaveClass("w-[var(--content-width)]");
+        expect(header).toHaveClass("w-content-width");
         expect(asFragment()).toMatchSnapshot();
     });
 
     test("Should apply 'min-h-[290px]' class when 'movieId' is not present in URL params", () => {
         renderWithRouter();
-        expect(screen.getByTestId("header-inner")).toHaveClass("min-h-[290px]");
+        expect(screen.getByTestId("header-inner")).toHaveClass("min-h-header-height-collapsed");
     });
 
     test("Should apply 'h-[540px]' class when 'movieId' is present in URL params", () => {
         renderWithRouter("123");
-        expect(screen.getByTestId("header-inner")).toHaveClass("h-[540px]");
+        expect(screen.getByTestId("header-inner")).toHaveClass("h-header-height-expanded");
     });
 
     test("Should render Outlet", () => {

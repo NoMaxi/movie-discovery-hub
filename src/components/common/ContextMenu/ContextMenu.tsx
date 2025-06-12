@@ -45,7 +45,7 @@ export const ContextMenu = ({
                 context-menu
                 absolute z-20 min-w-[100px]
                 flex flex-col
-                bg-[var(--color-content-background)]
+                bg-content-background
                 ring-1 ring-black shadow-lg rounded
                 ${className}
             `}
@@ -57,8 +57,8 @@ export const ContextMenu = ({
                     className="
                     context-menu-close-button
                     absolute top-1 right-2
-                    text-xl leading-none text-[var(--color-gray-lighter)]
-                    hover:text-[var(--color-text)]
+                    text-xl leading-none text-gray-lighter
+                    hover:text-text
                     cursor-pointer
                 "
                     onClick={handleMenuClose}
@@ -75,8 +75,8 @@ export const ContextMenu = ({
                             className={`
                                 context-menu-${action.label.toLowerCase()}-button
                                 block w-full text-left px-4 py-2
-                                text-base text-[var(--color-text)]
-                                hover:bg-[var(--color-primary)]
+                                text-base text-text
+                                hover:bg-primary
                                 transition-colors duration-150
                                 cursor-pointer
                             `}

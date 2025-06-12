@@ -106,7 +106,7 @@ describe("GenreMoreDropdown", () => {
                 "items-center",
                 "justify-center",
                 "gap-x-2",
-                "min-w-[80px]",
+                "min-w-4xl",
                 "px-2",
                 "py-1",
                 "text-lg",
@@ -472,7 +472,7 @@ describe("GenreMoreDropdown", () => {
             renderComponent();
             const button = screen.getByRole("button");
 
-            expect(button).toHaveClass("min-w-[80px]");
+            expect(button).toHaveClass("min-w-4xl");
         });
         test("Should include transition classes for smooth interactions", () => {
             renderComponent();

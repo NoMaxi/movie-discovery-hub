@@ -22,7 +22,7 @@ describe("SelectArrow", () => {
 
         expect(svgElement).toHaveClass("w-3");
         expect(svgElement).toHaveClass("h-3");
-        expect(svgElement).toHaveClass("fill-[var(--color-primary)]");
+        expect(svgElement).toHaveClass("fill-primary");
     });
 
     test("Should have correct custom CSS classes applied to the SVG element", () => {

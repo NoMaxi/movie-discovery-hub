@@ -11,14 +11,14 @@ exports[`GenreMultiSelect Should render correctly with default props and no pres
       aria-invalid="false"
       class="
                         input-field relative flex items-center justify-between w-full
-                        text-left text-[var(--color-primary)] font-normal opacity-80
+                        text-left text-primary font-normal opacity-80
                         cursor-pointer 
                     "
       id="genre-select"
       type="button"
     >
       <span
-        class="truncate text-[var(--color-text)] opacity-30"
+        class="truncate text-text opacity-30"
       >
         Select Genre
       </span>
@@ -46,14 +46,14 @@ exports[`GenreMultiSelect Should render correctly with preselected genres 1`] = 
       aria-invalid="false"
       class="
                         input-field relative flex items-center justify-between w-full
-                        text-left text-[var(--color-primary)] font-normal opacity-80
+                        text-left text-primary font-normal opacity-80
                         cursor-pointer 
                     "
       id="genre-select"
       type="button"
     >
       <span
-        class="truncate text-[var(--color-text)]"
+        class="truncate text-text"
       >
         Comedy, Horror
       </span>

@@ -5,7 +5,7 @@ interface SelectArrowProps {
 const SelectArrow = ({ className }: SelectArrowProps) => (
     <svg
         data-testid="select-arrow-svg"
-        className={`w-3 h-3 fill-[var(--color-primary)] ${className ?? ""}`}
+        className={`w-3 h-3 fill-primary ${className ?? ""}`}
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 10 10"
         aria-hidden="true"

@@ -46,7 +46,7 @@ export const Dialog = ({ title, children, onClose, className = "" }: DialogProps
                         className={`
                             dialog-content
                             relative flex flex-col w-full
-                            bg-[var(--color-background)] rounded-md shadow-2xl
+                            bg-background rounded-md shadow-2xl
                             max-h-[95vh] overflow-hidden
                             ${className}
                         `}
@@ -55,18 +55,14 @@ export const Dialog = ({ title, children, onClose, className = "" }: DialogProps
                         <div
                             className="
                                 dialog-header-container
-                                sticky top-0 px-[60px] pt-[60px] pb-[38px]
-                                bg-[var(--color-background)] z-10
+                                sticky top-0 px-3xl pt-3xl pb-[38px]
+                                bg-background z-10
                             "
                         >
                             {title && (
                                 <div className="dialog-header flex justify-between items-start">
                                     {typeof title === "string" ? (
-                                        <h2
-                                            className="
-                                                font-light text-[40px] text-[var(--color-text)] uppercase tracking-wide
-                                            "
-                                        >
+                                        <h2 className="font-light text-2xl text-text uppercase tracking-wide">
                                             {title.toUpperCase()}
                                         </h2>
                                     ) : (
@@ -80,9 +76,9 @@ export const Dialog = ({ title, children, onClose, className = "" }: DialogProps
                                 onClick={onClose}
                                 className="
                                     dialog-close-button
-                                    flex items-center justify-center w-[20px] h-[20px]
+                                    flex items-center justify-center w-xl h-xl
                                     absolute top-[30px] right-[30px]
-                                    hover:text-[var(--color-primary)]
+                                    hover:text-primary
                                     before:content-[''] before:block before:absolute before:w-[2px] before:h-[24px]
                                     before:bg-current before:rotate-45
                                     after:content-[''] after:block after:absolute after:w-[2px] after:h-[24px]
@@ -95,10 +91,7 @@ export const Dialog = ({ title, children, onClose, className = "" }: DialogProps
                         </div>
                         <div
                             data-testid="dialog-body"
-                            className={`
-                                dialog-body flex-grow px-[60px] pb-[60px] overflow-y-auto
-                                ${!title ? "pt-[60px]" : ""}
-                            `}
+                            className={`dialog-body flex-grow px-3xl pb-3xl overflow-y-auto ${title ? "" : "pt-3xl"}`}
                         >
                             {children}
                         </div>

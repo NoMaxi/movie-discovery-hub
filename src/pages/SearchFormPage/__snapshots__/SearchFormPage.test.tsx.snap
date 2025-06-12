@@ -3,10 +3,10 @@
 exports[`SearchFormPage Should render correctly 1`] = `
 <DocumentFragment>
   <div
-    class="flex flex-col items-start px-[60px]"
+    class="flex flex-col items-start px-3xl"
   >
     <h2
-      class="text-[40px] font-light uppercase mb-8 mt-[25px] tracking-[1px]"
+      class="text-2xl font-light uppercase mb-8 mt-[25px] tracking-[1px]"
     >
       Find Your Movie
     </h2>

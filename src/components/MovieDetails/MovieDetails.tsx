@@ -15,8 +15,8 @@ export const MovieDetails = ({
         <div
             data-testid="movie-details"
             className="
-                movie-details flex w-full gap-x-14 p-8 text-[var(--color-text)]
-                bg-[var(--color-content-background)]
+                movie-details flex w-full max-h-header-height-expanded gap-x-14 p-8 text-text
+                bg-content-background
             "
         >
             <img
@@ -28,25 +28,30 @@ export const MovieDetails = ({
 
             <div className="movie-details-info flex flex-col flex-grow">
                 <div className="flex items-center gap-x-5 mb-2">
-                    <h1 className="movie-details-title text-[40px] font-light tracking-[1px] uppercase">{title}</h1>
+                    <h1 className="movie-details-title text-2xl font-light tracking-[1px] uppercase">{title}</h1>{" "}
                     <div
                         className="
                             movie-details-rating flex flex-shrink-0 items-center justify-center
-                            w-[60px] h-[60px] border-2 rounded-full
+                            w-3xl h-3xl border-2 rounded-full
                         "
                     >
                         <span className="font-light">{rating}</span>
                     </div>
                 </div>
 
-                <p className="movie-details-genres text-[14px] opacity-50 mb-6">{genres.join(", ")}</p>
+                <p className="movie-details-genres text-md opacity-50 mb-6">{genres.join(", ")}</p>
 
-                <div className="flex items-center gap-x-6 text-[24px] font-light text-[var(--color-primary)] mb-6">
+                <div className="flex items-center gap-x-6 text-[24px] font-light text-primary mb-6">
                     <span className="movie-details-date">{releaseYear}</span>
                     <span className="movie-details-duration">{formatDuration(duration)}</span>
                 </div>
 
-                <p className="movie-details-description font-light opacity-50 leading-relaxed">{description}</p>
+                <p
+                    className="
+                    movie-details-description font-light opacity-50 leading-relaxed overflow-y-scroll"
+                >
+                    {description}
+                </p>
             </div>
         </div>
     );

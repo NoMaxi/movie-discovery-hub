@@ -3,14 +3,14 @@ import { Outlet, useParams } from "react-router-dom";
 
 export const Header = () => {
     const { movieId } = useParams();
-    const heightClass = movieId ? "h-[540px]" : "min-h-[290px]";
+    const heightClass = movieId ? "h-header-height-expanded" : "min-h-header-height-collapsed";
 
     return (
         <header
             data-testid="header"
             className="
-                relative w-[var(--content-width)] px-[60px] pt-[80px] pb-[20px] mb-[10px]
-                bg-[var(--color-content-background)] bg-cover bg-center bg-no-repeat
+                relative w-content-width px-3xl pt-4xl pb-xl mb-md
+                bg-content-background bg-cover bg-center bg-no-repeat
             "
             style={{ backgroundImage: `url(${bgHeaderImage})` }}
         >

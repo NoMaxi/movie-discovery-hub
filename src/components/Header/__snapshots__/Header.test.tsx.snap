@@ -4,14 +4,14 @@ exports[`Header Should render a header with the correct background and base clas
 <DocumentFragment>
   <header
     class="
-                relative w-[var(--content-width)] px-[60px] pt-[80px] pb-[20px] mb-[10px]
-                bg-[var(--color-content-background)] bg-cover bg-center bg-no-repeat
+                relative w-content-width px-3xl pt-4xl pb-xl mb-md
+                bg-content-background bg-cover bg-center bg-no-repeat
             "
     data-testid="header"
     style="background-image: url();"
   >
     <div
-      class="flex flex-col relative z-10 min-h-[290px]"
+      class="flex flex-col relative z-10 min-h-header-height-collapsed"
       data-testid="header-inner"
     >
       <div

@@ -18,7 +18,7 @@ export const ErrorMessage = ({ message, onDismiss, className = "" }: ErrorMessag
                 data-testid="error-dismiss-button"
                 onClick={onDismiss}
                 className="
-                    text-3xl text-red-300 hover:text-[var(--color-primary)]
+                    text-3xl text-red-300 hover:text-primary
                     transition-colors duration-300 cursor-pointer
                 "
                 aria-label="Dismiss error"

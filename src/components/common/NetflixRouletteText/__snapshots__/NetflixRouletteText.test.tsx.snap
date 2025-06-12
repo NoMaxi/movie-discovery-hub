@@ -3,7 +3,7 @@
 exports[`NetflixRouletteText Should render the component with correct text parts 1`] = `
 <DocumentFragment>
   <span
-    class="text-[var(--color-primary)] group"
+    class="text-primary group"
     data-testid="netflix-roulette-text"
   >
     <span

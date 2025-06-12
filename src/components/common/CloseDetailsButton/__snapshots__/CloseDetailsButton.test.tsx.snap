@@ -5,7 +5,7 @@ exports[`CloseDetailsButton should render the close button with correct styling 
   <a
     aria-label="Close movie details"
     class="
-                absolute top-0 right-0 p-2 z-20 text-5xl text-[var(--color-primary)]
+                absolute top-0 right-0 p-2 z-20 text-5xl text-primary
                 hover:text-red-400 cursor-pointer transition-colors
             "
     data-discover="true"

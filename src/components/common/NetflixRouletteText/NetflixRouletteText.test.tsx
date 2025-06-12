@@ -21,7 +21,7 @@ describe("NetflixRouletteText", () => {
 
         expect(parentSpan).toContainElement(netflixSpan);
         expect(parentSpan).toContainElement(rouletteSpan);
-        expect(parentSpan).toHaveClass("text-[var(--color-primary)] group");
+        expect(parentSpan).toHaveClass("text-primary group");
         expect(netflixSpan).toHaveClass("font-black group-hover:text-blue-500 transition-colors duration-300");
         expect(rouletteSpan).toHaveClass("font-medium group-hover:text-red-500 transition-colors duration-300");
     });
